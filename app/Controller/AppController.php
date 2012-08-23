@@ -32,4 +32,38 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+	
+	public $components = array('Auth', 'Session');
+	
+	public function beforeFilter() {
+		// Contener las relaciones
+		$Class = $this -> modelClass;
+		$this -> $Class -> contain();
+		// Manejo de la parte de autentificación
+		$this -> authConfig();
+		//$this -> layoutConfig();
+	}
+	
+	protected function authConfig() {
+		$this -> Auth -> authenticate = array('Form' => array('scope' => array('activo' => 1), 'userModel' => 'Usuario', 'fields' => array('username' => 'nombre_de_usuario', 'password' => 'contraseña')));
+		$this -> Auth -> authError = __('No tiene permiso para ver esta sección', true);
+		if (!isset($this -> params['prefix'])) {
+			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
+			//$this -> Auth -> loginRedirect = array('controller' => 'users', 'action' => 'profile');
+			$this -> Auth -> logoutRedirect = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
+		} elseif ($this -> params['prefix'] == 'admin') {
+			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => true);
+			//$this -> Auth -> loginRedirect = array('controller' => 'users', 'action' => 'index');
+			$this -> Auth -> logoutRedirect = array('controller' => 'users', 'action' => 'login', 'admin' => true);
+		}
+	}
+
+	protected function layoutConfig() {
+		if (isset($this -> params['prefix']) && $this -> params['prefix'] == 'admin') {
+			//$this -> layout = ''; // Entorno "/"
+		} else {
+			//$this -> layout = ''; // Entorno "/admin"
+		}
+	}
+	
 }
