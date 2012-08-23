@@ -9,8 +9,8 @@
 		<?php
 		echo $this -> Session -> flash('auth');
 		echo $this -> Form -> create('Usuario', array('action' => 'login'));
-		echo $this -> Form -> input('username', array("label" => "Nombre de Usuario"));
-		echo $this -> Form -> input('password', array("label" => "Contraseña"));
+		echo $this -> Form -> input('nombre_de_usuario', array('required' => 'required'));
+		echo $this -> Form -> input('contraseña', array('required' => 'required'));
 		echo $this -> Form -> end('Acceder');
 		?>
 	</div>

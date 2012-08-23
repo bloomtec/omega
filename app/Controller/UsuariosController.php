@@ -13,7 +13,13 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function login() {
-		
+		if ($this -> request -> is('post')) {
+			if ($this -> Auth -> login()) {
+				$this -> redirect($this -> Auth -> redirect());
+			} else {
+				$this -> Session -> setFlash(__('Nombre de usuario y/o contraseña no válido.'), 'crud/error');
+			}
+		}
 	}
 	
 	/**
@@ -22,7 +28,7 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function logout() {
-		
+		$this -> redirect($this -> Auth -> logout());
 	}
 	
 	/**
@@ -45,7 +51,7 @@ class UsuariosController extends AppController {
 	public function view($id = null) {
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		$this -> set('usuario', $this -> Usuario -> read(null, $id));
 	}
@@ -59,14 +65,14 @@ class UsuariosController extends AppController {
 		if ($this -> request -> is('post')) {
 			$this -> Usuario -> create();
 			if ($this -> Usuario -> save($this -> request -> data)) {
-				$this -> Session -> setFlash(__('The usuario has been saved'));
+				$this -> Session -> setFlash(__('Se registró el usuario'), 'crud/success');
 				$this -> redirect(array('action' => 'index'));
 			} else {
-				$this -> Session -> setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this -> Session -> setFlash(__('No se pudo registrar el usuario. Por favor, intente de nuevo.'), 'crud/error');
 			}
 		}
 		$empresas = $this -> Usuario -> Empresa -> find('list');
-		$roles = $this -> Usuario -> Rol -> find('list');
+		$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id' => 3)));
 		$servicios = $this -> Usuario -> Servicio -> find('list');
 		$this -> set(compact('empresas', 'roles', 'servicios'));
 	}
@@ -81,20 +87,20 @@ class UsuariosController extends AppController {
 	public function edit($id = null) {
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		if ($this -> request -> is('post') || $this -> request -> is('put')) {
 			if ($this -> Usuario -> save($this -> request -> data)) {
-				$this -> Session -> setFlash(__('The usuario has been saved'));
+				$this -> Session -> setFlash(__('Se guardaron los cambios del usuario'), 'crud/success');
 				$this -> redirect(array('action' => 'index'));
 			} else {
-				$this -> Session -> setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this -> Session -> setFlash(__('No se guardaron los cambios del usuario. Por favor, intente de nuevo.'), 'crud/error');
 			}
 		} else {
 			$this -> request -> data = $this -> Usuario -> read(null, $id);
 		}
 		$empresas = $this -> Usuario -> Empresa -> find('list');
-		$roles = $this -> Usuario -> Rol -> find('list');
+		$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id' => 3)));
 		$servicios = $this -> Usuario -> Servicio -> find('list');
 		$this -> set(compact('empresas', 'roles', 'servicios'));
 	}
@@ -113,13 +119,13 @@ class UsuariosController extends AppController {
 		}
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		if ($this -> Usuario -> delete()) {
-			$this -> Session -> setFlash(__('Usuario deleted'));
+			$this -> Session -> setFlash(__('Se eliminó el usuario'), 'crud/success');
 			$this -> redirect(array('action' => 'index'));
 		}
-		$this -> Session -> setFlash(__('Usuario was not deleted'));
+		$this -> Session -> setFlash(__('No se eliminó el usuario'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
 	}
 	
@@ -129,7 +135,13 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function admin_login() {
-		
+		if ($this -> request -> is('post')) {
+			if ($this -> Auth -> login()) {
+				$this -> redirect($this -> Auth -> redirect());
+			} else {
+				$this -> Session -> setFlash(__('Nombre de usuario y/o contraseña no válido.'), 'crud/error');
+			}
+		}
 	}
 	
 	/**
@@ -138,7 +150,7 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function admin_logout() {
-		
+		$this -> redirect($this -> Auth -> logout());
 	}
 
 	/**
@@ -147,7 +159,7 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function admin_index() {
-		$this -> Usuario -> recursive = 0;
+		$this -> Usuario -> contain('Rol');
 		$this -> set('usuarios', $this -> paginate());
 	}
 
@@ -159,9 +171,10 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function admin_view($id = null) {
+		$this -> Usuario -> contain('Rol');
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		$this -> set('usuario', $this -> Usuario -> read(null, $id));
 	}
@@ -175,14 +188,14 @@ class UsuariosController extends AppController {
 		if ($this -> request -> is('post')) {
 			$this -> Usuario -> create();
 			if ($this -> Usuario -> save($this -> request -> data)) {
-				$this -> Session -> setFlash(__('The usuario has been saved'));
+				$this -> Session -> setFlash(__('Se registró el usuario'), 'crud/success');
 				$this -> redirect(array('action' => 'index'));
 			} else {
-				$this -> Session -> setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this -> Session -> setFlash(__('No se pudo registrar el usuario. Por favor, intente de nuevo.'), 'crud/error');
 			}
 		}
 		$empresas = $this -> Usuario -> Empresa -> find('list');
-		$roles = $this -> Usuario -> Rol -> find('list');
+		$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id >=' => $this -> Auth -> user('rol_id'))));
 		$servicios = $this -> Usuario -> Servicio -> find('list');
 		$this -> set(compact('empresas', 'roles', 'servicios'));
 	}
@@ -197,20 +210,20 @@ class UsuariosController extends AppController {
 	public function admin_edit($id = null) {
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		if ($this -> request -> is('post') || $this -> request -> is('put')) {
 			if ($this -> Usuario -> save($this -> request -> data)) {
-				$this -> Session -> setFlash(__('The usuario has been saved'));
+				$this -> Session -> setFlash(__('Se guardaron los cambios del usuario'), 'crud/success');
 				$this -> redirect(array('action' => 'index'));
 			} else {
-				$this -> Session -> setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this -> Session -> setFlash(__('No se guardaron los cambios del usuario. Por favor, intente de nuevo.'), 'crud/error');
 			}
 		} else {
 			$this -> request -> data = $this -> Usuario -> read(null, $id);
 		}
 		$empresas = $this -> Usuario -> Empresa -> find('list');
-		$roles = $this -> Usuario -> Rol -> find('list');
+		$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id >=' => $this -> Auth -> user('rol_id'))));
 		$servicios = $this -> Usuario -> Servicio -> find('list');
 		$this -> set(compact('empresas', 'roles', 'servicios'));
 	}
@@ -229,13 +242,13 @@ class UsuariosController extends AppController {
 		}
 		$this -> Usuario -> id = $id;
 		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Invalid usuario'));
+			throw new NotFoundException(__('Usuario no válido'));
 		}
 		if ($this -> Usuario -> delete()) {
-			$this -> Session -> setFlash(__('Usuario deleted'));
+			$this -> Session -> setFlash(__('Se eliminó el usuario'), 'crud/success');
 			$this -> redirect(array('action' => 'index'));
 		}
-		$this -> Session -> setFlash(__('Usuario was not deleted'));
+		$this -> Session -> setFlash(__('No se eliminó el usuario'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
 	}
 

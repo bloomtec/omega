@@ -45,16 +45,31 @@ class AppController extends Controller {
 	}
 	
 	protected function authConfig() {
+		$this -> Auth -> deny();
+		$this -> Auth -> authorize = 'Controller';
 		$this -> Auth -> authenticate = array('Form' => array('scope' => array('activo' => 1), 'userModel' => 'Usuario', 'fields' => array('username' => 'nombre_de_usuario', 'password' => 'contraseña')));
-		$this -> Auth -> authError = __('No tiene permiso para ver esta sección', true);
+		$this -> Auth -> authError = 'No tiene permiso para ver esta sección';
 		if (!isset($this -> params['prefix'])) {
 			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
-			//$this -> Auth -> loginRedirect = array('controller' => 'users', 'action' => 'profile');
+			$this -> Auth -> loginRedirect = array('controller' => 'usuarios', 'action' => 'index', 'admin' => false);
 			$this -> Auth -> logoutRedirect = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
 		} elseif ($this -> params['prefix'] == 'admin') {
 			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => true);
-			//$this -> Auth -> loginRedirect = array('controller' => 'users', 'action' => 'index');
-			$this -> Auth -> logoutRedirect = array('controller' => 'users', 'action' => 'login', 'admin' => true);
+			$this -> Auth -> loginRedirect = array('controller' => 'usuarios', 'action' => 'index', 'admin' => true);
+			$this -> Auth -> logoutRedirect = array('controller' => 'usuarios', 'action' => 'login', 'admin' => true);
+		}
+	}
+	
+	public function isAuthorized() {
+		// Contexto clientes (Clientes[3])
+		if (!isset($this -> params['prefix']) && $this -> Auth -> user('rol_id') != 2) {
+			return true;
+		}
+		// Contexto omega (Super Administrador[1] y Administrador[2])
+		elseif ($this -> params['prefix'] == 'admin' && $this -> Auth -> user('rol_id') <= 2) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

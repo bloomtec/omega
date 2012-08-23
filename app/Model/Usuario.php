@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Component');
 /**
  * Usuario Model
  *
@@ -23,9 +24,17 @@ class Usuario extends AppModel {
 	 */
 	public $validate = array(
 		'rol_id' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Debe seleccionar un rol de usuario',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
 			'numeric' => array(
 				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
+				'message' => 'Este campo es numérico',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -35,7 +44,7 @@ class Usuario extends AppModel {
 		'nombre_de_usuario' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar un nombre de usuario',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -43,7 +52,7 @@ class Usuario extends AppModel {
 			),
 			'isunique' => array(
 				'rule' => array('isunique'),
-				//'message' => 'Your custom message here',
+				'message' => 'Este nombre de usuario ya esta registrado',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -53,7 +62,33 @@ class Usuario extends AppModel {
 		'contraseña' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar una contraseña',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'esIgualLaContraseña' => array(
+				'rule' => array('esIgualLaContraseña'),
+				'message' => 'No coincide con la verificación de la contraseña',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'verificar_contraseña' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Debe verificar su contraseña',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'esIgualLaContraseña' => array(
+				'rule' => array('esIgualLaContraseña'),
+				'message' => 'No coincide con la contraseña',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -63,7 +98,7 @@ class Usuario extends AppModel {
 		'nombre' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar un nombre',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -73,7 +108,7 @@ class Usuario extends AppModel {
 		'apellido' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar un apellido',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -83,7 +118,7 @@ class Usuario extends AppModel {
 		'correo' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar su correo',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -91,7 +126,7 @@ class Usuario extends AppModel {
 			),
 			'isunique' => array(
 				'rule' => array('isunique'),
-				//'message' => 'Your custom message here',
+				'message' => 'Este correo ya esta registrado',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -119,6 +154,21 @@ class Usuario extends AppModel {
 			),
 		),
 	);
+	
+	public function esIgualLaContraseña() {
+		if($this -> data['Usuario']['contraseña'] === $this -> data['Usuario']['verificar_contraseña']) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function beforeSave() {
+		if(isset($this -> data['Usuario']['contraseña']) && !empty($this -> data['Usuario']['contraseña'])) {
+			$this -> data['Usuario']['contraseña'] = AuthComponent::password($this -> data['Usuario']['contraseña']);
+		}
+		return true;
+	}
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
