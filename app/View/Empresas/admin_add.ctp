@@ -1,30 +1,22 @@
-<div class="empresas form">
-<?php echo $this->Form->create('Empresa'); ?>
+<div class="clientes form">
+<?php echo $this -> Form -> create('Empresa'); ?>
 	<fieldset>
-		<legend><?php echo __('Admin Add Empresa'); ?></legend>
+ 		<legend><?php echo __('Añadir Empresa'); ?></legend>
 	<?php
-		echo $this->Form->input('nombre');
-		echo $this->Form->input('identificacion');
-		echo $this->Form->input('email');
-		echo $this->Form->input('contacto');
-		echo $this->Form->input('telefono');
-		echo $this->Form->input('tiene_alerta');
-		echo $this->Form->input('tiene_publicacion_empresa');
-		echo $this->Form->input('tiene_publicacion_omega');
-		echo $this->Form->input('tiene_solicitud');
-		echo $this->Form->input('Servicio');
+	echo $this -> Form -> input('nombre', array("label" => "Nombre/Razón Social"));
+	echo $this -> Form -> input('identificacion', array("label" => "CC/NIT"));
+	echo $this -> Form -> input('contacto');
+	echo $this -> Form -> input('telefono', array("label" => "Teléfono"));
+	echo $this -> Form -> input('correo');
+	echo $this -> Form -> input('servicios', array('multiple' => 'checkbox'));
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+	
+<?php echo $this -> Form -> end(__('Guardar', true)); ?>
 </div>
 <div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
+	<h3><?php __('Acciones'); ?></h3>
 	<ul>
-
-		<li><?php echo $this->Html->link(__('List Empresas'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Usuarios'), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Servicios'), array('controller' => 'servicios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Servicio'), array('controller' => 'servicios', 'action' => 'add')); ?> </li>
+		<li><?php echo $this -> Html -> link(__('Listar Empresas', true), array('action' => 'index')); ?></li>	
 	</ul>
 </div>

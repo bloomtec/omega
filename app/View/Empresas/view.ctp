@@ -1,118 +1,83 @@
-<div class="empresas view">
-<h2><?php  echo __('Empresa'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['id']); ?>
+<div class="clientes view">
+<h2><?php  __('Cliente');?></h2>
+	<dl><?php $i = 0; $class = ' class="altrow"';?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Id'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $cliente['Cliente']['id']; ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Nombre'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['nombre']); ?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Usuario'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $this->Html->link($cliente['Usuario']['username'], array('controller' => 'usuarios', 'action' => 'view', $cliente['Usuario']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Identificacion'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['identificacion']); ?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Nombre'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $cliente['Cliente']['nombre']; ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Email'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['email']); ?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Apellidos'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $cliente['Cliente']['apellidos']; ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Contacto'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['contacto']); ?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Identificacion'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $cliente['Cliente']['identificacion']; ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Telefono'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['telefono']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Tiene Alerta'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['tiene_alerta']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Tiene Publicacion Empresa'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['tiene_publicacion_empresa']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Tiene Publicacion Omega'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['tiene_publicacion_omega']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Tiene Solicitud'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['tiene_solicitud']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($empresa['Empresa']['modified']); ?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Email'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $cliente['Cliente']['email']; ?>
 			&nbsp;
 		</dd>
 	</dl>
 </div>
 <div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
+	<h3><?php __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Empresa'), array('action' => 'edit', $empresa['Empresa']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Empresa'), array('action' => 'delete', $empresa['Empresa']['id']), null, __('Are you sure you want to delete # %s?', $empresa['Empresa']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Empresas'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Empresa'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Usuarios'), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Servicios'), array('controller' => 'servicios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Servicio'), array('controller' => 'servicios', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('Edit %s', true), __('Cliente', true)), array('action' => 'edit', $cliente['Cliente']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('Delete %s', true), __('Cliente', true)), array('action' => 'delete', $cliente['Cliente']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $cliente['Cliente']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('List %s', true), __('Clientes', true)), array('action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('New %s', true), __('Cliente', true)), array('action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('List %s', true), __('Usuarios', true)), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('New %s', true), __('Usuario', true)), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('List %s', true), __('Equipos', true)), array('controller' => 'equipos', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(sprintf(__('New %s', true), __('Equipo', true)), array('controller' => 'equipos', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
 <div class="related">
-	<h3><?php echo __('Related Usuarios'); ?></h3>
-	<?php if (!empty($empresa['Usuario'])): ?>
+	<h3><?php printf(__('Related %s', true), __('Equipos', true));?></h3>
+	<?php if (!empty($cliente['Equipo'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Empresa Id'); ?></th>
-		<th><?php echo __('Rol Id'); ?></th>
-		<th><?php echo __('Nombre Usuario'); ?></th>
-		<th><?php echo __('Contraseña'); ?></th>
-		<th><?php echo __('Nombre'); ?></th>
-		<th><?php echo __('Apellido'); ?></th>
-		<th><?php echo __('Correo'); ?></th>
-		<th><?php echo __('Primer Login'); ?></th>
-		<th><?php echo __('Created'); ?></th>
-		<th><?php echo __('Modified'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
+		<th><?php __('Id'); ?></th>
+		<th><?php __('Cliente Id'); ?></th>
+		<th><?php __('Referencia'); ?></th>
+		<th><?php __('Nombre'); ?></th>
+		<th><?php __('Descripcion'); ?></th>
+		<th><?php __('Ficha Tecnica'); ?></th>
+		<th class="actions"><?php __('Actions');?></th>
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($empresa['Usuario'] as $usuario): ?>
-		<tr>
-			<td><?php echo $usuario['id']; ?></td>
-			<td><?php echo $usuario['empresa_id']; ?></td>
-			<td><?php echo $usuario['rol_id']; ?></td>
-			<td><?php echo $usuario['nombre_usuario']; ?></td>
-			<td><?php echo $usuario['contraseña']; ?></td>
-			<td><?php echo $usuario['nombre']; ?></td>
-			<td><?php echo $usuario['apellido']; ?></td>
-			<td><?php echo $usuario['correo']; ?></td>
-			<td><?php echo $usuario['primer_login']; ?></td>
-			<td><?php echo $usuario['created']; ?></td>
-			<td><?php echo $usuario['modified']; ?></td>
+		foreach ($cliente['Equipo'] as $equipo):
+			$class = null;
+			if ($i++ % 2 == 0) {
+				$class = ' class="altrow"';
+			}
+		?>
+		<tr<?php echo $class;?>>
+			<td><?php echo $equipo['id'];?></td>
+			<td><?php echo $equipo['cliente_id'];?></td>
+			<td><?php echo $equipo['referencia'];?></td>
+			<td><?php echo $equipo['nombre'];?></td>
+			<td><?php echo $equipo['descripcion'];?></td>
+			<td><?php echo $equipo['ficha_tecnica'];?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'usuarios', 'action' => 'view', $usuario['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'usuarios', 'action' => 'edit', $usuario['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'usuarios', 'action' => 'delete', $usuario['id']), null, __('Are you sure you want to delete # %s?', $usuario['id'])); ?>
+				<?php echo $this->Html->link(__('View', true), array('controller' => 'equipos', 'action' => 'view', $equipo['id'])); ?>
+				<?php echo $this->Html->link(__('Edit', true), array('controller' => 'equipos', 'action' => 'edit', $equipo['id'])); ?>
+				<?php echo $this->Html->link(__('Delete', true), array('controller' => 'equipos', 'action' => 'delete', $equipo['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $equipo['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -121,42 +86,7 @@
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		</ul>
-	</div>
-</div>
-<div class="related">
-	<h3><?php echo __('Related Servicios'); ?></h3>
-	<?php if (!empty($empresa['Servicio'])): ?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Nombre'); ?></th>
-		<th><?php echo __('Created'); ?></th>
-		<th><?php echo __('Modified'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($empresa['Servicio'] as $servicio): ?>
-		<tr>
-			<td><?php echo $servicio['id']; ?></td>
-			<td><?php echo $servicio['nombre']; ?></td>
-			<td><?php echo $servicio['created']; ?></td>
-			<td><?php echo $servicio['modified']; ?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'servicios', 'action' => 'view', $servicio['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'servicios', 'action' => 'edit', $servicio['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'servicios', 'action' => 'delete', $servicio['id']), null, __('Are you sure you want to delete # %s?', $servicio['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Servicio'), array('controller' => 'servicios', 'action' => 'add')); ?> </li>
+			<li><?php echo $this->Html->link(sprintf(__('New %s', true), __('Equipo', true)), array('controller' => 'equipos', 'action' => 'add'));?> </li>
 		</ul>
 	</div>
 </div>

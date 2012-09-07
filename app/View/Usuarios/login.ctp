@@ -10,7 +10,7 @@
 		echo $this -> Session -> flash('auth');
 		echo $this -> Form -> create('Usuario', array('action' => 'login'));
 		echo $this -> Form -> input('nombre_de_usuario', array('required' => 'required'));
-		echo $this -> Form -> input('contraseña', array('required' => 'required'));
+		echo $this -> Form -> input('contraseña', array('type' => 'password', 'required' => 'required'));
 		echo $this -> Form -> end('Acceder');
 		?>
 	</div>

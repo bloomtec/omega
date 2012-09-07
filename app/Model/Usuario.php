@@ -216,5 +216,39 @@ class Usuario extends AppModel {
 			'insertQuery' => ''
 		)
 	);
+	
+	/**
+	 * hasAndBelongsToMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array(
+		'Observacione' => array(
+			'className' => 'Observacione',
+			'foreignKey' => 'llave_foranea',
+			'dependent' => false,
+			'conditions' => array('Observacione.modelo' => 'Usuario'),
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'RevisionContratosEquipo' => array(
+			'className' => 'RevisionContratosEquipo',
+			'foreignKey' => 'usuario_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 
 }

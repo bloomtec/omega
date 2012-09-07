@@ -106,7 +106,7 @@ li{
 	
 }
 #header .wrap{
-	width:1000px;
+	width:1280px;
 	margin:0 auto;
 }
 #header .llave{
@@ -131,14 +131,14 @@ li{
 	color: #333;
 	padding: 10px 20px 40px 20px;
 	overflow: auto;
-	width:1024px;
+	width:1280px;
 	margin:0 auto;
 }
 #footer {
 	clear: both;
 	padding: 6px 10px;
 	text-align: right;
-	width:1000px;
+	width:1280px;
 	margin:0 auto;
 }
 

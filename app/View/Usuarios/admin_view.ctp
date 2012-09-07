@@ -11,7 +11,7 @@
 			<?php echo $usuario['Usuario']['apellido']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php echo __('Nombre De Usuario'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php echo __('Usuario'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
 			<?php echo $usuario['Usuario']['nombre_de_usuario']; ?>
 			&nbsp;

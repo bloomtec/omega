@@ -24,7 +24,7 @@ class Empresa extends AppModel {
 		'nombre' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingresar un nombre',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -34,7 +34,7 @@ class Empresa extends AppModel {
 		'identificacion' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Debe ingrear este dato',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -98,6 +98,45 @@ class Empresa extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Solicitud' => array(
+			'className' => 'Solicitud',
+			'foreignKey' => 'empresa_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Proyecto' => array(
+			'className' => 'Proyecto',
+			'foreignKey' => 'empresa_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => array('Proyecto.alerta_para_omega' => 'DESC', 'Proyecto.alerta_para_empresa' => 'DESC'),
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Contrato' => array(
+			'className' => 'Contrato',
+			'foreignKey' => 'empresa_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => array('Contrato.tiene_alerta' => 'DESC'),
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',

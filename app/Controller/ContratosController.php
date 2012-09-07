@@ -1,0 +1,538 @@
+<?php
+App::uses('AppController', 'Controller');
+/**
+ * Contratos Controller
+ *
+ * @property Contrato $Contrato
+ */
+class ContratosController extends AppController {
+
+	public function index() {
+		$this -> layout = "empresa";
+		$this -> Contrato -> recursive = 0;
+		$this -> set('contratos', $this -> paginate());
+	}
+
+	public function view($id = null) {
+		$this -> layout = "empresa";
+		if (!$id) {
+			$this -> Session -> setFlash(sprintf(__('Invalid %s', true), 'contrato'));
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> set('contrato', $this -> Contrato -> read(null, $id));
+	}
+
+	public function admin_index() {
+		$this -> Contrato -> recursive = 0;
+		$this -> set('contratos', $this -> paginate());
+	}
+
+	public function tienePublicacionEmpresa($contrato_id) {
+		$contratosEquipos = $this -> Contrato -> ContratosEquipo -> find("all", array("conditions" => array("contrato_id" => $contrato_id)));
+		foreach ($contratosEquipos as $contratosEquipo) {
+			if ($contratosEquipo["ContratosEquipo"]["tiene_publicacion_empresa"])
+				return true;
+		}
+		return false;
+	}
+
+	public function tieneAlarmaEmpresa($contrato_id) {
+		$alarmas = $this -> Contrato -> Alarma -> find("count", array("conditions" => array("llave_foranea" => $contrato_id, "para_empresa" => false)));
+		if ($alarmas)
+			return true;
+
+		return false;
+	}
+
+	public function admin_view($id = null) {
+		if (!$id) {
+			$this -> Session -> setFlash(__('Contrato no válido'));
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Contrato -> bindModel(array("hasAndBelongsToMany" => array('Equipo' => array('className' => 'Equipo', 'joinTable' => 'contratos_equipos', 'foreignKey' => 'contrato_id', 'associationForeignKey' => 'equipo_id', 'unique' => true, 'conditions' => "", 'fields' => '', 'order' => array("ContratosEquipo.tiene_publicacion_empresa" => "desc"), 'limit' => '', 'offset' => '', 'finderQuery' => '', 'deleteQuery' => '', 'insertQuery' => ''))));
+		$this -> set('contrato', $this -> Contrato -> read(null, $id));
+	}
+
+	public public function admin_add($id = null) {
+		$empresaId = $id;
+		if ($this -> request -> is('post')) {
+			$this -> Contrato -> create();
+			if ($this -> Contrato -> save($this -> request -> data)) {
+				$this -> Session -> setFlash(__('El contrato ha sido guardado'), 'crud/success');
+				$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Contrato"]["empresa_id"], "mantenimientos"));
+			} else {
+				$empresaId = $this -> request -> data["Contrato"]["empresa_id"];
+				$this -> Session -> setFlash(__('No se pudo guardar el Contrato. Porfavor, intente de nuevo.'));
+			}
+		}
+		$empresasAll = $this -> Contrato -> Empresa -> find('all');
+		$tipos = $this -> Contrato -> Tipo -> find('list');
+		$estados = $this -> Contrato -> Estado -> find('list');
+		$empresas = $this -> Contrato -> Empresa -> find('list');
+		$equipos = $this -> Contrato -> Equipo -> find('list');
+		$this -> set(compact('tipos', 'estados', 'equipos', 'empresas', 'empresasAll', 'empresaId'));
+	}
+
+	public function admin_delete($id = null) {
+		if (!$id) {
+			$this -> Session -> setFlash(__('Contrato no válido'));
+			$this -> redirect(array('action' => 'index'));
+		}
+		$contrato = $this -> Contrato -> read(null, $id);
+		$contratosEquipo = $this -> Contrato -> ContratosEquipo -> find("all", array("Conditions" => array("ContratosEquipo.contrato_id" => $id)));
+		foreach ($contratosEquipo as $contratoEquipo) {
+			$this -> Contrato -> ContratosEquipo -> ObservacionPublica -> deleteAll(array("ObservacionPublica.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+			$this -> Contrato -> ContratosEquipo -> ObservacionPrivada -> deleteAll(array("ObservacionPrivada.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+			$this -> Contrato -> ContratosEquipo -> Evento -> deleteAll(array("Evento.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+			$this -> Contrato -> ContratosEquipo -> RevisionContratosEquipo -> deleteAll(array("RevisionContratosEquipo.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+		}
+		$this -> Contrato -> ContratosEquipo -> deleteAll(array("ContratosEquipo.contrato_id" => $contrato["Contrato"]["id"]));
+		$this -> Contrato -> Alarma -> deleteAll(array("Alarma.contrato_id" => $contrato["Contrato"]["id"]));
+
+		if ($this -> Contrato -> delete($id)) {
+			$this -> Session -> setFlash(sprintf(__('%s borrado', true), 'Contrato'));
+			$this -> redirect(array('action' => 'view', "controller" => "empresas", $contrato["Contrato"]["empresa_id"], "mantenimientos"));
+		}
+		$this -> Session -> setFlash(sprintf(__('%s no fue borrado', true), 'Contrato'));
+		//$this->redirect(array("controller"=>"empresas",'action' => 'view',$contrato["Contrato"]["empresa_id"],"mantenimientos"));
+	}
+
+	public function admin_finalizar($id = null) {
+		if (!$id) {
+			$this -> Session -> setFlash(sprintf(__('Invalid id for %s', true), 'contrato'));
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $id);
+		$this -> Contrato -> set("estado_id", 5);
+
+		if ($this -> Contrato -> save()) {
+			$this -> Contrato -> ContratosEquipo -> recursive = -1;
+			$contratosEquipos = $this -> Contrato -> ContratosEquipo -> find("all", array("conditions" => array("ContratosEquipo.contrato_id" => $id)));
+			foreach ($contratosEquipos as $contratoEquipo) {
+				$this -> Contrato -> ContratosEquipo -> read(null, $contratoEquipo["ContratosEquipo"]["id"]);
+				$this -> Contrato -> ContratosEquipo -> set("fase_id", 3);
+				$this -> Contrato -> ContratosEquipo -> save();
+				$this -> Contrato -> ContratosEquipo -> id = 0;
+				$this -> enviarCorreo($contratoEquipo["ContratosEquipo"]["contrato_id"], $mail_body);
+
+				$this -> Contrato -> crearAlarma($contratoEquipo["ContratosEquipo"]["contrato_id"], "contrato finalizado", true);
+				$this -> Contrato -> eliminarAlarma($contratoEquipo["ContratosEquipo"]["contrato_id"], "contrato en desarrollo");
+
+			}
+			$this -> Session -> setFlash(sprintf(__("Se ha actualizado el estado del contrato", true), 'Contrato'));
+			$this -> redirect(array("controller" => "empresas", 'action' => 'view', $contrato["Contrato"]["empresa_id"], "mantenimientos"));
+
+		} else {
+			$this -> Session -> setFlash(sprintf(__('No se pudo cambiar de esto del contrato. Por favor, intente de nuevo', true), 'Contrato'));
+			$this -> redirect(array("controller" => "empresas", 'action' => 'view', $contrato["Contrato"]["empresa_id"], "mantenimientos"));
+		}
+
+	}
+
+	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
+		$this -> Email -> smtpOptions = array('port' => '465', 'timeout' => '30', 'auth' => true, 'host' => 'ssl://smtp.gmail.com', 'username' => 'omegaingsoporte@gmail.com', 'password' => 'omega123', );
+		$this -> Email -> delivery = 'smtp';
+		$this -> Email -> from = 'Aplicación Web Omega Ingenieros <no-responder@omegaingenieros.com>';
+		$this -> Email -> to = $nombrePara . '<' . $correoPara . '>';
+		$this -> Email -> subject = $subject;
+		$this -> Email -> send($body);
+		$this -> Email -> reset();
+	}
+
+	public function AJAX_eliminarAlarma() {
+		$alarmaId = $this -> params["form"]["alarmaId"];
+		if ($alarmaId) {
+			if ($this -> Contrato -> eliminarAlarmaSola($alarmaId)) {
+				echo "SI";
+			} else {
+				echo "NO";
+			}
+		} else {
+			echo "noparams";
+		}
+		Configure::Write("debug", 0);
+		$this -> Autorender = false;
+		exit(0);
+	}
+
+	public function aprobarCotizacion($id) {
+		$this -> layout = "ajax";
+		$uno = rand(0, 9);
+		$dos = rand(0, 9);
+		$tres = rand(0, 9);
+		$cuatro = rand(0, 9);
+		$verificacion = $uno . $dos . $tres . $cuatro;
+		$this -> set("contratoId", $id);
+		$this -> set("verificacion", $verificacion);
+	}
+
+	public function confirmarAprobacion() {
+		$this -> layout = "ajax";
+		$id = $this -> data["Contrato"]["id"];
+		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> set("estado_id", 3);
+		$this -> Contrato -> save();
+
+		$this -> Contrato -> eliminarAlarma($id, "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($id, "contrato nuevo");
+		$this -> Contrato -> crearAlarma($id, "contrato en perfeccionamiento", false);
+		$this -> Contrato -> crearAlarma($id, "debe ingresar el centro de costo", false);
+		$mail_body = "Se ha apropado la cotización del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		$this -> Session -> setFlash(sprintf(__('Gracias por permitirnos hacer parte de su equipo de trabajo.', true), 'Contrato'));
+
+	}
+
+	//*********ANULAR
+	public function admin_anularCotizacion($id) {
+		$this -> layout = "ajax";
+		$uno = rand(0, 9);
+		$dos = rand(0, 9);
+		$tres = rand(0, 9);
+		$cuatro = rand(0, 9);
+		$verificacion = $uno . $dos . $tres . $cuatro;
+		$this -> set("contratoId", $id);
+		$this -> set("verificacion", $verificacion);
+	}
+
+	public function admin_confirmarAnulacion() {
+		$this -> layout = "ajax";
+		$id = $this -> data["Contrato"]["id"];
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> set("estado_id", 7);
+		$this -> Contrato -> save();
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato nuevo");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
+		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
+		$mail_body = "Se ha anulado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		$this -> Session -> setFlash(sprintf(__('Se ha anulado la cotizazción', true), 'Contrato'));
+
+	}
+
+	//***********
+
+	//*********Reactivar
+	public function admin_reactivarContrato($id) {
+		$this -> layout = "ajax";
+		$uno = rand(0, 9);
+		$dos = rand(0, 9);
+		$tres = rand(0, 9);
+		$cuatro = rand(0, 9);
+		$verificacion = $uno . $dos . $tres . $cuatro;
+		$this -> set("contratoId", $id);
+		$this -> set("verificacion", $verificacion);
+	}
+
+	public function admin_confirmarReactivacion() {
+		$this -> layout = "ajax";
+		$id = $this -> data["Contrato"]["id"];
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> set("estado_id", 3);
+		$this -> Contrato -> save();
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato nuevo");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
+		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
+		$mail_body = "Se ha reactivado el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		$this -> Session -> setFlash(sprintf(__('Se ha reactivado el contrato', true), 'Contrato'));
+
+	}
+
+	//***********
+
+	//*********Suspender
+	public function admin_suspenderContrato($id) {
+		$this -> layout = "ajax";
+		$uno = rand(0, 9);
+		$dos = rand(0, 9);
+		$tres = rand(0, 9);
+		$cuatro = rand(0, 9);
+		$verificacion = $uno . $dos . $tres . $cuatro;
+		$this -> set("contratoId", $id);
+		$this -> set("verificacion", $verificacion);
+	}
+
+	public function admin_confirmarSuspencion() {
+		$this -> layout = "ajax";
+		$id = $this -> data["Contrato"]["id"];
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> set("estado_id", 8);
+		$this -> Contrato -> save();
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato nuevo");
+		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
+		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
+		$mail_body = "Se ha suspendido el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		$this -> Session -> setFlash(sprintf(__('Se ha suspendido la cotización', true), 'Contrato'));
+
+	}
+
+	//***********
+	//*---------------
+
+	public function rechazarCotizacion($id) {
+		$this -> layout = "ajax";
+		$uno = rand(0, 9);
+		$dos = rand(0, 9);
+		$tres = rand(0, 9);
+		$cuatro = rand(0, 9);
+		$verificacion = $uno . $dos . $tres . $cuatro;
+		$this -> set("contratoId", $id);
+		$this -> set("verificacion", $verificacion);
+	}
+
+	public function admin_comentarios($contratoId) {
+		$this -> layout = "ajax";
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $contratoId);
+		$this -> set(compact("contrato"));
+	}
+
+	public function comentarios($contratoId) {
+		$this -> layout = "ajax";
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $contratoId);
+		$this -> set(compact("contrato"));
+	}
+
+	public function confirmarRechazo() {
+		$this -> layout = "ajax";
+		$id = $this -> data["Contrato"]["id"];
+		$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> set("estado_id", 6);
+		$this -> Contrato -> save();
+		$this -> Contrato -> crearAlarma($id, "Se ha rechazado la cotización", false);
+		$this -> Contrato -> eliminarAlarma($id, "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($id, "contrato nuevo");
+
+		$mail_body = "Se ha rechazado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		$this -> Session -> setFlash(sprintf(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos.', true), 'Contrato'));
+
+	}
+
+	//*------------
+
+	public function admin_iniciarDesarrollo($id = null) {
+		$this -> layout = "ajax";
+		if (!empty($this -> data)) {
+			$contratoId = $this -> data["Contrato"]["id"];
+			$this -> Contrato -> recursive = -1;
+			$contrato = $this -> Contrato -> read(null, $contratoId);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+			$this -> Contrato -> set("estado_id", 4);
+			$this -> Contrato -> save();
+			$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
+			$this -> enviarCorreo($contratoId, $mail_body);
+
+			$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
+			$this -> Contrato -> eliminarAlarma($contratoId, "puede iniciar el desarrollo del contrato");
+			$this -> Contrato -> eliminarAlarma($contratoId, "contrato en perfeccionamiento");
+			$this -> set("flash", true);
+		}
+		$this -> set("contrato", $id);
+	}
+
+	public function admin_ingresarCc($id = null) {
+		$this -> layout = "ajax";
+		if (!empty($this -> data)) {
+			$contratoId = $this -> data["Contrato"]["id"];
+			$this -> Contrato -> recursive = -1;
+			$contrato = $this -> Contrato -> read(null, $contratoId);
+			$this -> Contrato -> set("centro_de_costo", $this -> data["Contrato"]["centro_de_costo"]);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+			$this -> Contrato -> set("estado_id", 4);
+
+			if ($this -> Contrato -> save()) {
+				$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
+				$this -> enviarCorreo($contratoId, $mail_body);
+				$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
+				$this -> Contrato -> eliminarAlarma($contratoId, "contrato en perfeccionamiento");
+				$this -> Contrato -> eliminarAlarma($contratoId, "debe ingresar el centro de costo");
+
+				$this -> set("flash", true);
+			} else {
+
+			}
+		}
+		if (empty($this -> data)) {
+			$this -> data = $this -> Contrato -> read(null, $id);
+		}
+		$this -> set("contrato", $id);
+	}
+
+	public function admin_edit($id = null) {
+		$this -> layout = "ajax";
+		if (!empty($this -> data)) {
+			$contratoId = $this -> data["Contrato"]["id"];
+			$contrato = $this -> Contrato -> read(null, $contratoId);
+			$this -> Contrato -> set("centro_de_costo", $this -> data["Contrato"]["centro_de_costo"]);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+
+			if ($this -> Contrato -> save()) {
+				$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
+				$this -> enviarCorreo($contratoId, $mail_body);
+				$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
+				$this -> Contrato -> eliminarAlarma($contratoId, "contrato en perfeccionamiento");
+				$this -> Contrato -> eliminarAlarma($contratoId, "debe ingresar el centro de costo");
+
+				$this -> set("flash", true);
+			} else {
+
+			}
+		}
+		if (empty($this -> data)) {
+			$this -> data = $this -> Contrato -> read(null, $id);
+		}
+		$this -> set("contrato", $id);
+	}
+
+	public function admin_subirCotizacion() {
+		$this -> layout = "ajax";
+	}
+
+	public function admin_listaCorreo($id) {
+		$this -> layout = "ajax";
+		$contrato = $this -> Contrato -> read(null, $id);
+		$this -> set("correos", $contrato["Correo"]);
+		$this -> set("contratoId", $id);
+	}
+
+	public function admin_crearCorreo() {
+		$correo["Correo"]["contrato_id"] = $this -> data["Contrato"]["contrato_id"];
+		$correo["Correo"]["email"] = $this -> data["Contrato"]["email"];
+		$correo["Correo"]["nombre"] = $this -> data["Contrato"]["nombre"];
+		$this -> Contrato -> Correo -> create();
+		if ($this -> Contrato -> Correo -> save($correo)) {
+			$this -> Session -> setFlash("Correo Guardado");
+			$this -> redirect(array('action' => 'listaCorreo', $this -> data["Contrato"]["contrato_id"]));
+		} else {
+			$this -> Session -> setFlash("No se pudo guardar el correo");
+			$this -> redirect(array('action' => 'listaCorreo', $this -> data["Contrato"]["contrato_id"]));
+		}
+
+	}
+
+	public function admin_borrarCorreo($correoId, $contratoId) {
+		if ($this -> Contrato -> Correo -> delete($correoId)) {
+			$this -> Session -> setFlash("Se ha borrado el correo");
+			$this -> redirect(array('action' => 'listaCorreo', $contratoId));
+		} else {
+			$this -> Session -> setFlash("No se pudo borrar el correo");
+			$this -> redirect(array('action' => 'listaCorreo', $contratoId));
+		}
+
+	}
+
+	public function admin_verCotizacion($id) {
+		$contrato = $this -> Contrato -> read("cotizacion", $id);
+		$partes = explode("/", $contrato["Contrato"]["cotizacion"]);
+		$nombrePartido = explode(".", $partes[2]);
+		$this -> view = 'Media';
+		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
+
+		$this -> set($params);
+
+	}
+
+	public function verCotizacion($id) {
+		$contrato = $this -> Contrato -> read("cotizacion", $id);
+		$partes = explode("/", $contrato["Contrato"]["cotizacion"]);
+		$nombrePartido = explode(".", $partes[2]);
+		$this -> view = 'Media';
+		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
+
+		$this -> set($params);
+
+	}
+
+	public function AJAX_subirCotizacion() {
+
+		$contratoId = $this -> params["form"]["id"];
+		$cotizacionPath = $this -> params["form"]["path"];
+		$contrato = $this -> Contrato -> read(null, $contratoId);
+		if ($contrato["Contrato"]["cotizacion"]) {
+			$archivo = substr($contrato["Contrato"]["cotizacion"], 1);
+			$archivo = str_replace("/", DS, $archivo);
+			unlink(WWW_ROOT . $archivo);
+
+		}
+		$contrato["Contrato"]["cotizacion"] = $cotizacionPath;
+		$contrato["Contrato"]["estado_id"] = 2;
+		//CAmbia estado a en espera de aprobación
+		if ($this -> Contrato -> save($contrato)) {
+			$this -> Contrato -> eliminarAlarma($contratoId, "debe subir la cotización");
+			$this -> Contrato -> crearAlarma($contratoId, "contrato en espera de aprobación", true);
+			$this -> enviarCorreo($contrato["Contrato"]["id"], "Se ha subido la cotización del contrato: " . $contrato["Contrato"]["nombre"]);
+			echo "La cotización ha sido subida con exito";
+		} else {
+			echo "NO";
+		}
+		Configure::Write("debug", 0);
+		$this -> Autorender = false;
+		exit(0);
+	}
+
+	public function prueba() {
+		$Name = "OMEGA INGENIEROS";
+		//senders name
+		$email = "no-responder@omegaingenieros.com";
+		//senders e-mail adress
+		$subject = "Nueva actividad en el contrato: ";
+		//subject
+		$header = "From: " . $Name . " <ricardo_andres_1@hotmail.com>\r\nPort:587\r\n";
+		//optional headerfields
+		//mail("ricardopandales@gmail.com", $subject, "prueba", $header);
+		//	mail($emailUsuario, $subject, $mail_body, $header);
+	}
+
+	public function enviarCorreo($contratoId, $mail_body) {
+		$this -> Contrato -> recursive = 1;
+		$contrato = $this -> Contrato -> read(null, $contratoId);
+		$this -> Contrato -> Empresa -> EmpresasUsuario -> bindModel(array("belongsTo" => array("Usuario")));
+		$usuarios = $this -> Contrato -> Empresa -> EmpresasUsuario -> find("all", array("conditions" => array("empresa_id" => $contrato["Empresa"]["id"])));
+		$emailUsuario = "";
+		foreach ($usuarios as $usuario) {
+			if ($usuario["Usuario"]["role"] == "empresaMantenimiento")
+				$emailUsuario = $usuario["Usuario"]["email"];
+		}
+		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.contrato_id" => $contratoId)));
+
+		$Name = "OMEGA INGENIEROS";
+		//senders name
+		$email = "no-responder@omegaingenieros.com";
+		//senders e-mail adress
+		$subject = "Nueva actividad en el contrato: " . $contrato["Contrato"]["nombre"];
+		//subject
+		$header = "From: " . $Name . " <" . $email . ">\r\nPort:587\r\n";
+		//optional headerfields
+		//	mail($contrato["Empresa"]["email"], $subject, $mail_body, $header);
+		//	mail($emailUsuario, $subject, $mail_body, $header);
+		$this -> sendbySMTP("", $emailUsuario, $subject, $mail_body);
+		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["email"], $subject, $mail_body);
+		if (!empty($correos)) {
+			foreach ($correos as $correo) {
+				$recipient = $correo["Correo"]["email"];
+				//recipient
+				//mail($recipient, $subject, $mail_body, $header);
+				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["email"], $subject, $mail_body);
+			}
+		}
+		return true;
+	}
+
+}
