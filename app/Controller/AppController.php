@@ -81,4 +81,19 @@ class AppController extends Controller {
 		}
 	}
 	
+	/**
+	 * sendbySMTP method
+	 * @param $nombrePara
+	 * @param $correoPara
+	 * @param $subject
+	 * @param $body
+	 */
+	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
+		$email = new CakeEmail('smtp');
+		//$email -> to($nombrePara . '<' . $correoPara . '>');
+		$email -> to($correoPara);
+		$email -> subject($subject);
+		$email -> send($body);
+	}
+	
 }

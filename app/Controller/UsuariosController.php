@@ -8,54 +8,44 @@ App::uses('AppController', 'Controller');
 class UsuariosController extends AppController {
 	
 	public function getOmega() {
-		return $this -> Usuario -> find("list", array("conditions" => array("role" => "omega"), "fields" => array("email", "nombre")));
+		return $this -> Usuario -> find("list", array("conditions" => array("role <=" => 2), "fields" => array("correo", "nombre")));
 	}
 
 	public function recordar() {
-		if (!empty($this -> data)) {
-			$usuario = $this -> Usuario -> findByEmail($this -> data["Usuario"]["email"]);
+		if ($this -> request -> is('post')) {
+			$usuario = $this -> Usuario -> findByCorreo($this -> request -> data["Usuario"]["correo"]);
 			if (!$usuario) {
-				$this -> Session -> setFlash(sprintf(__('El email no se encuetra registrado', true), 'Proyecto'));
-
+				$this -> Session -> setFlash(__('El correo electrónico no se encuetra registrado'), 'crud/error');
 			} else {
 				$uno = rand(0, 9);
 				$dos = rand(0, 9);
 				$tres = rand(0, 9);
 				$cuatro = rand(0, 9);
 				$password = $uno . $dos . $tres . $cuatro;
-				$usuario["Usuario"]["password"] = $this -> Auth -> password($password);
-				$usuario["Usuario"]["cambio_password"] = false;
+				$usuario["Usuario"]["contraseña"] = $password;
+				$usuario["Usuario"]["verificar_contraseña"] = $password;
+				$usuario["Usuario"]["primer_login"] = true;
 				if ($this -> Usuario -> save($usuario)) {
-					$this -> Session -> setFlash(sprintf(__('Se ha enviado un nuevo password a su correo eléctronico', true), 'Proyecto'));
+					$this -> Session -> setFlash(__('Se ha enviado una nueva contraseña a su correo electrónico'), 'crud/success');
 					$Name = "OMEGA INGENIEROS";
 					//senders name
 					$email = "info@omegaingenieros.com";
 					//senders e-mail adress
-					$recipient = $usuario["Usuario"]["email"];
+					$recipient = $usuario["Usuario"]["correo"];
 					//recipient
 					$subject = "Reestablecer contraseña";
 					//subject
 					$header = "From: " . $Name . " <" . $email . ">\r\n";
 					//optional headerfields
-					$mail_body = "Gracias por usar nuestra plataforma de Atencion de clientes, sus datos son los siguientes:\n usuario:" . $usuario["Usuario"]["username"] . "\nContraseña:" . $password;
+					$mail_body = "Gracias por usar nuestra plataforma de Atencion de clientes, sus datos son los siguientes:\n usuario:" . $usuario["Usuario"]["nombre_de_usuario"] . "\nContraseña:" . $password;
 					//mail($recipient, $subject, $mail_body, $header);
-					$this -> sendbySMTP("", $usuario["Usuario"]["email"], $subject, $mail_body);
+					$this -> sendbySMTP("", $usuario["Usuario"]["correo"], $subject, $mail_body);
 					$this -> redirect(array('action' => 'login'));
 				} else {
-					$this -> Session -> setFlash(sprintf(__('No se pudo completar su solicitud. Por favor, intente mas tarde', true), 'Proyecto'));
+					$this -> Session -> setFlash(__('No se pudo completar su solicitud. Por favor, intente mas tarde'), 'crud/error');
 				}
 			}
 		}
-	}
-
-	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
-		$this -> Email -> smtpOptions = array('port' => '465', 'timeout' => '30', 'auth' => true, 'host' => 'ssl://smtp.gmail.com', 'username' => 'omegaingsoporte@gmail.com', 'password' => 'omega123', );
-		$this -> Email -> delivery = 'smtp';
-		$this -> Email -> from = 'Aplicación Web Omega Ingenieros <no-responder@omegaingenieros.com>';
-		$this -> Email -> to = $nombrePara . '<' . $correoPara . '>';
-		$this -> Email -> subject = $subject;
-		$this -> Email -> send($body);
-		$this -> Email -> reset();
 	}
 	
 	/**
@@ -88,7 +78,7 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function index() {
-		$this -> Usuario -> recursive = 0;
+		//$this -> Usuario -> recursive = 0;
 		$this -> set('usuarios', $this -> paginate());
 	}
 

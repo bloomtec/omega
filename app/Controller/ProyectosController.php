@@ -224,17 +224,6 @@ class ProyectosController extends AppController {
 		return true;
 	}
 
-	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
-		$this -> Email -> smtpOptions = array('port' => '465', 'timeout' => '30', 'auth' => true, 'host' => 'ssl://smtp.gmail.com', 'username' => 'omegaingsoporte@gmail.com', 'password' => 'omega123', );
-
-		$this -> Email -> delivery = 'smtp';
-		$this -> Email -> from = 'Aplicación Web Omega Ingenieros <no-responder@omegaingenieros.com>';
-		$this -> Email -> to = $nombrePara . '<' . $correoPara . '>';
-		$this -> Email -> subject = $subject;
-		$this -> Email -> send($body);
-		$this -> Email -> reset();
-	}
-
 	public function AJAX_eliminarAlarma() {
 		$alarmaId = $this -> params["form"]["alarmaId"];
 		if ($alarmaId) {

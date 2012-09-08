@@ -102,21 +102,6 @@ class EmpresasController extends AppController {
 		$this -> redirect(array('action' => 'index'));
 	}
 
-	/**
-	 * sendbySMTP method
-	 * @param $nombrePara
-	 * @param $correoPara
-	 * @param $subject
-	 * @param $body
-	 */
-	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
-		$email = new CakeEmail('smtp');
-		//$email -> to($nombrePara . '<' . $correoPara . '>');
-		$email -> to($correoPara);
-		$email -> subject($subject);
-		$email -> send($body);
-	}
-
 	public function cambiarPassword() {
 		$usuario = $this -> Cliente -> Usuario -> read(null, $this -> data["Cliente"]["usuario_id"]);
 		$usuario["Usuario"]["password"] = $this -> Auth -> password($this -> data["Cliente"]["password"]);
