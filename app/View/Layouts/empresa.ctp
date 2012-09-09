@@ -31,7 +31,7 @@
 		echo $this -> Html -> css('cake.generic');
 		echo $this -> Html -> css('thickbox');
 		echo $this -> Html -> css('cake.generic');
-		echo $this -> Html -> script("jquery-1.4.2.min");
+		echo $this -> Html -> script('jquery.min');
 		echo $this -> Html -> script("jquery.tools.min");
 		echo $this -> Html -> script("jquery.uploadify.v2.1.0");
 		echo $this -> Html -> script("swfobject");

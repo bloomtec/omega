@@ -9,21 +9,21 @@ class ContratosController extends AppController {
 
 	public function index() {
 		$this -> layout = "empresa";
-		$this -> Contrato -> recursive = 0;
+		//$this -> Contrato -> recursive = 0;
 		$this -> set('contratos', $this -> paginate());
 	}
 
 	public function view($id = null) {
 		$this -> layout = "empresa";
-		if (!$id) {
-			$this -> Session -> setFlash(sprintf(__('Invalid %s', true), 'contrato'));
-			$this -> redirect(array('action' => 'index'));
+		$this -> Contrato -> id = $id;
+		if (!$this -> Contrato -> exists()) {
+			throw new NotFoundException(__('Contrato no válido'));
 		}
 		$this -> set('contrato', $this -> Contrato -> read(null, $id));
 	}
 
 	public function admin_index() {
-		$this -> Contrato -> recursive = 0;
+		//$this -> Contrato -> recursive = 0;
 		$this -> set('contratos', $this -> paginate());
 	}
 
@@ -37,19 +37,42 @@ class ContratosController extends AppController {
 	}
 
 	public function tieneAlarmaEmpresa($contrato_id) {
-		$alarmas = $this -> Contrato -> Alarma -> find("count", array("conditions" => array("llave_foranea" => $contrato_id, "para_empresa" => false)));
-		if ($alarmas)
+		$alarmas = $this -> Contrato -> Alarma -> find("count", array("conditions" => array("Alarma.modelo" => "Contrato", "Alarma.llave_foranea" => $contrato_id, "para_empresa" => false)));
+		if ($alarmas) {
 			return true;
-
-		return false;
+		} else {
+			return false;
+		}
 	}
 
 	public function admin_view($id = null) {
-		if (!$id) {
-			$this -> Session -> setFlash(__('Contrato no válido'));
-			$this -> redirect(array('action' => 'index'));
+		$this -> Contrato -> id = $id;
+		if (!$this -> Contrato -> exists()) {
+			throw new NotFoundException(__('Contrato no válido'));
 		}
-		$this -> Contrato -> bindModel(array("hasAndBelongsToMany" => array('Equipo' => array('className' => 'Equipo', 'joinTable' => 'contratos_equipos', 'foreignKey' => 'contrato_id', 'associationForeignKey' => 'equipo_id', 'unique' => true, 'conditions' => "", 'fields' => '', 'order' => array("ContratosEquipo.tiene_publicacion_empresa" => "desc"), 'limit' => '', 'offset' => '', 'finderQuery' => '', 'deleteQuery' => '', 'insertQuery' => ''))));
+		$this -> Contrato -> bindModel(
+			array(
+				"hasAndBelongsToMany" => array(
+					'Equipo' => array(
+						'className' => 'Equipo',
+						'joinTable' => 'contratos_equipos',
+						'foreignKey' => 'contrato_id',
+						'associationForeignKey' => 'equipo_id',
+						'unique' => true,
+						'conditions' => "",
+						'fields' => '',
+						'order' => array(
+							"ContratosEquipo.tiene_publicacion_empresa" => "desc"
+						),
+						'limit' => '',
+						'offset' => '',
+						'finderQuery' => '',
+						'deleteQuery' => '',
+						'insertQuery' => ''
+					)
+				)
+			)
+		);
 		$this -> set('contrato', $this -> Contrato -> read(null, $id));
 	}
 
@@ -74,40 +97,50 @@ class ContratosController extends AppController {
 	}
 
 	public function admin_delete($id = null) {
-		if (!$id) {
-			$this -> Session -> setFlash(__('Contrato no válido'));
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Contrato -> id = $id;
+		if (!$this -> Contrato -> exists()) {
+			throw new NotFoundException(__('Contrato no válido'));
 			$this -> redirect(array('action' => 'index'));
 		}
 		$contrato = $this -> Contrato -> read(null, $id);
 		$contratosEquipo = $this -> Contrato -> ContratosEquipo -> find("all", array("Conditions" => array("ContratosEquipo.contrato_id" => $id)));
 		foreach ($contratosEquipo as $contratoEquipo) {
+			$this -> Contrato -> ContratosEquipo -> delete($contratoEquipo['ContratosEquipo']['id']);
+			/* Manejar con el dependant en true
 			$this -> Contrato -> ContratosEquipo -> ObservacionPublica -> deleteAll(array("ObservacionPublica.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
 			$this -> Contrato -> ContratosEquipo -> ObservacionPrivada -> deleteAll(array("ObservacionPrivada.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
 			$this -> Contrato -> ContratosEquipo -> Evento -> deleteAll(array("Evento.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
 			$this -> Contrato -> ContratosEquipo -> RevisionContratosEquipo -> deleteAll(array("RevisionContratosEquipo.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+			 * 
+			 */
 		}
+		/* Manejar con dependant en true
 		$this -> Contrato -> ContratosEquipo -> deleteAll(array("ContratosEquipo.contrato_id" => $contrato["Contrato"]["id"]));
 		$this -> Contrato -> Alarma -> deleteAll(array("Alarma.contrato_id" => $contrato["Contrato"]["id"]));
-
+		 * 
+		 */
 		if ($this -> Contrato -> delete($id)) {
-			$this -> Session -> setFlash(sprintf(__('%s borrado', true), 'Contrato'));
+			$this -> Session -> setFlash(__('Contrato borrado'), 'crud/success');
 			$this -> redirect(array('action' => 'view', "controller" => "empresas", $contrato["Contrato"]["empresa_id"], "mantenimientos"));
 		}
-		$this -> Session -> setFlash(sprintf(__('%s no fue borrado', true), 'Contrato'));
+		$this -> Session -> setFlash(__('Contrato no fue borrado'), 'crud/error');
 		//$this->redirect(array("controller"=>"empresas",'action' => 'view',$contrato["Contrato"]["empresa_id"],"mantenimientos"));
 	}
 
 	public function admin_finalizar($id = null) {
-		if (!$id) {
-			$this -> Session -> setFlash(sprintf(__('Invalid id for %s', true), 'contrato'));
+		$this -> Contrato -> id = $id;
+		if (!$this -> Contrato -> exists()) {
+			throw new NotFoundException(__('Contrato no válido'));
 			$this -> redirect(array('action' => 'index'));
 		}
-		$this -> Contrato -> recursive = -1;
 		$contrato = $this -> Contrato -> read(null, $id);
 		$this -> Contrato -> set("estado_id", 5);
 
 		if ($this -> Contrato -> save()) {
-			$this -> Contrato -> ContratosEquipo -> recursive = -1;
+			$this -> Contrato -> ContratosEquipo -> contain();
 			$contratosEquipos = $this -> Contrato -> ContratosEquipo -> find("all", array("conditions" => array("ContratosEquipo.contrato_id" => $id)));
 			foreach ($contratosEquipos as $contratoEquipo) {
 				$this -> Contrato -> ContratosEquipo -> read(null, $contratoEquipo["ContratosEquipo"]["id"]);
@@ -120,24 +153,13 @@ class ContratosController extends AppController {
 				$this -> Contrato -> eliminarAlarma($contratoEquipo["ContratosEquipo"]["contrato_id"], "contrato en desarrollo");
 
 			}
-			$this -> Session -> setFlash(sprintf(__("Se ha actualizado el estado del contrato", true), 'Contrato'));
+			$this -> Session -> setFlash(__("Se ha actualizado el estado del contrato"), 'crud/success');
 			$this -> redirect(array("controller" => "empresas", 'action' => 'view', $contrato["Contrato"]["empresa_id"], "mantenimientos"));
-
 		} else {
-			$this -> Session -> setFlash(sprintf(__('No se pudo cambiar de esto del contrato. Por favor, intente de nuevo', true), 'Contrato'));
+			$this -> Session -> setFlash(__('No se pudo cambiar de esto del contrato. Por favor, intente de nuevo'), 'crud/error');
 			$this -> redirect(array("controller" => "empresas", 'action' => 'view', $contrato["Contrato"]["empresa_id"], "mantenimientos"));
 		}
 
-	}
-
-	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
-		$this -> Email -> smtpOptions = array('port' => '465', 'timeout' => '30', 'auth' => true, 'host' => 'ssl://smtp.gmail.com', 'username' => 'omegaingsoporte@gmail.com', 'password' => 'omega123', );
-		$this -> Email -> delivery = 'smtp';
-		$this -> Email -> from = 'Aplicación Web Omega Ingenieros <no-responder@omegaingenieros.com>';
-		$this -> Email -> to = $nombrePara . '<' . $correoPara . '>';
-		$this -> Email -> subject = $subject;
-		$this -> Email -> send($body);
-		$this -> Email -> reset();
 	}
 
 	public function AJAX_eliminarAlarma() {
@@ -169,9 +191,9 @@ class ContratosController extends AppController {
 
 	public function confirmarAprobacion() {
 		$this -> layout = "ajax";
-		$id = $this -> data["Contrato"]["id"];
-		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$id = $this -> request -> data["Contrato"]["id"];
+		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
 		$this -> Contrato -> set("estado_id", 3);
 		$this -> Contrato -> save();
 
@@ -181,8 +203,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> crearAlarma($id, "debe ingresar el centro de costo", false);
 		$mail_body = "Se ha apropado la cotización del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
-		$this -> Session -> setFlash(sprintf(__('Gracias por permitirnos hacer parte de su equipo de trabajo.', true), 'Contrato'));
-
+		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
 
 	//*********ANULAR
@@ -199,10 +220,10 @@ class ContratosController extends AppController {
 
 	public function admin_confirmarAnulacion() {
 		$this -> layout = "ajax";
-		$id = $this -> data["Contrato"]["id"];
-		$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$id = $this -> request -> data["Contrato"]["id"];
+		//$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
 		$this -> Contrato -> set("estado_id", 7);
 		$this -> Contrato -> save();
 		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
@@ -211,8 +232,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$mail_body = "Se ha anulado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
-		$this -> Session -> setFlash(sprintf(__('Se ha anulado la cotizazción', true), 'Contrato'));
-
+		$this -> Session -> setFlash(__('Se ha anulado la cotizazción'), 'crud/success');
 	}
 
 	//***********
@@ -231,10 +251,10 @@ class ContratosController extends AppController {
 
 	public function admin_confirmarReactivacion() {
 		$this -> layout = "ajax";
-		$id = $this -> data["Contrato"]["id"];
-		$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$id = $this -> request -> data["Contrato"]["id"];
+		//$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
 		$this -> Contrato -> set("estado_id", 3);
 		$this -> Contrato -> save();
 		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
@@ -243,8 +263,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$mail_body = "Se ha reactivado el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
-		$this -> Session -> setFlash(sprintf(__('Se ha reactivado el contrato', true), 'Contrato'));
-
+		$this -> Session -> setFlash(__('Se ha reactivado el contrato'), 'crud/success');
 	}
 
 	//***********
@@ -263,10 +282,10 @@ class ContratosController extends AppController {
 
 	public function admin_confirmarSuspencion() {
 		$this -> layout = "ajax";
-		$id = $this -> data["Contrato"]["id"];
-		$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$id = $this -> request -> data["Contrato"]["id"];
+		//$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
 		$this -> Contrato -> set("estado_id", 8);
 		$this -> Contrato -> save();
 		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
@@ -275,8 +294,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$mail_body = "Se ha suspendido el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
-		$this -> Session -> setFlash(sprintf(__('Se ha suspendido la cotización', true), 'Contrato'));
-
+		$this -> Session -> setFlash(__('Se ha suspendido la cotización'), 'crud/success');
 	}
 
 	//***********
@@ -295,24 +313,24 @@ class ContratosController extends AppController {
 
 	public function admin_comentarios($contratoId) {
 		$this -> layout = "ajax";
-		$this -> Contrato -> recursive = -1;
+		//$this -> Contrato -> recursive = -1;
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		$this -> set(compact("contrato"));
 	}
 
 	public function comentarios($contratoId) {
 		$this -> layout = "ajax";
-		$this -> Contrato -> recursive = -1;
+		//$this -> Contrato -> recursive = -1;
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		$this -> set(compact("contrato"));
 	}
 
 	public function confirmarRechazo() {
 		$this -> layout = "ajax";
-		$id = $this -> data["Contrato"]["id"];
-		$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> data["Contrato"]["comentarios"]);
+		$id = $this -> request -> data["Contrato"]["id"];
+		//$this -> Contrato -> recursive = -1;
+		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
+		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
 		$this -> Contrato -> set("estado_id", 6);
 		$this -> Contrato -> save();
 		$this -> Contrato -> crearAlarma($id, "Se ha rechazado la cotización", false);
@@ -321,7 +339,7 @@ class ContratosController extends AppController {
 
 		$mail_body = "Se ha rechazado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
-		$this -> Session -> setFlash(sprintf(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos.', true), 'Contrato'));
+		$this -> Session -> setFlash(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos.'), 'crud/success');
 
 	}
 
@@ -329,11 +347,11 @@ class ContratosController extends AppController {
 
 	public function admin_iniciarDesarrollo($id = null) {
 		$this -> layout = "ajax";
-		if (!empty($this -> data)) {
-			$contratoId = $this -> data["Contrato"]["id"];
-			$this -> Contrato -> recursive = -1;
+		if (!empty($this -> request -> data)) {
+			$contratoId = $this -> request -> data["Contrato"]["id"];
+			//$this -> Contrato -> recursive = -1;
 			$contrato = $this -> Contrato -> read(null, $contratoId);
-			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> request -> data["Contrato"]["fecha_inicio_desarrollo"]);
 			$this -> Contrato -> set("estado_id", 4);
 			$this -> Contrato -> save();
 			$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
@@ -349,12 +367,12 @@ class ContratosController extends AppController {
 
 	public function admin_ingresarCc($id = null) {
 		$this -> layout = "ajax";
-		if (!empty($this -> data)) {
-			$contratoId = $this -> data["Contrato"]["id"];
-			$this -> Contrato -> recursive = -1;
+		if (!empty($this -> request -> data)) {
+			$contratoId = $this -> request -> data["Contrato"]["id"];
+			//$this -> Contrato -> recursive = -1;
 			$contrato = $this -> Contrato -> read(null, $contratoId);
-			$this -> Contrato -> set("centro_de_costo", $this -> data["Contrato"]["centro_de_costo"]);
-			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+			$this -> Contrato -> set("centro_de_costo", $this -> request -> data["Contrato"]["centro_de_costo"]);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> request -> data["Contrato"]["fecha_inicio_desarrollo"]);
 			$this -> Contrato -> set("estado_id", 4);
 
 			if ($this -> Contrato -> save()) {
@@ -369,19 +387,19 @@ class ContratosController extends AppController {
 
 			}
 		}
-		if (empty($this -> data)) {
-			$this -> data = $this -> Contrato -> read(null, $id);
+		if (empty($this -> request -> data)) {
+			$this -> request -> data = $this -> Contrato -> read(null, $id);
 		}
 		$this -> set("contrato", $id);
 	}
 
 	public function admin_edit($id = null) {
 		$this -> layout = "ajax";
-		if (!empty($this -> data)) {
-			$contratoId = $this -> data["Contrato"]["id"];
+		if (!empty($this -> request -> data)) {
+			$contratoId = $this -> request -> data["Contrato"]["id"];
 			$contrato = $this -> Contrato -> read(null, $contratoId);
-			$this -> Contrato -> set("centro_de_costo", $this -> data["Contrato"]["centro_de_costo"]);
-			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> data["Contrato"]["fecha_inicio_desarrollo"]);
+			$this -> Contrato -> set("centro_de_costo", $this -> request -> data["Contrato"]["centro_de_costo"]);
+			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> request -> data["Contrato"]["fecha_inicio_desarrollo"]);
 
 			if ($this -> Contrato -> save()) {
 				$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
@@ -395,8 +413,8 @@ class ContratosController extends AppController {
 
 			}
 		}
-		if (empty($this -> data)) {
-			$this -> data = $this -> Contrato -> read(null, $id);
+		if (empty($this -> request -> data)) {
+			$this -> request -> data = $this -> Contrato -> read(null, $id);
 		}
 		$this -> set("contrato", $id);
 	}
@@ -413,26 +431,26 @@ class ContratosController extends AppController {
 	}
 
 	public function admin_crearCorreo() {
-		$correo["Correo"]["contrato_id"] = $this -> data["Contrato"]["contrato_id"];
-		$correo["Correo"]["email"] = $this -> data["Contrato"]["email"];
-		$correo["Correo"]["nombre"] = $this -> data["Contrato"]["nombre"];
+		$correo["Correo"]["contrato_id"] = $this -> request -> data["Contrato"]["contrato_id"];
+		$correo["Correo"]["email"] = $this -> request -> data["Contrato"]["email"];
+		$correo["Correo"]["nombre"] = $this -> request -> data["Contrato"]["nombre"];
 		$this -> Contrato -> Correo -> create();
 		if ($this -> Contrato -> Correo -> save($correo)) {
-			$this -> Session -> setFlash("Correo Guardado");
-			$this -> redirect(array('action' => 'listaCorreo', $this -> data["Contrato"]["contrato_id"]));
+			$this -> Session -> setFlash(__("Correo Guardado"), 'crud/success');
+			$this -> redirect(array('action' => 'listaCorreo', $this -> request -> data["Contrato"]["contrato_id"]));
 		} else {
 			$this -> Session -> setFlash("No se pudo guardar el correo");
-			$this -> redirect(array('action' => 'listaCorreo', $this -> data["Contrato"]["contrato_id"]));
+			$this -> redirect(array('action' => 'listaCorreo', $this -> request -> data["Contrato"]["contrato_id"]));
 		}
 
 	}
 
 	public function admin_borrarCorreo($correoId, $contratoId) {
 		if ($this -> Contrato -> Correo -> delete($correoId)) {
-			$this -> Session -> setFlash("Se ha borrado el correo");
+			$this -> Session -> setFlash(__("Se ha borrado el correo"), 'crud/success');
 			$this -> redirect(array('action' => 'listaCorreo', $contratoId));
 		} else {
-			$this -> Session -> setFlash("No se pudo borrar el correo");
+			$this -> Session -> setFlash(__("No se pudo borrar el correo"), 'crud/error');
 			$this -> redirect(array('action' => 'listaCorreo', $contratoId));
 		}
 
@@ -454,14 +472,25 @@ class ContratosController extends AppController {
 		$partes = explode("/", $contrato["Contrato"]["cotizacion"]);
 		$nombrePartido = explode(".", $partes[2]);
 		$this -> view = 'Media';
-		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
-
+		$params = array(
+			'id' => $partes[2],
+			'name' => $nombrePartido[0],
+			'download' => true,
+			'extension' => $nombrePartido[1],
+			'mimeType' => array(
+				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
+				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"),
+				'path' => $partes[1] . DS
+			);
 		$this -> set($params);
-
 	}
 
 	public function AJAX_subirCotizacion() {
-
 		$contratoId = $this -> params["form"]["id"];
 		$cotizacionPath = $this -> params["form"]["path"];
 		$contrato = $this -> Contrato -> read(null, $contratoId);
@@ -487,30 +516,18 @@ class ContratosController extends AppController {
 		exit(0);
 	}
 
-	public function prueba() {
-		$Name = "OMEGA INGENIEROS";
-		//senders name
-		$email = "no-responder@omegaingenieros.com";
-		//senders e-mail adress
-		$subject = "Nueva actividad en el contrato: ";
-		//subject
-		$header = "From: " . $Name . " <ricardo_andres_1@hotmail.com>\r\nPort:587\r\n";
-		//optional headerfields
-		//mail("ricardopandales@gmail.com", $subject, "prueba", $header);
-		//	mail($emailUsuario, $subject, $mail_body, $header);
-	}
-
 	public function enviarCorreo($contratoId, $mail_body) {
-		$this -> Contrato -> recursive = 1;
+		$this -> Contrato -> contain('Empresa');
+		//$this -> Contrato -> recursive = 1;
 		$contrato = $this -> Contrato -> read(null, $contratoId);
-		$this -> Contrato -> Empresa -> EmpresasUsuario -> bindModel(array("belongsTo" => array("Usuario")));
-		$usuarios = $this -> Contrato -> Empresa -> EmpresasUsuario -> find("all", array("conditions" => array("empresa_id" => $contrato["Empresa"]["id"])));
+		//$this -> Contrato -> Empresa -> EmpresasUsuario -> bindModel(array("belongsTo" => array("Usuario")));
+		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/1');
+		$usuarios = $this -> Contrato -> Empresa -> Usuario -> find("all", array("conditions" => array("Usuario.id" => $usuarios, "Usuario.empresa_id" => $contrato["Empresa"]["id"])));
 		$emailUsuario = "";
 		foreach ($usuarios as $usuario) {
-			if ($usuario["Usuario"]["role"] == "empresaMantenimiento")
-				$emailUsuario = $usuario["Usuario"]["email"];
+			$emailUsuario = $usuario["Usuario"]["correo"];
 		}
-		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.contrato_id" => $contratoId)));
+		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array('Correo.modelo' => 'Contrato', "Correo.llave_foranea" => $contratoId)));
 
 		$Name = "OMEGA INGENIEROS";
 		//senders name

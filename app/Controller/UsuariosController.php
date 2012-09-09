@@ -7,6 +7,37 @@ App::uses('AppController', 'Controller');
  */
 class UsuariosController extends AppController {
 	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this -> Auth -> allow('getUsuariosServicio', 'getServiciosUsuario');
+	}
+	
+	public function getServiciosUsuario($usuario_id) {
+		//$this -> autoRender = false;
+		$servicios = $this -> Usuario -> ServiciosUsuario -> find(
+			'list',
+			array(
+				'conditions' => array('ServiciosUsuario.usuario_id' => $usuario_id),
+				'fields' => array('ServiciosUsuario.servicio_id')
+			)
+		);
+		//debug($usuarios);
+		return $servicios;
+	}
+	
+	public function getUsuariosServicio($servicio_id) {
+		//$this -> autoRender = false;
+		$usuarios = $this -> Usuario -> ServiciosUsuario -> find(
+			'list',
+			array(
+				'conditions' => array('ServiciosUsuario.servicio_id' => $servicio_id),
+				'fields' => array('ServiciosUsuario.usuario_id')
+			)
+		);
+		//debug($usuarios);
+		return $usuarios;
+	}
+	
 	public function getOmega() {
 		return $this -> Usuario -> find("list", array("conditions" => array("role <=" => 2), "fields" => array("correo", "nombre")));
 	}

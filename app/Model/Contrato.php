@@ -190,7 +190,7 @@ class Contrato extends AppModel {
 		'Alarma' => array(
 			'className' => 'Alarma',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Alarma.modelo' => 'Contrato'),
 			'fields' => '',
 			'order' => '',
@@ -203,7 +203,7 @@ class Contrato extends AppModel {
 		'Correo' => array(
 			'className' => 'Correo',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Correo.modelo' => 'Contrato'),
 			'fields' => '',
 			'order' => '',

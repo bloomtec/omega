@@ -72,7 +72,7 @@ class ContratosEquipo extends AppModel {
 		'RevisionContratosEquipo' => array(
 			'className' => 'RevisionContratosEquipo',
 			'foreignKey' => 'contratos_equipo_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -85,7 +85,7 @@ class ContratosEquipo extends AppModel {
 		'Evento' => array(
 			'className' => 'Evento',
 			'foreignKey' => 'contratos_equipo_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -98,7 +98,7 @@ class ContratosEquipo extends AppModel {
 		'Observacione' => array(
 			'className' => 'Observacione',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Observacione.modelo' => 'ContratosEquipo'),
 			'fields' => '',
 			'order' => '',
