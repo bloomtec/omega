@@ -190,11 +190,11 @@ class Proyecto extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Observacione' => array(
-			'className' => 'Observacione',
+		'Observacion' => array(
+			'className' => 'Observacion',
 			'foreignKey' => 'llave_foranea',
 			'dependent' => false,
-			'conditions' => array('Observacione.modelo' => 'Proyecto'),
+			'conditions' => array('Observacion.modelo' => 'Proyecto'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',

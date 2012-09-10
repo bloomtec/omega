@@ -16,6 +16,10 @@ class Usuario extends AppModel {
 	 * @var string
 	 */
 	public $displayField = 'nombre_de_usuario';
+	
+	public $virtualFields = array(
+		'rol' => 'SELECT nombre FROM roles WHERE roles.id = Usuario.rol_id'
+	);
 
 	/**
 	 * Validation rules
@@ -223,11 +227,11 @@ class Usuario extends AppModel {
 	 * @var array
 	 */
 	public $hasMany = array(
-		'Observacione' => array(
-			'className' => 'Observacione',
+		'Observacion' => array(
+			'className' => 'Observacion',
 			'foreignKey' => 'llave_foranea',
 			'dependent' => false,
-			'conditions' => array('Observacione.modelo' => 'Usuario'),
+			'conditions' => array('Observacion.modelo' => 'Usuario'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',

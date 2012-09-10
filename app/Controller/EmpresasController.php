@@ -241,13 +241,24 @@ class EmpresasController extends AppController {
 	 * @return void
 	 */
 	public function admin_view($id = null) {
-		$this -> Empresa -> contain('Proyecto', 'Contrato', 'Contrato.Equipo', 'Contrato.Alarma', 'Contrato.Tipo', 'Contrato.Estado');
+		$this -> Empresa -> contain(
+			'Proyecto',
+			'Proyecto.Alarma',
+			'Contrato',
+			'Contrato.Equipo',
+			'Contrato.Alarma',
+			'Contrato.Tipo',
+			'Contrato.Estado'
+		);
 		$this -> Empresa -> id = $id;
 		if (!$this -> Empresa -> exists()) {
 			throw new NotFoundException(__('Empresa no válida'));
 		}
 		$this -> set('empresa', $this -> Empresa -> read(null, $id));
 		$this -> set('servicios', $this -> getServicios($id));
+		$estadosProyectosCotizacion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("or" => array("id <" => 3, "id >" => 7))));
+		$estadosProyectosEjecucion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("id >=" => 3, "id <" => "8")));
+		$this -> set(compact("estadosProyectosCotizacion", "estadosProyectosEjecucion"));
 	}
 
 	/**

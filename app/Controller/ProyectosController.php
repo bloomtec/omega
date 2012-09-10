@@ -46,7 +46,7 @@ class ProyectosController extends AppController {
 
 	}
 
-	public function tieneAlarmaCliente($proyecto_id) {
+	public function tieneAlarmaEmpresa($proyecto_id) {
 		$alarmas = $this -> Proyecto -> Alarma -> find("count", array("conditions" => array("Alarma.modelo" => "Proyecto", "Alarma.llave_foranea" => $proyecto_id, "Alarma.para_empresa" => false)));
 		if ($alarmas)
 			return true;
@@ -62,13 +62,13 @@ class ProyectosController extends AppController {
 			//$this -> redirect(array('action' => 'index'));
 		}
 		$proyecto = $this -> Proyecto -> read(null, $id);
-		$comentariosPublicos = $this -> Proyecto -> Observacione -> find(
+		$comentariosPublicos = $this -> Proyecto -> Observacion -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Observacione.llave_foranea" => $proyecto["Proyecto"]["id"],
-					"Observacione.modelo" => "Proyecto",
-					"Observacione.es_publico" => true
+					"Observacion.llave_foranea" => $proyecto["Proyecto"]["id"],
+					"Observacion.modelo" => "Proyecto",
+					"Observacion.es_publico" => true
 				)
 			)
 		);
@@ -97,23 +97,23 @@ class ProyectosController extends AppController {
 			//$this -> redirect(array('action' => 'index'));
 		}
 		$proyecto = $this -> Proyecto -> read(null, $id);
-		$comentariosPrivados = $this -> Proyecto -> Observacione -> find(
+		$comentariosPrivados = $this -> Proyecto -> Observacion -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Observacione.llave_foranea" => $proyecto["Proyecto"]["id"],
-					"Observacione.modelo" => "Proyecto",
-					"Observacione.es_publico" => false
+					"Observacion.llave_foranea" => $proyecto["Proyecto"]["id"],
+					"Observacion.modelo" => "Proyecto",
+					"Observacion.es_publico" => false
 				)
 			)
 		);
-		$comentariosPublicos = $this -> Proyecto -> Observacione -> find(
+		$comentariosPublicos = $this -> Proyecto -> Observacion -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Observacione.llave_foranea" => $proyecto["Proyecto"]["id"],
-					"Observacione.modelo" => "Proyecto",
-					"Observacione.es_publico" => true
+					"Observacion.llave_foranea" => $proyecto["Proyecto"]["id"],
+					"Observacion.modelo" => "Proyecto",
+					"Observacion.es_publico" => true
 				)
 			)
 		);
@@ -122,7 +122,7 @@ class ProyectosController extends AppController {
 	}
 
 	public function admin_add($id = null) {
-		$clienteId = $id;
+		$empresaId = $id;
 		if (!empty($this -> request -> data)) {
 
 			$this -> Proyecto -> create();
@@ -232,7 +232,7 @@ class ProyectosController extends AppController {
 		$proyecto = $this -> Proyecto -> read("cotizacion", $id);
 		$partes = explode("/", $proyecto["Proyecto"]["cotizacion"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
@@ -256,7 +256,7 @@ class ProyectosController extends AppController {
 		$proyecto = $this -> Proyecto -> read("cotizacion", $id);
 		$partes = explode("/", $proyecto["Proyecto"]["cotizacion"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
@@ -502,7 +502,7 @@ class ProyectosController extends AppController {
 		$proyecto = $this -> Proyecto -> read("ficha_tecnica", $id);
 		$partes = explode("/", $proyecto["Proyecto"]["ficha_tecnica"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
@@ -554,7 +554,7 @@ class ProyectosController extends AppController {
 		$proyecto = $this -> Proyecto -> read("ficha_tecnica", $id);
 		$partes = explode("/", $proyecto["Proyecto"]["ficha_tecnica"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],

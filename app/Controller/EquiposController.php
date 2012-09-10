@@ -20,23 +20,6 @@ class EquiposController extends AppController {
 			$this -> redirect(array('action' => 'index'));
 		}
 		$equipo = $this -> Equipo -> read(null, $id);
-		/** Definido en el modelo
-		$this -> Equipo -> ContratosEquipo -> bindModel(
-			array(
-				"hasMany" => array(
-					'ObservacionPublica' => array(
-						'className' => 'ObservacionPublica',
-						'foreignKey' => 'contratos_equipo_id'
-					),
-					'ObservacionPrivada' => array(
-						'className' => 'ObservacionPublica',
-						'foreignKey' => 'contratos_equipo_id'
-					),
-				)
-			)
-		);
-		 */
-		$this -> Equipo -> ContratosEquipo -> contain();
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> find(
 			"first",
 			array(
@@ -47,26 +30,68 @@ class EquiposController extends AppController {
 			)
 		);
 		$contrato = $this -> Equipo -> Contrato -> read(null, $contratoId);
-		//$observacionesPrivadas=$this->Equipo->ContratosEquipo->ObservacionPrivada->observaciones($contratoEquipo);
-		//$observacionesPrivadas = $this -> ObservacionPrivada -> find("all", array("conditions" => array("ObservacionPrivada.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"])));
-		//$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> ObservacionPublica -> observaciones($contratoEquipo);
-		$observacionesPrivadas = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
-			"all",
+		$this -> Equipo -> ContratosEquipo -> bindModel(
 			array(
-				"conditions" => array(
-					"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
-					"Observacione.modelo" => "ContratosEquipo",
-					"Observacione.es_publico" => false
+				'hasMany' => array(
+					'RevisionContratosEquipo' => array(
+						'className' => 'RevisionContratosEquipo',
+						'foreignKey' => 'contratos_equipo_id',
+						'dependent' => true,
+						'conditions' => '',
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					),
+					'Evento' => array(
+						'className' => 'Evento',
+						'foreignKey' => 'contratos_equipo_id',
+						'dependent' => true,
+						'conditions' => '',
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					),
+					'Observacion' => array(
+						'className' => 'Observacion',
+						'foreignKey' => 'llave_foranea',
+						'dependent' => true,
+						'conditions' => array('Observacion.modelo' => 'ContratosEquipo'),
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					)
 				)
 			)
 		);
-		$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+		$observacionesPrivadas = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
-					"Observacione.modelo" => "ContratosEquipo",
-					"Observacione.es_publico" => true
+					"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
+					"Observacion.modelo" => "ContratosEquipo",
+					"Observacion.es_publico" => false
+				)
+			)
+		);
+		$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
+			"all",
+			array(
+				"conditions" => array(
+					"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
+					"Observacion.modelo" => "ContratosEquipo",
+					"Observacion.es_publico" => true
 				)
 			)
 		);
@@ -147,15 +172,12 @@ class EquiposController extends AppController {
 	}
 
 	public function admin_view($id = null, $contratoId, $tipoContrato) {
+		$this -> Equipo -> contain('Archivo');
 		if (!$id) {
 			$this -> Session -> setFlash(__('Equipo no válido'), 'crud/error');
 			$this -> redirect(array('action' => 'index'));
 		}
 		$equipo = $this -> Equipo -> read(null, $id);
-		/** Esto esta en el modelo
-		$this -> Equipo -> ContratosEquipo -> bindModel(array("hasMany" => array('ObservacionPublica' => array('className' => 'ObservacionPublica', 'foreignKey' => 'contratos_equipo_id'), 'ObservacionPrivada' => array('className' => 'ObservacionPublica', 'foreignKey' => 'contratos_equipo_id'), )));
-		 */ 
-		$this -> Equipo -> ContratosEquipo -> contain();
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> find(
 			"first",
 			array(
@@ -165,28 +187,69 @@ class EquiposController extends AppController {
 				)
 			)
 		);
-		//debug($contratoEquipo);
 		$contrato = $this -> Equipo -> Contrato -> read(null, $contratoId);
-		//$observacionesPrivadas=$this->Equipo->ContratosEquipo->ObservacionPrivada->observaciones($contratoEquipo);
-		//$observacionesPrivadas = $this -> ObservacionPrivada -> find("all", array("conditions" => array("ObservacionPrivada.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"])));
-		//$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> ObservacionPublica -> observaciones($contratoEquipo);
-		$observacionesPrivadas = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
-			"all",
+		$this -> Equipo -> ContratosEquipo -> bindModel(
 			array(
-				"conditions" => array(
-					"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
-					"Observacione.modelo" => "ContratosEquipo",
-					"Observacione.es_publico" => false
+				'hasMany' => array(
+					'RevisionContratosEquipo' => array(
+						'className' => 'RevisionContratosEquipo',
+						'foreignKey' => 'contratos_equipo_id',
+						'dependent' => true,
+						'conditions' => '',
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					),
+					'Evento' => array(
+						'className' => 'Evento',
+						'foreignKey' => 'contratos_equipo_id',
+						'dependent' => true,
+						'conditions' => '',
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					),
+					'Observacion' => array(
+						'className' => 'Observacion',
+						'foreignKey' => 'llave_foranea',
+						'dependent' => true,
+						'conditions' => array('Observacion.modelo' => 'ContratosEquipo'),
+						'fields' => '',
+						'order' => '',
+						'limit' => '',
+						'offset' => '',
+						'exclusive' => '',
+						'finderQuery' => '',
+						'counterQuery' => ''
+					)
 				)
 			)
 		);
-		$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+		$observacionesPrivadas = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
-					"Observacione.modelo" => "ContratosEquipo",
-					"Observacione.es_publico" => true
+					"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
+					"Observacion.modelo" => "ContratosEquipo",
+					"Observacion.es_publico" => false
+				)
+			)
+		);
+		$observacionesPublicas = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
+			"all",
+			array(
+				"conditions" => array(
+					"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"],
+					"Observacion.modelo" => "ContratosEquipo",
+					"Observacion.es_publico" => true
 				)
 			)
 		);
@@ -198,7 +261,9 @@ class EquiposController extends AppController {
 				)
 			)
 		);
-		$this -> set(compact("observacionesPublicas", "observacionesPrivadas", "contratoEquipo", "tipoContrato", "contrato", "eventos", 'equipo'));
+		$equipo_id = $equipo['Equipo']['id'];
+		$usuario_id = $this -> Auth -> user('id');
+		$this -> set(compact("observacionesPublicas", "observacionesPrivadas", "contratoEquipo", "tipoContrato", "contrato", "eventos", 'equipo', 'equipo_id', 'usuario_id'));
 	}
 
 	public function admin_add($id = null) {
@@ -228,13 +293,15 @@ class EquiposController extends AppController {
 				$contratoId = $this -> request -> data["Contrato"]["Contrato"][0];
 				$this -> Session -> setFlash(__('No se pudo guardar el equipo. Por favor, intente de nuevo.'), 'crud/error');
 			}
-
 		}
 		$contratos = $this -> Equipo -> Contrato -> find("list");
-		$this -> set(compact('contratoId', 'contratos'));
+		$contrato = $this -> Equipo -> Contrato -> read(null, $contratoId);
+		$categoriasEquipos = $this -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
+		$this -> set(compact('contratoId', 'contratos', 'categoriasEquipos'));
 	}
 
 	public function admin_relacionar($id = null) {
+		$this -> Equipo -> Contrato -> contain('ContratosEquipo');
 		if ($id)
 			$contratoId = $id;
 		if (!empty($this -> request -> data["Equipos"])) {
@@ -262,13 +329,13 @@ class EquiposController extends AppController {
 			}
 			$this -> Session -> setFlash(__('Se ha relacionado con exito el equipo al contrato, orpima volver para ir al contrato o relacione otro equipo si lo desea.'), 'crud/success');
 		}
-		$contrato = $this -> Equipo -> Contrato -> read("empresa_id", $contratoId);
+		$contrato = $this -> Equipo -> Contrato -> read('empresa_id', $contratoId);
 		$contratos = $this -> Equipo -> Contrato -> find("list");
 		$contratosCompleto = $this -> Equipo -> Contrato -> find(
 			"all",
 			array(
 				"conditions" => array(
-					"Contrato.cliente_id" => $contrato["Contrato"]["empresa_id"],
+					"Contrato.empresa_id" => $contrato["Contrato"]["empresa_id"],
 					"Contrato.id <>" => $contratoId
 				)
 			)
@@ -296,7 +363,7 @@ class EquiposController extends AppController {
 		if (!empty($this -> request -> data)) {
 			if ($this -> Equipo -> save($this -> request -> data)) {
 				$this -> Session -> setFlash(__('El equipo ha sido guardado'), 'crud/success');
-				$this -> redirect(array('action' => 'view', 'controller' => 'empresas', $this -> request -> data["Equipo"]["empresa_id"]));
+				$this -> redirect(array('action' => 'view', 'controller' => 'contratos', $contratoId));
 			} else {
 				$this -> Session -> setFlash(__('No se pudo guardar el equipo. Por favor, intente de nuevo.'), 'crud/error');
 			}
@@ -304,7 +371,10 @@ class EquiposController extends AppController {
 		if (empty($this -> request -> data)) {
 			$this -> request -> data = $this -> Equipo -> read(null, $id);
 		}
+		$contrato = $this -> Equipo -> Contrato -> read(null, $contratoId);
+		$categoriasEquipos = $this -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set("contrato", $contratoId);
+		$this -> set("categoriasEquipos", $categoriasEquipos);
 	}
 
 	public function admin_delete($id = null) {
@@ -325,13 +395,13 @@ class EquiposController extends AppController {
 	}
 
 	public function admin_verFicha($id) {
+		$this -> viewClass = 'Media';
+		
 		$equipo = $this -> Equipo -> read("ficha_tecnica", $id);
 		$partes = explode("/", $equipo["Equipo"]["ficha_tecnica"]);
 
 		$nombrePartido = explode(".", $partes[2]);
-		//debug($partes);
-		//debug($nombrePartido);
-		$this -> view = 'Media';
+		
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
@@ -355,7 +425,7 @@ class EquiposController extends AppController {
 		$equipo = $this -> Equipo -> read("ficha_tecnica", $id);
 		$partes = explode("/", $equipo["Equipo"]["ficha_tecnica"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
@@ -376,8 +446,8 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_subirFicha() {
-		$equipoId = $this -> params["form"]["id"];
-		$equipoFichaTecnicaPath = $this -> params["form"]["path"];
+		$equipoId = $this -> data["id"];
+		$equipoFichaTecnicaPath = $this -> data["path"];
 		//$this -> Equipo -> recursive = -1;
 		$equipo = $this -> Equipo -> read(null, $equipoId);
 		if ($equipo["Equipo"]["ficha_tecnica"]) {
@@ -397,11 +467,12 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_registrarVisita() {
-		$visita["RevisionContratosEquipo"]["contratos_equipo_id"] = $this -> params["form"]["contratos_equipo_id"];
-		$visita["RevisionContratosEquipo"]["usuario_id"] = $this -> params["form"]["usuarioId"];
+		$visita["RevisionContratosEquipo"]["contratos_equipo_id"] = $this -> data["contratos_equipo_id"];
+		$visita["RevisionContratosEquipo"]["usuario_id"] = $this -> data["usuarioId"];
+		$this -> Equipo -> ContratosEquipo -> contain();
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> read(null, $visita["RevisionContratosEquipo"]["contratos_equipo_id"]);
-		//$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
+		$this -> Equipo -> Contrato -> contain();
+		$contrato = $this -> Equipo -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
 		//Desactivo las alarmas de publicaciones nuevas
 		$empresa = true;
 		$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
@@ -410,8 +481,8 @@ class EquiposController extends AppController {
 				$contratoEquipo["ContratosEquipo"]["tiene_publicacion_omega"] = false;
 		}
 		if ($this -> Auth -> user('rol_id') <= 2) {
-			if ($contratoEquipo["ContratosEquipo"]["tiene_publicacion_cliente"])
-				$contratoEquipo["ContratosEquipo"]["tiene_publicacion_cliente"] = false;
+			if ($contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"])
+				$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"] = false;
 			$empresa = false;
 			//Esto quiere decir que la ultima actualizacion la hizo omega
 		}
@@ -420,17 +491,17 @@ class EquiposController extends AppController {
 			$contratosEquipoDelContratoConPubliOmega = $this -> Equipo -> ContratosEquipo -> find("count", array("ContratosEquipo.tiene_publicacion_omega" => true));
 			if ($contratosEquipoDelContratoConPubliOmega > 0) {
 				$contrato["Contrato"]["tiene_publicacion_omega"] = false;
-				$this -> Contrato -> save($contrato);
+				$this -> Equipo -> Contrato -> save($contrato);
 			}
 		} else {
-			$contratosEquipoDelContratoConPubliCliente = $this -> Equipo -> ContratosEquipo -> find("count", array("ContratosEquipo.tiene_publicacion_cliente" => true));
+			$contratosEquipoDelContratoConPubliCliente = $this -> Equipo -> ContratosEquipo -> find("count", array("ContratosEquipo.tiene_publicacion_empresa" => true));
 			if ($contratosEquipoDelContratoConPubliCliente > 0) {
 				$contrato["Contrato"]["tiene_publicacion_empresa"] = false;
-				$this -> Contrato -> save($contrato);
+				$this -> Equipo -> Contrato -> save($contrato);
 			}
 		}
-
-		if ($this -> Equipo -> ContratosEquipo -> RevisionContratosEquipo -> save($visita)) {
+		$this -> loadModel('RevisionContratosEquipo');
+		if ($this -> RevisionContratosEquipo -> save($visita)) {
 			echo "OK";
 		} else {
 			echo "NO";
@@ -463,28 +534,28 @@ class EquiposController extends AppController {
 		);
 		$ultimaVisita = $this -> Equipo -> ContratosEquipo -> RevisionContratosEquipo -> getLast($visita["usuario_id"], $contratoEquipo["ContratosEquipo"]["id"]);
 		if ($ultimaVisita) {
-			$mensajes = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+			$mensajes = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 				"count",
 				array(
 					"conditions" => array(
-						"Observacione.usuario_id <>" => $visita["usuario_id"],
-						"Observacione.created >" => $ultimaVisita["RevisionContratosEquipo"]["created"],
-						"Observacione.es_publico" => true,
-						"Observacione.modelo" => "ContratosEquipo",
-						"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
+						"Observacion.usuario_id <>" => $visita["usuario_id"],
+						"Observacion.created >" => $ultimaVisita["RevisionContratosEquipo"]["created"],
+						"Observacion.es_publico" => true,
+						"Observacion.modelo" => "ContratosEquipo",
+						"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
 					)
 				)
 			);
 			if ($this -> Auth -> user('rol_id') <= 2) {
-				$mensajes += $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+				$mensajes += $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 				"count",
 				array(
 					"conditions" => array(
-						"Observacione.usuario_id <>" => $visita["usuario_id"],
-						"Observacione.created >" => $ultimaVisita["RevisionContratosEquipo"]["created"],
-						"Observacione.es_publico" => false,
-						"Observacione.modelo" => "ContratosEquipo",
-						"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
+						"Observacion.usuario_id <>" => $visita["usuario_id"],
+						"Observacion.created >" => $ultimaVisita["RevisionContratosEquipo"]["created"],
+						"Observacion.es_publico" => false,
+						"Observacion.modelo" => "ContratosEquipo",
+						"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
 					)
 				)
 			);
@@ -496,26 +567,26 @@ class EquiposController extends AppController {
 			 'dependent' => false,
 			 )
 			 )));*/
-			$mensajes = $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+			$mensajes = $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 				"count",
 				array(
 					"conditions" => array(
-						"Observacione.usuario_id <>" => $visita["usuario_id"],
-						"Observacione.es_publico" => true,
-						"Observacione.modelo" => "ContratosEquipo",
-						"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
+						"Observacion.usuario_id <>" => $visita["usuario_id"],
+						"Observacion.es_publico" => true,
+						"Observacion.modelo" => "ContratosEquipo",
+						"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
 					)
 				)
 			);
 			if ($this -> Auth -> user('rol_id') <= 2) {
-				$mensajes += $this -> Equipo -> ContratosEquipo -> Observacione -> find(
+				$mensajes += $this -> Equipo -> ContratosEquipo -> Observacion -> find(
 					"count",
 					array(
 						"conditions" => array(
-							"Observacione.usuario_id <>" => $visita["usuario_id"],
-							"Observacione.es_publico" => false,
-							"Observacione.modelo" => "ContratosEquipo",
-							"Observacione.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
+							"Observacion.usuario_id <>" => $visita["usuario_id"],
+							"Observacion.es_publico" => false,
+							"Observacion.modelo" => "ContratosEquipo",
+							"Observacion.llave_foranea" => $contratoEquipo["ContratosEquipo"]["id"]
 						)
 					)
 				);

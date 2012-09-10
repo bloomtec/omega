@@ -21,10 +21,18 @@ class Equipo extends AppModel {
 	 * @var array
 	 */
 	public $validate = array(
-		'referencia' => array(
+		'codigo' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'Ingrese el código del equipo',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'isunique' => array(
+				'rule' => array('isunique'),
+				'message' => 'El código ingresado ya está registrado',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule

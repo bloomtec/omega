@@ -39,7 +39,7 @@ class UsuariosController extends AppController {
 	}
 	
 	public function getOmega() {
-		return $this -> Usuario -> find("list", array("conditions" => array("role <=" => 2), "fields" => array("correo", "nombre")));
+		return $this -> Usuario -> find("list", array("conditions" => array("rol_id <=" => 2), "fields" => array("correo", "nombre")));
 	}
 
 	public function recordar() {

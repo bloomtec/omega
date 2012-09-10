@@ -220,11 +220,11 @@
 		<tr<?php echo $class;?>>
 		
 			<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php  echo $proyecto['centro_de_costo']; ?></td>
 			<td><?php  echo $proyecto['nombre']; ?></td>
-			<td><?php echo $form->input("estado",array("id"=>"estadoProyecto","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosCotizacion,"selected"=>$proyecto["estado_proyecto_id"],"disabled"=>true));?></td>
+			<td><?php echo $this -> Form -> input("estado",array("id"=>"estadoProyecto","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosCotizacion,"selected"=>$proyecto["estado_proyecto_id"],"disabled"=>true));?></td>
 			
 			<td class="actions">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
@@ -382,8 +382,7 @@
 <script>
 
 
-//var server="/omega/";
-var server="/";
+var server="/omega/";
 
 $(document).ready(function(){
 	$(".postventa").hide();

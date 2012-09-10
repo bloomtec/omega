@@ -95,11 +95,11 @@ class ContratosEquipo extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Observacione' => array(
-			'className' => 'Observacione',
+		'Observacion' => array(
+			'className' => 'Observacion',
 			'foreignKey' => 'llave_foranea',
 			'dependent' => true,
-			'conditions' => array('Observacione.modelo' => 'ContratosEquipo'),
+			'conditions' => array('Observacion.modelo' => 'ContratosEquipo'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',

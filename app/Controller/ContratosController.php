@@ -73,10 +73,16 @@ class ContratosController extends AppController {
 				)
 			)
 		);
+		$this -> Contrato -> contain(
+			'Estado',
+			'Tipo',
+			'Empresa',
+			'Equipo.CategoriasEquipo'
+		);
 		$this -> set('contrato', $this -> Contrato -> read(null, $id));
 	}
 
-	public public function admin_add($id = null) {
+	public function admin_add($id = null) {
 		$empresaId = $id;
 		if ($this -> request -> is('post')) {
 			$this -> Contrato -> create();
@@ -425,14 +431,16 @@ class ContratosController extends AppController {
 
 	public function admin_listaCorreo($id) {
 		$this -> layout = "ajax";
+		$this -> Contrato -> contain('Correo');
 		$contrato = $this -> Contrato -> read(null, $id);
 		$this -> set("correos", $contrato["Correo"]);
 		$this -> set("contratoId", $id);
 	}
 
 	public function admin_crearCorreo() {
-		$correo["Correo"]["contrato_id"] = $this -> request -> data["Contrato"]["contrato_id"];
-		$correo["Correo"]["email"] = $this -> request -> data["Contrato"]["email"];
+		$correo['Correo']['modelo'] = 'Contrato';
+		$correo["Correo"]["llave_foranea"] = $this -> request -> data["Contrato"]["contrato_id"];
+		$correo["Correo"]["correo"] = $this -> request -> data["Contrato"]["correo"];
 		$correo["Correo"]["nombre"] = $this -> request -> data["Contrato"]["nombre"];
 		$this -> Contrato -> Correo -> create();
 		if ($this -> Contrato -> Correo -> save($correo)) {
@@ -460,7 +468,7 @@ class ContratosController extends AppController {
 		$contrato = $this -> Contrato -> read("cotizacion", $id);
 		$partes = explode("/", $contrato["Contrato"]["cotizacion"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
 
 		$this -> set($params);
@@ -471,7 +479,7 @@ class ContratosController extends AppController {
 		$contrato = $this -> Contrato -> read("cotizacion", $id);
 		$partes = explode("/", $contrato["Contrato"]["cotizacion"]);
 		$nombrePartido = explode(".", $partes[2]);
-		$this -> view = 'Media';
+		$this -> viewClass = 'Media';
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],

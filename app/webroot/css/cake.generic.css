@@ -938,16 +938,16 @@ a.boton{
 	height:150px;
 	overflow-y:scroll;
 }
-.historial .observacion{
+.historial .observacion {
 	margin-bottom:5px;
 	color:white;	
 }
 
-.historial .cliente,.historial .clienteMantenimiento, .clienteProyecto{
+.historial .Cliente {
 	background:#303030;
 	border:1px solid;
 }
-.historial .omega{
+.historial .Administrador {
 	background:#a80808;
 	border:1px solid;
 }

@@ -21,7 +21,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<?php echo $this -> Html -> charset(); ?>
-		<title> <?php __('ZONA OMEGA'); ?>
+		<title> 
+			<?php echo __('ZONA OMEGA'); ?>
 			<?php echo $title_for_layout; ?>
 		</title>
 		<?php
