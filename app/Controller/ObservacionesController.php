@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('CakeEmail', 'Network/Email');
 /**
  * Observacions Controller
  *

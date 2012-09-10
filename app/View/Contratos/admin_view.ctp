@@ -76,6 +76,15 @@
 <div class="related">
 	<h3><?php echo __('Equipos Relacionados');?></h3>
 	<?php if (!empty($contrato['Equipo'])):?>
+	<table>
+		<?php echo $this -> Form -> create('Contrato'); ?>
+		<tr><th>Código</th><th>Categoría Equipo</th><th></th></tr>
+		<tr>
+			<td><?php echo $this -> Form -> input('codigo', array('label' => false)); ?></td>
+			<td><?php echo $this -> Form -> input('categorias_equipo_id', array('label' => false, 'empty' => 'Seleccione...')); ?></td>
+			<td><?php echo $this -> Form -> end('Buscar Equipo'); ?></td>
+		</tr>
+	</table>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Alertas'); ?></th>

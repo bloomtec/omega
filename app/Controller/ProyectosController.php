@@ -92,6 +92,7 @@ class ProyectosController extends AppController {
 
 	public function admin_view($id = null) {
 		$this -> Proyecto -> id = $id;
+		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo');
 		if (!$this -> Proyecto -> exists()) {
 			throw new NotFoundException(__('Proyecto no válido'));
 			//$this -> redirect(array('action' => 'index'));
@@ -117,7 +118,6 @@ class ProyectosController extends AppController {
 				)
 			)
 		);
-
 		$this -> set(compact('proyecto', 'comentariosPrivados', 'comentariosPublicos'));
 	}
 

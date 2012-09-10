@@ -5,7 +5,7 @@
 			
 			
 			<div class="lineaSuperior">
-				<div class="info"> <span style="color:#e10000"><?php echo $proyecto['Proyecto']["nombre"];?> </span> <?php echo $html->link("volver",array("controller"=>"clientes","action"=>"view",$proyecto["Proyecto"]["cliente_id"],"proyectos"),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
+				<div class="info"> <span style="color:#e10000"><?php echo $proyecto['Proyecto']["nombre"];?> </span> <?php echo $this->Html->link("volver",array("controller"=>"empresas","action"=>"view",$proyecto["Proyecto"]["empresa_id"],"proyectos"),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
 			
 			</div>
 			
@@ -15,13 +15,11 @@
 				<br />
 					<table cellpadding="0" cellspacing="0">
 						<tr>
-						
-
-								<th>Subproyecto</th>
-								<th>Presupuesto</th>
-								<th>Cronograma</th>
-								<th>Estado</th>
-								<th class="actions"><?php __('Acciones');?></th>
+							<th>Subproyecto</th>
+							<th>Presupuesto</th>
+							<th>Cronograma</th>
+							<th>Estado</th>
+							<th class="actions"><?php __('Acciones');?></th>
 						</tr>
 						<?php
 						$i = 0;
@@ -36,7 +34,7 @@
 							<td><?php echo $subproyecto['nombre']; ?>&nbsp;</td>
 							<td>
 								<?php if($subproyecto['presupuesto_path']){
-										echo $html->link("ver PDF",array("controller"=>"subproyectos","action"=>"verPresupuesto", $subproyecto['id'])); 
+										echo $this->Html->link("ver PDF",array("controller"=>"subproyectos","action"=>"verPresupuesto", $subproyecto['id'])); 
 										}else{
 											
 										}
@@ -44,7 +42,7 @@
 							</td>
 							<td>
 								<?php if($subproyecto['cronograma_path']){
-										echo $html->link("ver PDF",array("controller"=>"subproyectos","action"=>"verCronograma", $subproyecto['id'])); 
+										echo $this->Html->link("ver PDF",array("controller"=>"subproyectos","action"=>"verCronograma", $subproyecto['id'])); 
 										}else{
 											
 										}
@@ -93,25 +91,23 @@
 				</div>
 			
 			<div class="panel_lateral">
-			
-				<?php echo $html->link("VER ARCHIVOS (".count($proyecto["ArchivoProyecto"]).")",array("controller"=>"archivoProyectos","action"=>"index",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
-				<?php echo $html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link("VER ARCHIVOS (".count($proyecto["Archivo"]).")",array("controller"=>"archivoProyectos","action"=>"index",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link(sprintf(__('AÑADIR %s', true), __('SUB PROYECTO', true)), array("controller"=>"subproyectos",'action' => 'add', $proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
-			<?php echo $this->Html->link(sprintf(__('Lista de Correo', true), __('Contratos', true)), array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link(sprintf(__('Lista de Correo', true), __('Contratos', true)), array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 			</div>
 				<div style="clear:both;"></div>
 			<br />
+				<?php //debug($comentariosPrivados); ?>
 				<div class="pestana3">Comentarios / Observaciones</div>
 				<div class="comentarios publicos">
-				
-					<?php echo $this->element("commentsproyecto",array("observacionesPublicas"=>$comentariosPublicos,"modelo"=>"Publicos"));?>
+					<?php echo $this->element("commentsproyecto",array("observacionesPublicas"=>$comentariosPublicos,"modelo"=>"Publico"));?>
 					<div style="clear:both;"></div>
 				</div>
 				<div style="border:3px dashed #E10000;">
 				<div class="pestana3 ">Comentarios / Observaciones</div>
 				<div class="comentarios privados" style="margin-top:0;">
-
-					<?php echo $this->element("commentsproyecto",array("observacionesPrivadas"=>$comentariosPrivados,"modelo"=>"Privados"));?>
+					<?php echo $this->element("commentsproyecto",array("observacionesPrivadas"=>$comentariosPrivados,"modelo"=>"Privado"));?>
 					<div style="clear:both;"></div>
 				</div>			
 			</div>
@@ -119,7 +115,7 @@
 
 
 	<div style="display:none">
-		<div id="usuario" usuarioId="<?php echo $session->read("Auth.Usuario.id");?>"></div>
+		<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>
 		<div id="equipo" proyectoId="<?php echo $proyecto["Proyecto"]["id"];?>"></div>
 	</div>
 <script> //SCRIPT para Registrar la ultima visita al equipo del usuario

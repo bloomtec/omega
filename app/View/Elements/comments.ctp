@@ -1,22 +1,22 @@
 <?php //debug($this -> Session -> read('Auth')); ?>
 <div class="historial" nombre="<?php echo $this -> Session -> read("Auth.User.nombre"); ?>">
 <?php 
-if($modelo=="Publica"){
+if($modelo=="Publica") {
 foreach($observacionesPublicas as $observacion):?>
 	<div class="observacion <?php echo $observacion["Usuario"]["rol"]; ?>">
 		<div class="encabezado"><div class="nombre"><?php echo $observacion["Usuario"]["nombre_de_usuario"]; ?>:</div>  <div class="fecha"> <?php echo $observacion["Observacion"]["created"]; ?></div></div>
 		<div class="cuerpo"><?php echo $observacion["Observacion"]["texto"]; ?></div>
 	</div>
-<?php
+	<?php
 		endforeach;
-		}else{
+		} else {
 		foreach($observacionesPrivadas as $observacion):
 	?>
-<div class="observacion privada">
+	<div class="observacion privada">
 		<div class="encabezado"><div class="nombre"><?php echo $observacion["Usuario"]["nombre_de_usuario"]; ?>:</div>  <div class="fecha"> <?php echo $observacion["Observacion"]["created"]; ?></div></div>
 		<div class="cuerpo"><?php echo $observacion["Observacion"]["texto"]; ?></div>
 	</div>
-<?php
+	<?php
 		endforeach;
 		}
 	?>

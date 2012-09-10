@@ -19,13 +19,72 @@ class ContratosController extends AppController {
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
 		}
+		if($this -> request -> is('post')) {
+			$conditions = array();
+			if(isset($this -> request -> data['Contrato']['codigo']) && !empty($this -> request -> data['Contrato']['codigo'])) {
+				$equipos = $this -> Contrato -> Equipo -> find(
+					'list',
+					array(
+						'conditions' => array(
+							'Equipo.codigo LIKE' => '%' . $this -> request -> data['Contrato']['codigo'] . '%'
+						),
+						'fields' => array(
+							'Equipo.id'
+						)
+					)
+				);
+				$conditions['equipo_id'] = $equipos;
+			}
+			if(isset($this -> request -> data['Contrato']['categorias_equipo_id']) && !empty($this -> request -> data['Contrato']['categorias_equipo_id'])) {
+				$equipos = $this -> Contrato -> Equipo -> find(
+					'list',
+					array(
+						'conditions' => array(
+							'Equipo.categorias_equipo_id' => $this -> request -> data['Contrato']['categorias_equipo_id']
+						),
+						'fields' => array(
+							'Equipo.id'
+						)
+					)
+				);
+				if(isset($conditions['equipo_id'])) {
+					$equipos_tmp = $conditions['equipo_id'];
+					$equipos = array_merge($equipos, $equipos_tmp);
+				}
+				$conditions['equipo_id'] = $equipos;
+			}
+			$this -> Contrato -> bindModel(
+				array(
+					'hasAndBelongsToMany' => array(
+						'Equipo' => array(
+							'className' => 'Equipo',
+							'joinTable' => 'contratos_equipos',
+							'foreignKey' => 'contrato_id',
+							'associationForeignKey' => 'equipo_id',
+							'unique' => 'keepExisting',
+							'conditions' => $conditions,
+							'fields' => '',
+							'order' => '',
+							'order' => array('ContratosEquipo.tiene_publicacion_omega' => 'desc'),
+							'limit' => '',
+							'offset' => '',
+							'finderQuery' => '',
+							'deleteQuery' => '',
+							'insertQuery' => ''
+						)
+					)
+				)
+			);
+		}
 		$this -> Contrato -> contain(
 			'Estado',
 			'Tipo',
 			'Empresa',
 			'Equipo.CategoriasEquipo'
 		);
-		$this -> set('contrato', $this -> Contrato -> read(null, $id));
+		$contrato = $this -> Contrato -> read(null, $id);
+		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
+		$this -> set(compact('contrato', 'categoriasEquipos'));
 	}
 
 	public function admin_index() {
@@ -56,6 +115,41 @@ class ContratosController extends AppController {
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
 		}
+		$conditions = array();
+		if($this -> request -> is('post')) {
+			if(isset($this -> request -> data['Contrato']['codigo']) && !empty($this -> request -> data['Contrato']['codigo'])) {
+				$equipos = $this -> Contrato -> Equipo -> find(
+					'list',
+					array(
+						'conditions' => array(
+							'Equipo.codigo LIKE' => '%' . $this -> request -> data['Contrato']['codigo'] . '%'
+						),
+						'fields' => array(
+							'Equipo.id'
+						)
+					)
+				);
+				$conditions['equipo_id'] = $equipos;
+			}
+			if(isset($this -> request -> data['Contrato']['categorias_equipo_id']) && !empty($this -> request -> data['Contrato']['categorias_equipo_id'])) {
+				$equipos = $this -> Contrato -> Equipo -> find(
+					'list',
+					array(
+						'conditions' => array(
+							'Equipo.categorias_equipo_id' => $this -> request -> data['Contrato']['categorias_equipo_id']
+						),
+						'fields' => array(
+							'Equipo.id'
+						)
+					)
+				);
+				if(isset($conditions['equipo_id'])) {
+					$equipos_tmp = $conditions['equipo_id'];
+					$equipos = array_merge($equipos, $equipos_tmp);
+				}
+				$conditions['equipo_id'] = $equipos;
+			}
+		}
 		$this -> Contrato -> bindModel(
 			array(
 				"hasAndBelongsToMany" => array(
@@ -65,7 +159,7 @@ class ContratosController extends AppController {
 						'foreignKey' => 'contrato_id',
 						'associationForeignKey' => 'equipo_id',
 						'unique' => true,
-						'conditions' => "",
+						'conditions' => $conditions,
 						'fields' => '',
 						'order' => array(
 							"ContratosEquipo.tiene_publicacion_empresa" => "desc"

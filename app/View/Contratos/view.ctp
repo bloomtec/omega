@@ -39,11 +39,20 @@
 <div class="related">
 	<h3><?php echo __('Equipos Relacionados');?></h3>
 	<?php if (!empty($contrato['Equipo'])):?>
+	<table>
+		<?php echo $this -> Form -> create('Contrato'); ?>
+		<tr><th>Código</th><th>Categoría Equipo</th><th></th></tr>
+		<tr>
+			<td><?php echo $this -> Form -> input('codigo', array('label' => false)); ?></td>
+			<td><?php echo $this -> Form -> input('categorias_equipo_id', array('label' => false, 'empty' => 'Seleccione...')); ?></td>
+			<td><?php echo $this -> Form -> end('Buscar Equipo'); ?></td>
+		</tr>
+	</table>
 	<table cellpadding = "0" cellspacing = "0">
 		<tr>
 			<th><?php echo __('Alertas'); ?></th>
-			<th><?php echo __('Codigo Equipo'); ?></th>
 			<th><?php echo __('Código'); ?></th>
+			<th><?php echo __('Categoría'); ?></th>
 			<th><?php echo __('Ficha Tecnica'); ?></th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
 		</tr>
@@ -61,8 +70,8 @@
 			<td style="width:180px;">
 				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
-			<td><?php echo $equipo['id'];?></td>
 			<td><?php echo $equipo['codigo'];?></td>
+			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
 			<td><?php if($equipo['ficha_tecnica']&&$equipo['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['id']), array('target'=>'_BLANK'));?></td>
 			<td class="actions">
 				<?php 
