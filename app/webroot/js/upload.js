@@ -17,12 +17,14 @@ $(document).ready(function() {
 			var path = "/files";
 			var file = d.split("/");
 			var name = path + "/" + file[(file.length - 1)];
+			var category = $('#categoria_archivo_id option:selected').val();
 			//var name=path+"/"+c.name;
 
 			if (controller && action) {
 				$.post(server + controller + "/" + action, {
 					"id" : id,
-					"path" : name
+					"path" : name,
+					"category" : category
 				}, function(data) {
 					if (data != "NO") {
 						$(".uploaded").html(data);

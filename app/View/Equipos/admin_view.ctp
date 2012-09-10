@@ -279,6 +279,7 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 	
 			
 			<div class="panel_lateral">
+				<?php echo $this -> Html -> link('CATEGORÍAS ARCHIVO', array('controller' => 'categorias_archivos', 'action' => 'index'), array("class"=>"boton", 'target' => '_BLANK')); ?>
 				<?php echo $this -> Html->link("VER ARCHIVOS (".count($equipo["Archivo"]).")",array("controller"=>"archivos","action"=>"index",$equipo["Equipo"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this -> Html->link("SUBIR ARCHIVOS",array("controller"=>"archivos","action"=>"add",$equipo["Equipo"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>	
 			</div>

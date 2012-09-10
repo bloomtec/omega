@@ -139,7 +139,6 @@ class ObservacionesController extends AppController {
 					$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"] = true;
 				//Toco poner tiene publicacion cliente en verdadero porque os elementos de alertas asumen que las publicaciones del cliente son las que activan las alarmas para omega
 				$this -> Observacion -> ContratosEquipo -> save($contratoEquipo);
-
 				echo "OK";
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
