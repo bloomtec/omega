@@ -51,7 +51,7 @@ class AppController extends Controller {
 		$this -> Auth -> authError = 'No tiene permiso para ver esta sección';
 		if (!isset($this -> params['prefix'])) {
 			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
-			$this -> Auth -> loginRedirect = array('controller' => 'usuarios', 'action' => 'index', 'admin' => false);
+			$this -> Auth -> loginRedirect = array('controller' => 'empresas', 'action' => 'index', 'admin' => false);
 			$this -> Auth -> logoutRedirect = array('controller' => 'usuarios', 'action' => 'login', 'admin' => false);
 		} elseif ($this -> params['prefix'] == 'admin') {
 			$this -> Auth -> loginAction = array('controller' => 'usuarios', 'action' => 'login', 'admin' => true);

@@ -15,6 +15,7 @@ class EquiposController extends AppController {
 
 	public function view($id = null, $contratoId, $tipoContrato) {
 		$this -> layout = "empresa";
+		$this -> Equipo -> contain('Archivo');
 		if (!$id) {
 			$this -> Session -> setFlash(__('Equipo no válido'), 'crud/error');
 			$this -> redirect(array('action' => 'index'));
@@ -103,7 +104,9 @@ class EquiposController extends AppController {
 				)
 			)
 		);
-		$this -> set(compact("observacionesPublicas", "observacionesPrivadas", "contratoEquipo", "tipoContrato", "contrato", "eventos", "equipo"));
+		$equipo_id = $equipo['Equipo']['id'];
+		$usuario_id = $this -> Auth -> user('id');
+		$this -> set(compact("observacionesPublicas", "observacionesPrivadas", "contratoEquipo", "tipoContrato", "contrato", "eventos", "equipo", 'equipo_id', 'usuario_id'));
 	}
 
 	public function add() {

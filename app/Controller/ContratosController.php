@@ -19,6 +19,12 @@ class ContratosController extends AppController {
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
 		}
+		$this -> Contrato -> contain(
+			'Estado',
+			'Tipo',
+			'Empresa',
+			'Equipo.CategoriasEquipo'
+		);
 		$this -> set('contrato', $this -> Contrato -> read(null, $id));
 	}
 

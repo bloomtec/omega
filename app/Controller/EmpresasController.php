@@ -15,7 +15,17 @@ class EmpresasController extends AppController {
 	 */
 	public function index() {
 		//$this -> Empresa -> recursive = 0;
-		$this -> set('empresas', $this -> paginate());
+		$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
+		$this -> set('servicios_usuario', $servicios_usuario);
+		$this -> set('empresa', $this -> Empresa -> read(null, $this -> Auth -> user('empresa_id')));
+		$this -> paginate = array(
+			'Contrato' => array(
+				'conditions' => array(
+					'Contrato.empresa_id' => $this -> Auth -> user('empresa_id')
+				)
+			)
+		);
+		$this -> set('contratos', $this -> paginate('Contrato'));
 	}
 
 	/**
@@ -37,10 +47,8 @@ class EmpresasController extends AppController {
 		$usuario = $this -> Empresa -> Usuario -> read(null, $this -> Auth -> user('id'));
 		$usuario["Usuario"]["contraseña"] = $this -> request -> data["Empresa"]["contraseña"];
 		$usuario["Usuario"]["verificar_contraseña"] = $this -> request -> data["Empresa"]["verificar_contraseña"];
-		//$usuario["Usuario"]["cambio_password"] = true;
-
+		$usuario["Usuario"]["primer_login"] = false;
 		if ($this -> Empresa -> Usuario -> save($usuario)) {
-
 			$Name = "OMEGA INGENIEROS";
 			//senders name
 			$email = "info@omegaingenieros.com";
@@ -54,7 +62,7 @@ class EmpresasController extends AppController {
 			$mail_body = "Gracias por usar nuestra plataforma de Atencion de clientes, sus datos son los siguientes:\n usuario:" . $usuario["Usuario"]["nombre_de_usuario"] . "\nContraseña:" . $this -> request -> data["Empresa"]["contraseña"];
 			//mail($recipient, $subject, $mail_body, $header);
 			$this -> sendbySMTP("", $usuario["Usuario"]["correo"], $subject, $mail_body);
-			$this -> Session -> write("Auth.Usuario.cambio_password", true);
+			$this -> Session -> write("Auth.User.primer_login", false);
 			$this -> Session -> setFlash(__('Se ha cambiado su contraseña'), 'crud/success');
 			$this -> redirect(array('action' => 'index'));
 		} else {

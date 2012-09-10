@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Observacions Controller
  *
@@ -85,7 +86,7 @@ class ObservacionesController extends AppController {
 
 				$this -> Observacion -> Usuario -> contain();
 				$usuario = $this -> Observacion -> Usuario -> read(null, $comentario["Observacion"]["usuario_id"]);
-
+				$this -> loadModel('Contrato');
 				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
 				$this -> enviarCorreoObservacionesPublicas($contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
 				echo "OK";
@@ -102,7 +103,7 @@ class ObservacionesController extends AppController {
 
 	function enviarCorreoObservacionesPublicas($contratoId, $mail_body) {
 		$this -> loadModel('Contrato');
-		$this -> Contrato -> contain('Correo');
+		$this -> Contrato -> contain('Correo', 'Empresa');
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => "Contrato", "Correo.llave_foranea" => $contratoId)));
 		$Name = "OMEGA INGENIEROS";

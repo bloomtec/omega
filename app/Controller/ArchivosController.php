@@ -8,10 +8,21 @@ App::uses('AppController', 'Controller');
 class ArchivosController extends AppController {
 
 	public function index($equipoId) {
-		//debug();
 		$this -> layout = "ajax";
-		$this -> Archivo -> recursive = 0;
-		$this -> set('archivos', $this -> paginate("Archivo", array("Archivo.equipo_id" => $this -> params["pass"][0])));
+		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
+		$equipo_id = null;
+		if($equipoId) {
+			$equipo_id = $equipoId;
+		} else {
+			$equipo_id = $this -> params["pass"][0];
+		}
+		$this -> paginate = array(
+			'conditions' => array(
+				'Archivo.modelo' => 'Equipo',
+				'Archivo.llave_foranea' => $equipoId
+			)
+		);
+		$this -> set('archivos', $this -> paginate());
 		$this -> set(compact("equipoId", $equipoId));
 	}
 
@@ -37,7 +48,7 @@ class ArchivosController extends AppController {
 		} else {
 			$equipoId = $this -> params["pass"][0];
 		}
-
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
 		$this -> set(compact('equipoId'));
 	}
 

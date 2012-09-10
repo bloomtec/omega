@@ -33,7 +33,7 @@
 		echo $this -> Html -> css('cake.generic');
 		echo $this -> Html -> script('jquery.min');
 		echo $this -> Html -> script("jquery.tools.min");
-		echo $this -> Html -> script("jquery.uploadify.v2.1.0");
+		echo $this -> Html -> script('jquery.uploadify.v2.1.4.min');
 		echo $this -> Html -> script("swfobject");
 		echo $this -> Html -> script("thickbox");
 		echo $this -> Html -> script("common");
@@ -46,10 +46,10 @@
 		<div id="container">
 			<div id="header">
 				<div class="wrap">
-					<div class="llave"><?php echo $html -> link($html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "clientes"), array('escape' => false)); ?></div>
+					<div class="llave"><?php echo $this -> Html -> link($this -> Html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "clientes"), array('escape' => false)); ?></div>
 					<div class="titulo">ZONA EXCLUSIVA <span style="font-weight:bold;">CLIENTES</div>
-					<div class="logo"><?php echo $html -> image("logo.png"); ?></div>
-					<div class="logout"><?php echo $html -> link("Salir", array("controller" => "usuarios", "action" => "logout")); ?></div>
+					<div class="logo"><?php echo $this -> Html -> image("logo.png"); ?></div>
+					<div class="logout"><?php echo $this -> Html -> link("Salir", array("controller" => "usuarios", "action" => "logout")); ?></div>
 				</div>
 			</div>
 			<div id="content">
@@ -59,7 +59,7 @@
 	
 			</div>
 			<div id="footer">
-				<?php echo $this -> Html -> link("developed by: " . $html -> image("bloom_negro.png", array("height" => 12)), 'http://www.bloomweb.co', array('target' => '_blank', 'escape' => false)); ?>
+				<?php echo $this -> Html -> link("developed by: " . $this -> Html -> image("bloom_negro.png", array("height" => 12)), 'http://www.bloomweb.co', array('target' => '_blank', 'escape' => false)); ?>
 			</div>
 		</div>
 		<?php echo $this -> element('sql_dump'); ?>

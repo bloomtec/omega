@@ -133,6 +133,7 @@ li{
 	overflow: auto;
 	width:1280px;
 	margin:0 auto;
+	/*min-height: 480px;*/
 }
 #footer {
 	clear: both;
