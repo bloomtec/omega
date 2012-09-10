@@ -599,14 +599,13 @@ class ContratosController extends AppController {
 	}
 
 	public function AJAX_subirCotizacion() {
-		$contratoId = $this -> params["form"]["id"];
-		$cotizacionPath = $this -> params["form"]["path"];
+		$contratoId = $this -> data["id"];
+		$cotizacionPath = $this -> data["path"];
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		if ($contrato["Contrato"]["cotizacion"]) {
 			$archivo = substr($contrato["Contrato"]["cotizacion"], 1);
 			$archivo = str_replace("/", DS, $archivo);
 			unlink(WWW_ROOT . $archivo);
-
 		}
 		$contrato["Contrato"]["cotizacion"] = $cotizacionPath;
 		$contrato["Contrato"]["estado_id"] = 2;
@@ -617,6 +616,9 @@ class ContratosController extends AppController {
 			$this -> enviarCorreo($contrato["Contrato"]["id"], "Se ha subido la cotización del contrato: " . $contrato["Contrato"]["nombre"]);
 			echo "La cotización ha sido subida con exito";
 		} else {
+			debug($this -> data);
+			debug($contrato);
+			debug($this -> Contrato -> invalidFields());
 			echo "NO";
 		}
 		Configure::Write("debug", 0);
@@ -648,13 +650,13 @@ class ContratosController extends AppController {
 		//	mail($contrato["Empresa"]["email"], $subject, $mail_body, $header);
 		//	mail($emailUsuario, $subject, $mail_body, $header);
 		$this -> sendbySMTP("", $emailUsuario, $subject, $mail_body);
-		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["email"], $subject, $mail_body);
+		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body);
 		if (!empty($correos)) {
 			foreach ($correos as $correo) {
-				$recipient = $correo["Correo"]["email"];
+				$recipient = $correo["Correo"]["correo"];
 				//recipient
 				//mail($recipient, $subject, $mail_body, $header);
-				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["email"], $subject, $mail_body);
+				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);
 			}
 		}
 		return true;

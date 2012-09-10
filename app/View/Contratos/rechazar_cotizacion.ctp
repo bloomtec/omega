@@ -7,13 +7,13 @@ Ayúdenos a mejorar. Por favor indíquenos el motivo del rechazo de la cotizaci�
 </p>
 <br />
 <div class="verificacion"><?php echo $verificacion?></div>
-<?php echo $form->create("Contrato",array("controller"=>"contratos","action"=>"confirmarRechazo"));?>
-<?php echo $form->input("verificacion",array("id"=>"inputVerificacion","label"=>false,"div"=>"verificacionInput"));?>
-<?php echo $form->input("id",array("value"=>$contratoId,"label"=>false,"div"=>"verificacionInput"));?>
+<?php echo $this->Form->create("Contrato",array("controller"=>"contratos","action"=>"confirmarRechazo"));?>
+<?php echo $this->Form->input("verificacion",array("id"=>"inputVerificacion","label"=>false,"div"=>"verificacionInput"));?>
+<?php echo $this->Form->input("id",array("value"=>$contratoId,"label"=>false,"div"=>"verificacionInput"));?>
 <div style="clear:both"></div>
 <br />
-<?php echo $form->input("comentarios",array("id"=>"inputVerificacion","label"=>"Comentarios"));?>
-<?php echo $form->end("Rechazar Cotizacion",array("class"=>"boton"));?>
+<?php echo $this->Form->input("comentarios",array("id"=>"inputVerificacion","label"=>"Comentarios"));?>
+<?php echo $this->Form->end("Rechazar Cotizacion",array("class"=>"boton"));?>
 <?php 
 	//echo $html->link("Aprobar Cotización",array("controller"=>"contratos","action"=>"confirmarAprobacion",$contratoId,$this->Form->value('Contrato.comentarios')),array("class"=>"boton","style"=>"margin-left:40px;"));
 	

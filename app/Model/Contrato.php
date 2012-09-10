@@ -33,7 +33,7 @@ class Contrato extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'comentarios' => array(
+		/*'comentarios' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',
@@ -42,7 +42,7 @@ class Contrato extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		),*/
 		'tiene_alerta' => array(
 			'boolean' => array(
 				'rule' => array('boolean'),
