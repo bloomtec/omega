@@ -100,7 +100,7 @@
 		<div id="equipo" proyectoId="<?php echo $proyecto["Proyecto"]["id"];?>"></div>
 	</div>
 <script> //SCRIPT para Registrar la ultima visita al equipo del usuario
-var server="/omega/";
+var server="/";
 $.post(server+"proyectos/quitarPulicacionParaCliente",{"id":"<?php echo $proyecto["Proyecto"]["id"];?>"},function(data){
 	
 });

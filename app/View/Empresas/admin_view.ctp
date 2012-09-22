@@ -382,7 +382,7 @@
 <script>
 
 
-var server="/omega/";
+var server="/";
 
 $(document).ready(function(){
 	$(".postventa").hide();

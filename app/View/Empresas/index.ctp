@@ -297,7 +297,7 @@
 </div>
 <!--<div class="verificarMensajes"></div><div style="display:none;" class="equipo" equipoId="<?php echo $proyecto["Proyecto"]["id"]; ?>"></div>-->
 <script>
-	var server="/omega/";
+	var server="/";
 	$.each($(".equipo"), function(i, val){
 		$.post(server+"equipos/AJAX_verificarVisitas",{"equipoId":$(val).attr("equipoId"),"usuarioId":"<?php echo $this -> Session -> read('Auth.User.id'); ?>"},function(data){
 		if(parseInt(data)>0){

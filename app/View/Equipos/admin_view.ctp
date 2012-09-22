@@ -304,7 +304,7 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 		<div id="equipo" equipoId="<?php echo $equipo_id; ?>"></div>
 	</div>
 <script> //SCRIPT para Registrar la ultima visita al equipo del usuario
-var server="/omega/";
+var server="/";
 $.post(server+"equipos/AJAX_registrarVisita",{"contratos_equipo_id":"<?php echo $contratoEquipo["ContratosEquipo"]["id"];?>","usuarioId":"<?php echo $usuario_id;?>"},function(data){
 	//$("body").append(data);
 });

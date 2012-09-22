@@ -35,7 +35,7 @@
 </div>
 <script>
 $(document).ready(function(){
-	var server="/omega/";
+	var server="/";
 	$(".eliminarAlarma").click(function(){
 		var alarmaId=$(this).attr("id");
 		$.post(server+"contratos/AJAX_eliminarAlarma",{"alarmaId":alarmaId},function(data){

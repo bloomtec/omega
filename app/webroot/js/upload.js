@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var server = '/omega/'
+	var server = '/'
 	var path = '/files';
 	var message = $('#upload').attr('message');
 	var controller = $('#upload').attr('controller');
@@ -80,4 +80,4 @@ $(document).ready(function() {
 
 		}
 	});
-}); 
+});

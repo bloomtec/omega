@@ -92,7 +92,7 @@
 		<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>		
 </div>
 <script>
-var server="/omega/";
+var server="/";
 $.each($(".equipo"), function(i, val){
 	$.post(server+"equipos/AJAX_verificarVisitas",{"contrato_id":<?php echo $contrato['Contrato']["id"];?>,"usuarioId":"<?php echo $this->Session->read('Auth.User.id');?>"},function(data){
 		if(parseInt(data)>0){
