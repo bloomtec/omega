@@ -88,11 +88,13 @@ class AppController extends Controller {
 	 * @param $subject
 	 * @param $body
 	 */
-	public function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
+	public function sendbySMTP($nombrePara, $correoPara, $subject, $body, $headers = false) {
 		$email = new CakeEmail('smtp');
-		//$email -> to($nombrePara . '<' . $correoPara . '>');
 		$email -> to($correoPara);
 		$email -> subject($subject);
+		if($headers && !empty($headers)) {
+			$email -> addHeaders($headers);
+		}
 		$email -> send($body);
 	}
 	

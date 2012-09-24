@@ -48,6 +48,7 @@ class ObservacionesController extends AppController {
 				$this -> Observacion -> ContratosEquipo -> Contrato -> contain();
 				$contrato = $this -> Observacion -> ContratosEquipo -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
 				$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
+				
 				if (in_array(1, $servicios_usuario)) {
 					if (!$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"])
 						$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"] = true;
@@ -56,6 +57,7 @@ class ObservacionesController extends AppController {
 						$this -> Observacion -> ContratosEquipo -> Contrato -> save();
 					}
 				}
+
 				if ($this -> Auth -> user('rol_id') <= 2) {
 					if (!$contratoEquipo["ContratosEquipo"]["tiene_publicacion_omega"])
 						$contratoEquipo["ContratosEquipo"]["tiene_publicacion_omega"] = true;
@@ -64,7 +66,15 @@ class ObservacionesController extends AppController {
 						$this -> Observacion -> ContratosEquipo -> Contrato -> save();
 					}
 				}
+
 				$this -> Observacion -> ContratosEquipo -> save($contratoEquipo);
+
+				$this -> Observacion -> Usuario -> contain();
+				$usuario = $this -> Observacion -> Usuario -> read(null, $comentario["Observacion"]["usuario_id"]);
+				$this -> loadModel('Contrato');
+				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
+				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				
 				echo "OK";
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
@@ -91,6 +101,7 @@ class ObservacionesController extends AppController {
 				$this -> Observacion -> ContratosEquipo -> Contrato -> contain();
 				$contrato = $this -> Observacion -> ContratosEquipo -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
 				$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
+				
 				if (in_array(1, $servicios_usuario)) {
 					if (!$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"])
 						$contratoEquipo["ContratosEquipo"]["tiene_publicacion_empresa"] = true;
@@ -99,6 +110,7 @@ class ObservacionesController extends AppController {
 						$this -> Observacion -> ContratosEquipo -> Contrato -> save();
 					}
 				}
+				
 				if ($this -> Auth -> user('rol_id') <= 2) {
 					if (!$contratoEquipo["ContratosEquipo"]["tiene_publicacion_omega"])
 						$contratoEquipo["ContratosEquipo"]["tiene_publicacion_omega"] = true;
@@ -109,12 +121,13 @@ class ObservacionesController extends AppController {
 				}
 
 				$this -> Observacion -> ContratosEquipo -> save($contratoEquipo);
-
+				
 				$this -> Observacion -> Usuario -> contain();
 				$usuario = $this -> Observacion -> Usuario -> read(null, $comentario["Observacion"]["usuario_id"]);
 				$this -> loadModel('Contrato');
 				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
-				$this -> enviarCorreoObservacionesPublicas($contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				
 				echo "OK";
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
@@ -127,25 +140,27 @@ class ObservacionesController extends AppController {
 		exit(0);
 	}
 
-	function enviarCorreoObservacionesPublicas($contratoId, $mail_body) {
+	function enviarCorreoObservacionesPublicas($observacionId, $contratoId, $mail_body) {
 		$this -> loadModel('Contrato');
 		$this -> Contrato -> contain('Correo', 'Empresa');
 		$contrato = $this -> Contrato -> read(null, $contratoId);
-		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => "Contrato", "Correo.llave_foranea" => $contratoId)));
-		$Name = "OMEGA INGENIEROS";
-		//senders name
-		$email = "no-responder@omegaingenieros.com";
-		//senders e-mail adress
+		$modelo = 'Contrato';
+		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => $modelo, "Correo.llave_foranea" => $contratoId)));
+		// Asunto del mensaje
 		$subject = "Nueva actividad en el contrato: " . $contrato["Contrato"]["nombre"];
-		//subject
-		$header = "From: " . $Name . " <" . $email . ">\r\n";
-		//optional headerfields
-		//	mail($contrato["Cliente"]["email"], $subject, $mail_body, $header);
-		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body);
+		// Cabeceras
+		$headers = array(
+			'X-observacion_id' => $observacionId,
+			'X-modelo' => $modelo,
+			'X-llave_foranea' => $contratoId,
+		);
+		// Enviar al contacto principal
+		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body, $headers);
 		if (!empty($correos)) {
 			foreach ($correos as $correo) {
 				$recipient = $correo["Correo"]["correo"];
-				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);
+				// Enviar a otros contactos registrados
+				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body, $headers);
 			}
 		}
 		return true;

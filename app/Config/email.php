@@ -42,47 +42,21 @@
  */
 class EmailConfig {
 
-	public $default = array(
-		'transport' => 'Mail',
-		'from' => 'you@localhost',
-		'charset' => 'utf-8',
-		'headerCharset' => 'utf-8',
-	);
-	
-	/*function sendbySMTP($nombrePara, $correoPara, $subject, $body) {
-		$this -> Email -> smtpOptions = array(
-			'port' => '465',
-			'timeout' => '30',
-			'auth' => true,
-			'host' => 'ssl://smtp.gmail.com',
-			'username' => 'omegaingsoporte@gmail.com',
-			'password' => 'omega123',
-		);
-		$this -> Email -> delivery = 'smtp';
-		$this -> Email -> from = 'Aplicación Web Omega Ingenieros <no-responder@omegaingenieros.com>';
-		$this -> Email -> to = $nombrePara . '<' . $correoPara . '>';
-		$this -> Email -> subject = $subject;
-		$this -> Email -> send($body);
-		$this -> Email -> reset();
-	}*/
-
 	public $smtp = array(
 		'transport' => 'Smtp',
-		'from' => array('no-responder@omegaingenieros.com' => 'Aplicación Web Omega Ingenieros'),
+		'from' => array('notificaciones@omega.bloomweb.co' => 'Aplicación Web Omega Ingenieros'),
 		'host' => 'ssl://smtp.gmail.com',
 		'port' => 465,
 		'timeout' => 30,
-		//'username' => 'omegaingsoporte@gmail.com',
-		'username' => 'juliodominguez@gmail.com',
-		//'password' => 'omega123',
-		'password' => 'Cobr@RojiVerde',
+		'username' => 'notificaciones@omega.bloomweb.co',
+		'password' => 'noti-omeg@',
 		'client' => 'smtp_helo_gmail.com',
 		'log' => false,
 		'charset' => 'utf-8',
 		'headerCharset' => 'utf-8',
 	);
 
-	public $fast = array(
+	/*public $fast = array(
 		'from' => 'you@localhost',
 		'sender' => null,
 		'to' => null,
@@ -111,6 +85,6 @@ class EmailConfig {
 		'log' => true,
 		'charset' => 'utf-8',
 		'headerCharset' => 'utf-8',
-	);
+	);*/
 
 }
