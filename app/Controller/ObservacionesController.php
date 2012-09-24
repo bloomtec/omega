@@ -17,7 +17,7 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-		$text = print_r($_POST, true);
+		$text = json_decode($_POST['mandrill_events']);
 		$this -> Observacion -> create();
 		$this -> Observacion -> save(
 			array(
@@ -26,7 +26,7 @@ class ObservacionesController extends AppController {
 					'modelo' => 'PruebasEnvio',
 					'llave_foranea' => 0,
 					'es_publico' => 0,
-					'texto' => $text
+					'texto' => debug($text)
 				)
 			)
 		);
