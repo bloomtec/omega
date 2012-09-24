@@ -17,7 +17,8 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-
+		$this -> autoRender = false;
+		exit(0);
 	}
 
 	function admin_AJAX_addObservacionPublica() {
