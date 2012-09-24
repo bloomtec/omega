@@ -7,6 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class ObservacionesController extends AppController {
 
+	/**
+	 * Método para manejar respuestas de los correos para
+	 * las respuestas a observaciones.
+	 */
+	public function emailResponseHandler() {
+		
+	}
+
 	function admin_AJAX_addObservacionPublica() {
 		$this -> Observacion -> bindModel(array('belongsTo' => array('Usuario' => array('className' => 'Usuario', 'foreignKey' => 'usuario_id', 'conditions' => '', 'fields' => '', 'order' => ''), 'ContratosEquipo' => array('className' => 'ContratosEquipo', 'foreignKey' => 'llave_foranea', 'conditions' => array('modelo' => 'ContratosEquipo'), 'fields' => '', 'order' => ''))));
 		$comentario["Observacion"]["usuario_id"] = $this -> data['Observacion']["usuario_id"];
