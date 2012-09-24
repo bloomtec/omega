@@ -7,12 +7,17 @@ App::uses('AppController', 'Controller');
  */
 class ObservacionesController extends AppController {
 
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this -> Auth -> allow('emailResponseHandler');
+	}
+
 	/**
 	 * Método para manejar respuestas de los correos para
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-		
+
 	}
 
 	function admin_AJAX_addObservacionPublica() {
