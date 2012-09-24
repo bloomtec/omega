@@ -17,7 +17,7 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-		$text = print_r($_POST);
+		$text = print_r($_POST, true);
 		$this -> Observacion -> create();
 		$this -> Observacion -> save(
 			array(
