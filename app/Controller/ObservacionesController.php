@@ -17,6 +17,19 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
+		$text = print_r($_POST);
+		$this -> Observacion -> create();
+		$this -> Observacion -> save(
+			array(
+				'Observacion' => array(
+					'usuario_id' => 1,
+					'modelo' => 'PruebasEnvio',
+					'llave_foranea' => 0,
+					'es_publico' => 0,
+					'texto' => $text
+				)
+			)
+		);
 		$this -> autoRender = false;
 		exit(0);
 	}
