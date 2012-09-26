@@ -30,9 +30,21 @@ class ObservacionesController extends AppController {
 					)
 			);
 			$this -> Observacion -> Usuario -> contain();
-			if($usuario = $this -> Observacion -> Usuario -> findByCorreo($from_email)) {
+			$usuario = $this -> Observacion -> Usuario -> findByCorreo($from_email);
+			if(!empty($usuario)) {
 				$observacion['Observacion']['usuario_id'] => $usuario['Usuario']['id']; 
 			}
+			$this -> Observacion -> create();
+			$this -> Observacion -> save($observacion);
+		} else {
+			$observacion = array(
+					'Observacion' => array(
+							'modelo' => 'PruebasEnvio',
+							'llave_foranea' => 0,
+							'es_publico' => 1,
+							'texto' => print_r($data, true);
+					)
+			);
 			$this -> Observacion -> create();
 			$this -> Observacion -> save($observacion);
 		}
