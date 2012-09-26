@@ -144,23 +144,33 @@ class ObservacionesController extends AppController {
 		$this -> loadModel('Contrato');
 		$this -> Contrato -> contain('Correo', 'Empresa');
 		$contrato = $this -> Contrato -> read(null, $contratoId);
+		$observacion = $this -> Observacion -> read(null, $observacionId);
 		$modelo = 'Contrato';
 		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => $modelo, "Correo.llave_foranea" => $contratoId)));
 		// Asunto del mensaje
 		$subject = "Nueva actividad en el contrato: " . $contrato["Contrato"]["nombre"];
 		// Cabeceras
-		$headers = array(
-			'X-observacion_id' => $observacionId,
-			'X-modelo' => $modelo,
-			'X-llave_foranea' => $contratoId,
+		$datos = array(
+			'observacion_id' => $observacionId,
+			'usuario_id' => $observacion['Observacion']['usuario_id'],
+			'modelo' => $modelo,
+			'llave_foranea' => $contratoId,
 		);
+		$datos = json_encode($datos);
+		$extra_content = '
+		
+		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		<div style="color:white; background-color: white;">' . $datos . '</div>
+		';
+		$mail_body .= $extra_content; 
 		// Enviar al contacto principal
-		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body, $headers);
+		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body);
 		if (!empty($correos)) {
 			foreach ($correos as $correo) {
 				$recipient = $correo["Correo"]["correo"];
 				// Enviar a otros contactos registrados
-				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body, $headers);
+				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);
 			}
 		}
 		return true;
