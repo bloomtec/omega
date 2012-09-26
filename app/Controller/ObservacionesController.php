@@ -17,7 +17,7 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-		$data = json_decode($_POST['mandrill_events']);
+		$data = json_decode($_POST['mandrill_events'], true);
 		$this -> Observacion -> create();
 		$this -> Observacion -> save(
 			array(
