@@ -19,7 +19,7 @@ class ObservacionesController extends AppController {
 						'event' => 'inbound',
 						'ts' => 1348662138,
 						'msg' => array(
-								'text' => 'hasta cuando?
+								'text' => 'asdlfkjasldñfkjaslñknlñkjñasdfasldfkj!!!lkjfsnfñafhng!!!
 
 											2012/9/26 Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>:
 											> El Usuario: jucedogi ha escrito el siguiente comentario: tests envío datos
@@ -52,7 +52,8 @@ class ObservacionesController extends AppController {
 		debug($email_text);
 		debug(strpos($email_text, '{"observacion_id"'));
 		debug(strrpos($email_text, '"}'));
-		debug(json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true));
+		$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
+		debug($info);
 	}
 
 	/**
@@ -63,7 +64,7 @@ class ObservacionesController extends AppController {
 		$data = json_decode($_POST['mandrill_events'], true);
 		
 		if(isset($data[0]['event']) && !empty($data[0]['event']) && $data[0]['event'] == 'inbound') {
-			$email_txt = $data[0]['msg']['txt'];
+			$email_text = $data[0]['msg']['text'];
 			$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
 			$from_email = $data[0]['msg']['from_email'];
 			$this -> Observacion -> create();
