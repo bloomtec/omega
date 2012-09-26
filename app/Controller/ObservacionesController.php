@@ -18,18 +18,37 @@ class ObservacionesController extends AppController {
 	 */
 	public function emailResponseHandler() {
 		$data = json_decode($_POST['mandrill_events'], true);
-		$this -> Observacion -> create();
-		$this -> Observacion -> save(
-			array(
-				'Observacion' => array(
-					'usuario_id' => 1,
-					'modelo' => 'PruebasEnvio',
-					'llave_foranea' => 0,
-					'es_publico' => 0,
-					'texto' => print_r($data, true)
-				)
-			)
-		);
+		
+		if(isset($data[0]['event']) && !empty($data[0]['event']) && $data[0]['event'] == 'inbound') {
+			$email_txt = $data[0]['msg']['txt'];
+			$from_email = $data[0]['msg']['from_email'];
+			$this -> Observacion -> create();
+			$this -> Observacion -> save(
+					array(
+							'Observacion' => array(
+									'usuario_id' => 1,
+									'modelo' => 'PruebasEnvio',
+									'llave_foranea' => 0,
+									'es_publico' => 1,
+									'texto' => $email_txt
+							)
+					)
+			);
+		} else {
+			$this -> Observacion -> create();
+			$this -> Observacion -> save(
+					array(
+							'Observacion' => array(
+									'usuario_id' => 1,
+									'modelo' => 'PruebasEnvio',
+									'llave_foranea' => 0,
+									'es_publico' => 0,
+									'texto' => print_r($data, true)
+							)
+					)
+			);
+		}
+		
 		$this -> autoRender = false;
 		exit(0);
 	}
