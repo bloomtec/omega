@@ -76,24 +76,21 @@ class ObservacionesController extends AppController {
 			$from_email = $data[0]['msg']['from_email'];
 			$texto = trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11)));
 			$texto = 'Se ha escrito desde el correo ' . $from_email . ': ' . $texto;
-			$this -> Observacion -> create();
-			$this -> Observacion -> save(
-					array(
-							'Observacion' => array(
-									'usuario_id' => 0,
-									'modelo' => $info['modelo'],
-									'llave_foranea' => $info['llave_foranea'],
-									'es_publico' => 1,
-									'texto' => $texto
-							)
-					)
+			$observacion = array(
+				'Observacion' => array(
+						'modelo' => $info['modelo'],
+						'llave_foranea' => $info['llave_foranea'],
+						'es_publico' => 1,
+						'texto' => $texto
+				)
 			);
+			$this -> Observacion -> create();
+			$this -> Observacion -> save($observacion);
 		} else {
 			$this -> Observacion -> create();
 			$this -> Observacion -> save(
 					array(
 							'Observacion' => array(
-									'usuario_id' => 1,
 									'modelo' => 'PruebasEnvio',
 									'llave_foranea' => 0,
 									'es_publico' => 0,
