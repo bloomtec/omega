@@ -17,26 +17,21 @@ class ObservacionesController extends AppController {
 	 * las respuestas a observaciones.
 	 */
 	public function emailResponseHandler() {
-		
-		// Procesar datos recibidos
 		$data = json_decode($_POST['mandrill_events'], true);
-		
-		// Crear el "objeto" Observacion
-		$observacion = array(
-			'Observacion' => array(
-				'modelo' => 'PruebasEnvio',
-				'llave_foranea' => 0,
-				'es_publico' => 1,
-				'texto' => print_r($data, true);
+		$this -> Observacion -> create();
+		$this -> Observacion -> save(
+			array(
+				'Observacion' => array(
+					'usuario_id' => 1,
+					'modelo' => 'PruebasEnvio',
+					'llave_foranea' => 0,
+					'es_publico' => 0,
+					'texto' => print_r($data, true)
+				)
 			)
 		);
-		
-		$this -> Observacion -> create();
-		$this -> Observacion -> save($observacion);
-		
 		$this -> autoRender = false;
 		exit(0);
-		
 	}
 
 	function admin_AJAX_addObservacionPublica() {
