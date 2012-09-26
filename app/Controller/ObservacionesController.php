@@ -19,7 +19,7 @@ class ObservacionesController extends AppController {
 	public function emailResponseHandler() {
 		
 		// Procesar datos recibidos
-		$data = json_decode($_POST['mandrill_events'][0], true);
+		$data = json_decode($_POST['mandrill_events'], true);
 		
 		// Crear el "objeto" Observacion
 		$observacion = array(
@@ -36,6 +36,7 @@ class ObservacionesController extends AppController {
 		
 		$this -> autoRender = false;
 		exit(0);
+		
 	}
 
 	function admin_AJAX_addObservacionPublica() {
