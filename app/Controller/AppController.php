@@ -91,6 +91,7 @@ class AppController extends Controller {
 	 */
 	public function sendbySMTP($nombrePara, $correoPara, $subject, $body, $headers = false) {
 		$email = new CakeEmail('smtp');
+		$email -> emailFormat('html');
 		$email -> to($correoPara);
 		$email -> subject($subject);
 		if($headers && !empty($headers)) {
