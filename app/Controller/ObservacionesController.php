@@ -30,7 +30,7 @@ class ObservacionesController extends AppController {
 									'modelo' => 'PruebasEnvio',
 									'llave_foranea' => 0,
 									'es_publico' => 1,
-									'texto' => $email_txt
+									'texto' => 'A ver si así sí!'
 							)
 					)
 			);
