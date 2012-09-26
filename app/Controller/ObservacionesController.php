@@ -50,10 +50,17 @@ class ObservacionesController extends AppController {
 		//debug($data);
 		$email_text = $data[0]['msg']['text'];
 		debug($email_text);
-		debug(strpos($email_text, '{"observacion_id"'));
-		debug(strrpos($email_text, '"}'));
 		$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
-		debug($info);
+		
+		debug(trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11))));
+		
+		$this -> Observacion -> Usuario -> contain('Observacion');
+		$usuario = $this -> Observacion -> Usuario -> findByCorreo($data[0]['msg']['from_email']);
+		debug($data[0]['msg']['from_email']);
+		debug($usuario);
+		$texto = trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11)));
+		$texto = 'Se ha escrito desde el correo ' . $data[0]['msg']['from_email'] . ': ' . $texto;
+		debug($texto);
 	}
 
 	/**
@@ -67,15 +74,17 @@ class ObservacionesController extends AppController {
 			$email_text = $data[0]['msg']['text'];
 			$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
 			$from_email = $data[0]['msg']['from_email'];
+			$texto = trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11)));
+			$texto = 'Se ha escrito desde el correo ' . $from_email . ': ' . $texto;
 			$this -> Observacion -> create();
 			$this -> Observacion -> save(
 					array(
 							'Observacion' => array(
-									'usuario_id' => 1,
+									'usuario_id' => 0,
 									'modelo' => $info['modelo'],
 									'llave_foranea' => $info['llave_foranea'],
 									'es_publico' => 1,
-									'texto' => 'A ver si así sí!'
+									'texto' => $texto
 							)
 					)
 			);
