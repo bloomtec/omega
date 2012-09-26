@@ -9,7 +9,50 @@ class ObservacionesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this -> Auth -> allow('emailResponseHandler');
+		$this -> Auth -> allow('emailResponseHandler', 'pruebas');
+	}
+	
+	public function pruebas() {
+		$this -> autoRender = false;
+		$data = array(
+				0 => array(
+						'event' => 'inbound',
+						'ts' => 1348662138,
+						'msg' => array(
+								'text' => 'hasta cuando?
+
+											2012/9/26 Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>:
+											> El Usuario: jucedogi ha escrito el siguiente comentario: tests envío datos
+											> correo 7
+											>
+											> <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA
+											>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+											> <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+											>
+											>
+											> {"observacion_id":"15","usuario_id":"1","modelo":"Contrato","llave_foranea":"2"}
+											>',
+								'from_email' => 'juliodominguez@gmail.com',
+								'from_name' => 'Julio César Domínguez Giraldo',
+								'to' => array(
+										0 => array(
+												0 => 'notificaciones@omega.bloomweb.co',
+												1 => 'Aplicación Web Omega Ingenieros'
+										)
+								),
+								'email' => 'notificaciones@omega.bloomweb.co',
+								'subject' => 'Re: Nueva actividad en el contrato: Contrato Preventivo Prueba 1',
+								'tags' => array(),
+								'sender' => null
+						)
+				)
+		);
+		//debug($data);
+		$email_text = $data[0]['msg']['text'];
+		debug($email_text);
+		debug(strpos($email_text, '{"observacion_id"'));
+		debug(strrpos($email_text, '"}'));
+		debug(json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true));
 	}
 
 	/**
@@ -21,14 +64,15 @@ class ObservacionesController extends AppController {
 		
 		if(isset($data[0]['event']) && !empty($data[0]['event']) && $data[0]['event'] == 'inbound') {
 			$email_txt = $data[0]['msg']['txt'];
+			$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
 			$from_email = $data[0]['msg']['from_email'];
 			$this -> Observacion -> create();
 			$this -> Observacion -> save(
 					array(
 							'Observacion' => array(
 									'usuario_id' => 1,
-									'modelo' => 'PruebasEnvio',
-									'llave_foranea' => 0,
+									'modelo' => $info['modelo'],
+									'llave_foranea' => $info['llave_foranea'],
 									'es_publico' => 1,
 									'texto' => 'A ver si así sí!'
 							)
