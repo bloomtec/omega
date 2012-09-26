@@ -157,13 +157,14 @@ class ObservacionesController extends AppController {
 			'llave_foranea' => $contratoId,
 		);
 		$datos = json_encode($datos);
-		$extra_content = '
-		<p>
-		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		$extra_content =
+		'<p>
+		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br />
 		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		</p>
+		<br />
 		<div style="color:white; background-color: white;">' . $datos . '</div>
-		';
+		<br />';
 		$mail_body .= $extra_content; 
 		// Enviar al contacto principal
 		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body);
