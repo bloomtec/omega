@@ -215,7 +215,7 @@ class ObservacionesController extends AppController {
 		$this -> Contrato -> contain('Correo', 'Empresa');
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		$observacion = $this -> Observacion -> read(null, $observacionId);
-		$modelo = 'Contrato';
+		$modelo = 'ContratosEquipo';
 		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => $modelo, "Correo.llave_foranea" => $contratoId)));
 		// Asunto del mensaje
 		$subject = "Nueva actividad en el contrato: " . $contrato["Contrato"]["nombre"];

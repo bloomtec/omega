@@ -941,7 +941,8 @@ a.boton{
 }
 .historial .observacion {
 	margin-bottom:5px;
-	color:white;	
+	color:white;
+	background-color: #5DD4D8;
 }
 
 .historial .Cliente {
