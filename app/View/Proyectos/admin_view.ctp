@@ -89,6 +89,7 @@
 				</div>
 			
 			<div class="panel_lateral">
+				<?php echo $this -> Html -> link('CATEGORÍAS ARCHIVO', array('controller' => 'categorias_archivos', 'action' => 'index'), array("class"=>"boton", 'target' => '_BLANK')); ?>
 				<?php echo $this->Html->link("VER ARCHIVOS (".count($proyecto["Archivo"]).")",array("controller"=>"archivoProyectos","action"=>"index",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link('AÑADIR SUB PROYECTO', array("controller"=>"subproyectos",'action' => 'add', $proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array('style' => 'font-size:12px;', "class"=>"boton thickbox"));?>

@@ -11,17 +11,12 @@ class ArchivosController extends AppController {
 		$this -> layout = "ajax";
 		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
 		$equipo_id = null;
-		if($equipoId) {
+		if ($equipoId) {
 			$equipo_id = $equipoId;
 		} else {
 			$equipo_id = $this -> params["pass"][0];
 		}
-		$this -> paginate = array(
-			'conditions' => array(
-				'Archivo.modelo' => 'Equipo',
-				'Archivo.llave_foranea' => $equipoId
-			)
-		);
+		$this -> paginate = array('conditions' => array('Archivo.modelo' => 'Equipo', 'Archivo.llave_foranea' => $equipoId));
 		$this -> set('archivos', $this -> paginate());
 		$this -> set(compact("equipoId", $equipoId));
 	}
@@ -89,17 +84,12 @@ class ArchivosController extends AppController {
 		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
 		$this -> layout = "ajax";
 		$equipo_id = null;
-		if($equipoId) {
+		if ($equipoId) {
 			$equipo_id = $equipoId;
 		} else {
 			$equipo_id = $this -> params["pass"][0];
 		}
-		$this -> paginate = array(
-			'conditions' => array(
-				'Archivo.modelo' => 'Equipo',
-				'Archivo.llave_foranea' => $equipoId
-			)
-		);
+		$this -> paginate = array('conditions' => array('Archivo.modelo' => 'Equipo', 'Archivo.llave_foranea' => $equipoId));
 		$this -> set('archivos', $this -> paginate());
 		$this -> set(compact("equipoId", $equipoId));
 	}

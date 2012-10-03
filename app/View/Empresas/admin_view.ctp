@@ -210,10 +210,7 @@
 				$alarmaPublicacion=false;
 		
 				if($proyecto["publicacion_para_omega"]) $alarmaPublicacion=true;
-	
-		
 
-		
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';

@@ -11,33 +11,26 @@ class ArchivoProyectosController extends AppController {
 
 	function index($proyectoId) {
 		$this -> layout = "ajax";
-		$this -> Archivo -> contain('Proyecto');
+		$this -> Archivo -> contain('Proyecto', 'CategoriasArchivo');
+		$this -> paginate = array('Archivo' => array('conditions' => array('Archivo.modelo' => 'Proyecto', 'Archivo.llave_foranea' => $proyectoId)));
 		$this -> set('archivoProyectos', $this -> paginate());
 	}
 
 	function admin_index($proyectoId) {
 		$this -> layout = "ajax";
-		$this -> Archivo -> contain('Proyecto');
-		$this -> paginate = array(
-			'Archivo' => array(
-				'conditions' => array(
-					'Archivo.modelo' => 'Proyecto',
-					'Archivo.llave_foranea' => $proyectoId
-				)
-			)
-		);
+		$this -> Archivo -> contain('Proyecto', 'CategoriasArchivo');
+		$this -> paginate = array('Archivo' => array('conditions' => array('Archivo.modelo' => 'Proyecto', 'Archivo.llave_foranea' => $proyectoId)));
 		$this -> set('archivoProyectos', $this -> paginate('Archivo'));
 	}
 
 	function add($proyectoId = null) {
-		$proyectoId = $proyectoId;
 		$this -> layout = "ajax";
-		if (!empty($this -> data)) {
-			$proyectoId = $this -> data["ArchivoProyecto"]["proyecto_id"];
+		if (!empty($this -> request -> data)) {
+			$proyectoId = $this -> request -> data["ArchivoProyecto"]["proyecto_id"];
 			$this -> Archivo -> create();
-			$this -> data['ArchivoProyecto']['modelo'] = 'Proyecto';
-			$this -> data['ArchivoProyecto']['llave_foranea'] = $proyectoId;
-			$archivo = array('Archivo' => $this -> data['ArchivoProyecto']);
+			$this -> request -> data['ArchivoProyecto']['modelo'] = 'Proyecto';
+			$this -> request -> data['ArchivoProyecto']['llave_foranea'] = $proyectoId;
+			$archivo = array('Archivo' => $this -> request -> data['ArchivoProyecto']);
 			if ($this -> Archivo -> save($archivo)) {
 				$this -> Session -> setFlash(__('Se guardó el archivo'), 'crud/success');
 				$this -> redirect(array('action' => 'index'));
@@ -46,6 +39,7 @@ class ArchivoProyectosController extends AppController {
 			}
 		}
 		$this -> set(compact('proyectoId'));
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
 	}
 
 	function admin_add($proyectoId = null) {
@@ -65,6 +59,7 @@ class ArchivoProyectosController extends AppController {
 			}
 		}
 		$this -> set(compact('proyectoId'));
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
 	}
 
 	function delete($id = null) {
@@ -98,22 +93,7 @@ class ArchivoProyectosController extends AppController {
 		$partes = explode("/", $archivo["Archivo"]["ruta"]);
 		$nombrePartido = explode(".", $partes[2]);
 		$this -> viewClass = 'Media';
-		$params = array(
-			'id' => $partes[2],
-			'name' => $nombrePartido[0],
-			'download' => true,
-			'extension' => $nombrePartido[1],
-			'mimeType' => array(
-				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
-				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
-			),
-			'path' => $partes[1] . DS
-		);
+		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
 		$this -> set($params);
 	}
 
@@ -122,29 +102,15 @@ class ArchivoProyectosController extends AppController {
 		$partes = explode("/", $archivo["Archivo"]["ruta"]);
 		$nombrePartido = explode(".", $partes[2]);
 		$this -> viewClass = 'Media';
-		$params = array(
-			'id' => $partes[2],
-			'name' => $nombrePartido[0],
-			'download' => true,
-			'extension' => $nombrePartido[1],
-			'mimeType' => array(
-				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
-				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
-			),
-			'path' => $partes[1] . DS
-		);
+		$params = array('id' => $partes[2], 'name' => $nombrePartido[0], 'download' => true, 'extension' => $nombrePartido[1], 'mimeType' => array('docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation", "ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "potx" => "application/vnd.openxmlformats-officedocument.presentationml.template", "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"), 'path' => $partes[1] . DS);
 		$this -> set($params);
 	}
 
 	function AJAX_subirArchivo() {
 		$archivo["Archivo"]["modelo"] = 'Proyecto';
-		$archivo["Archivo"]["llave_foranea"] = $this -> params["form"]["id"];
-		$archivo["ArchivoProyecto"]["ruta"] = $this -> params["form"]["ruta"];
+		$archivo["Archivo"]["llave_foranea"] = $this -> request -> data["id"];
+		$archivo["Archivo"]["ruta"] = $this -> request -> data["path"];
+		$archivo["Archivo"]['categorias_archivo_id'] = $this -> request -> data['category'];
 		$this -> Archivo -> create();
 		if ($this -> Archivo -> save($archivo)) {
 			echo "El Archivo ha sido subido con exito";
