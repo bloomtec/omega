@@ -408,7 +408,7 @@ class EquiposController extends AppController {
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
-			'download' => false,
+			'download' => true,
 			'extension' => $nombrePartido[1],
 			'mimeType' => array(
 				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -432,7 +432,7 @@ class EquiposController extends AppController {
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
-			'download' => false,
+			'download' => true,
 			'extension' => $nombrePartido[1],
 			'mimeType' => array(
 				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

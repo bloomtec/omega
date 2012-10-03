@@ -274,5 +274,120 @@ class ObservacionesController extends AppController {
 		$this -> autoRender = false;
 		exit(0);
 	}
-
+	
+	/* -----------------------------------------------------------------------------------------------------------------------------------*/
+	
+	public function enviarCorreoComentariosPublicos($observacionId,$proyectoId,$mail_body) {
+		$this -> loadModel('Proyecto');
+		$this -> Proyecto -> contain('Correo', 'Empresa');
+		$proyecto = $this -> Proyecto -> read(null,$proyectoId);
+		$modelo = 'Proyecto';
+		$correos = $this -> Proyecto -> Correo -> find("all", array("conditions" => array("Correo.modelo" => $modelo, "Correo.llave_foranea" => $proyectoId)));
+		$observacion = $this -> Observacion -> read(null, $observacionId);
+		$Name = "OMEGA INGENIEROS"; //senders name
+		$email = "no-responder@omegaingenieros.com"; //senders e-mail adress
+		$subject = "Nueva actividad en el Proyecto: ".$proyecto["Proyecto"]["nombre"]; //subject
+		$datos = array(
+			'observacion_id' => $observacionId,
+			'usuario_id' => $observacion['Observacion']['usuario_id'],
+			'modelo' => $modelo,
+			'llave_foranea' => $proyectoId,
+		);
+		$datos = json_encode($datos);
+		$extra_content =
+		'<p>
+		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br />
+		<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		</p>
+		<br />
+		<div style="color:white; background-color: white;">' . $datos . '</div>
+		<br />';
+		$mail_body .= $extra_content;
+		$header = "From: ". $Name . " <" . $email . ">\r\n"; //optional headerfields	
+		//	mail($contrato["Cliente"]["email"], $subject, $mail_body, $header);
+		$this -> sendbySMTP($proyecto["Empresa"]["nombre"],$proyecto["Empresa"]["correo"],$subject,$mail_body);
+		
+		if(!empty($correos)){
+			foreach($correos as $correo){
+				$recipient = $correo["Correo"]["correo"]; //recipient
+				//mail($recipient, $subject, $mail_body, $header);
+				$this->sendbySMTP($correo["Correo"]["nombre"],$correo["Correo"]["correo"],$subject,$mail_body);
+			}
+		}
+		return true;
+	}
+	
+	function admin_AJAX_addComentarioPublico() {
+		$this -> Observacion -> bindModel(
+			array(
+				'belongsTo' => array(
+					'Usuario' => array('className' => 'Usuario', 'foreignKey' => 'usuario_id', 'conditions' => '', 'fields' => '', 'order' => ''),
+					'Proyecto' => array('className' => 'Proyecto', 'foreignKey' => 'llave_foranea', 'conditions' => array('modelo' => 'Proyecto'), 'fields' => '', 'order' => '')
+				)
+			)
+		);
+		$comentario["Observacion"]["usuario_id"] = $this -> data['Observacion']["usuario_id"];
+		$comentario["Observacion"]["llave_foranea"] = $this -> data['Observacion']["proyecto_id"];
+		$comentario["Observacion"]["texto"] = $this -> data['Observacion']["observacion"];
+		$comentario["Observacion"]["modelo"] = 'Proyecto';
+		$comentario["Observacion"]["es_publico"] = 1;
+		if($comentario["Observacion"]["texto"]) {
+			$this -> Observacion -> create();
+			if ($this->Observacion->save($comentario)) {
+				$proyecto = $this -> Observacion -> Proyecto -> read(null,$comentario["Observacion"]["llave_foranea"]);
+				if($this -> Auth -> user('rol_id') < 3){
+					if(!$proyecto["Proyecto"]["publicacion_para_empresa"]) $proyecto["Proyecto"]["publicacion_para_empresa"]=true;
+				}	
+				$this->Observacion->Proyecto->save($proyecto);
+				$usuario=$this->Observacion->Usuario->read(null,$comentario["Observacion"]["usuario_id"]);				
+				echo "OK";	
+			} else {
+				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
+			}
+		} else {
+			echo "Debe escribir un comentario";
+		}
+		configure::Write("debug",0);
+		$this->autoRender=false;
+		exit(0);
+	}
+	
+	public function AJAX_addComentarioPublico() {
+		$this -> Observacion -> bindModel(
+			array(
+				'belongsTo' => array(
+					'Usuario' => array('className' => 'Usuario', 'foreignKey' => 'usuario_id', 'conditions' => '', 'fields' => '', 'order' => ''),
+					'Proyecto' => array('className' => 'Proyecto', 'foreignKey' => 'llave_foranea', 'conditions' => array('modelo' => 'Proyecto'), 'fields' => '', 'order' => '')
+				)
+			)
+		);
+		$comentario["Observacion"]["usuario_id"] = $this -> data['Observacion']["usuario_id"];
+		$comentario["Observacion"]["llave_foranea"] = $this -> data['Observacion']["proyecto_id"];
+		$comentario["Observacion"]["texto"] = $this -> data['Observacion']["observacion"];
+		$comentario["Observacion"]["modelo"] = 'Proyecto';
+		$comentario["Observacion"]["es_publico"] = 1;
+		if($comentario["Observacion"]["texto"]) {
+			$this -> Observacion -> create();
+			if ($this->Observacion->save($comentario)) {
+				$proyecto = $this -> Observacion -> Proyecto -> read(null,$comentario["Observacion"]["llave_foranea"]);
+				$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
+				if (in_array(2, $servicios_usuario)) {
+					if(!$proyecto["Proyecto"]["publicacion_para_omega"]) $proyecto["Proyecto"]["publicacion_para_omega"]=true;
+				}
+				$this->Observacion->Proyecto->save($proyecto);
+				$usuario=$this->Observacion->Usuario->recursive=0;
+				$usuario=$this->Observacion->Usuario->read(null,$comentario["Observacion"]["usuario_id"]);
+				$this->enviarCorreoComentariosPublicos($this -> Observacion -> id,$comentario["Observacion"]["llave_foranea"],"El Usuario: ".$usuario["Usuario"]["nombre"]." del Proyecto ".$proyecto["Proyecto"]["nombre"]." ha escrito el siguiente comentario: \n".$comentario["Observacion"]["texto"]);
+				echo "OK";	
+			}else{
+				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
+			}
+		}else{
+			echo "Debe escribir un comentario";
+		}
+		configure::Write("debug",0);
+		$this->autoRender=false;
+		exit(0);
+	}
+	
 }

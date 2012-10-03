@@ -59,7 +59,7 @@
 				<?php echo $this -> fetch('content'); ?>
 			</div>
 			<div id="footer">
-				<?php echo $this -> Html -> link('developed by: ' . $this -> Html -> image('bloom_negro.png', array('height' => 12)), 'http://www.bloomweb.co', array('target' => '_blank', 'escape' => false)); ?>
+				<?php echo $this -> Html -> link('developed by: ' . $this -> Html -> image('bloom_negro.png', array('height' => 12)), 'http://www.bloomweb.co', array('style' => 'margin-right:40px;', 'target' => '_blank', 'escape' => false)); ?>
 			</div>
 		</div>
 		<?php echo $this -> element('sql_dump'); ?>

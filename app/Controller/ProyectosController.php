@@ -19,9 +19,10 @@ class ProyectosController extends AppController {
 		$this -> set("correos", $proyecto["Correo"]);
 		$this -> set("proyectoId", $id);
 	}
-
+	
 	public function admin_crearCorreo() {
-		$correo["Correo"]["proyecto_id"] = $this -> request -> data["Proyecto"]["proyecto_id"];
+		$correo['Correo']['modelo'] = 'Proyecto';
+		$correo["Correo"]["llave_foranea"] = $this -> request -> data["Proyecto"]["proyecto_id"];
 		$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["correo"];
 		$correo["Correo"]["nombre"] = $this -> request -> data["Proyecto"]["nombre"];
 		$this -> Proyecto -> Correo -> create();
@@ -32,7 +33,6 @@ class ProyectosController extends AppController {
 			$this -> Session -> setFlash("No se pudo guardar el correo", 'crud/error');
 			$this -> redirect(array('action' => 'listaCorreo', $this -> request -> data["Proyecto"]["proyecto_id"]));
 		}
-
 	}
 
 	public function admin_borrarCorreo($correoId, $proyectoId) {
@@ -55,7 +55,8 @@ class ProyectosController extends AppController {
 	}
 
 	public function view($id = null) {
-		$this -> layout = "cliente";
+		$this -> layout = "empresa";
+		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo');
 		$this -> Proyecto -> id = $id;
 		if (!$this -> Proyecto -> exists()) {
 			throw new NotFoundException(__('Proyecto no válido'));
@@ -281,8 +282,8 @@ class ProyectosController extends AppController {
 	}
 
 	public function AJAX_subirCotizacion() {
-		$proyectoId = $this -> params["form"]["id"];
-		$cotizacionPath = $this -> params["form"]["path"];
+		$proyectoId = $this -> request -> data["id"];
+		$cotizacionPath = $this -> request -> data["path"];
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		if ($proyecto["Proyecto"]["cotizacion"]) {
 			$archivo = substr($proyecto["Proyecto"]["cotizacion"], 1);
@@ -298,7 +299,7 @@ class ProyectosController extends AppController {
 			$this -> enviarCorreo($proyecto["Proyecto"]["id"], "Se ha subido la cotización del proyecto: " . $proyecto["Proyecto"]["nombre"]);
 			echo "La Cotizacion ha sido subida con exito";
 		} else {
-			echo "NO";
+			debug($this -> Proyecto -> invalidFields());
 		}
 		Configure::Write("debug", 0);
 		$this -> Autorender = false;
@@ -355,6 +356,7 @@ class ProyectosController extends AppController {
 	public function confirmarRechazo() {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Proyecto"]["id"];
+		//$id = $this -> request -> data["id"];
 		$proyecto = $this -> Proyecto -> read(null, $id);
 		$this -> Proyecto -> set("estado_proyecto_id", 9);
 		$this -> Proyecto -> set("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
@@ -437,7 +439,7 @@ class ProyectosController extends AppController {
 		exit(0);
 	}
 
-	public function solicitarProyecto($clienteId = null) {
+	public function solicitarProyecto($empresaId = null) {
 		$this -> layout = "ajax";
 		if (!empty($this -> request -> data)) {
 			$empresaId = $this -> request -> data["Proyecto"]["empresa_id"];
@@ -474,6 +476,9 @@ class ProyectosController extends AppController {
 	}
 
 	public function sendToOmegaProyecto($clienteName, $data) {
+		/**
+		 * @todo ¿esto debe quedar sin enviar correos?
+		 */
 	 	/**
 		 $this->sendbySMTP($clienteName,"gacruz@omegaingenieros.com",$subject,$data["Proyecto"]["texto_solicitud"]);
 		 $this->sendbySMTP($clienteName,"lcastano@omegaingenieros.com",$subject,$data["Proyecto"]["texto_solicitud"]);
@@ -484,8 +489,8 @@ class ProyectosController extends AppController {
 	}
 
 	public function AJAX_guardarDesarrollo() {
-		$proyectoId = $this -> params["form"]["id"];
-		$texto = $this -> params["form"]["texto"];
+		$proyectoId = $this -> request -> data["id"];
+		$texto = $this -> request -> data["texto"];
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		$proyecto["Proyecto"]["desarrollo"] = $texto;
 		if ($this -> Proyecto -> save($proyecto)) {
@@ -506,7 +511,7 @@ class ProyectosController extends AppController {
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
-			'download' => false,
+			'download' => true,
 			'extension' => $nombrePartido[1],
 			'mimeType' => array(
 				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -558,7 +563,7 @@ class ProyectosController extends AppController {
 		$params = array(
 			'id' => $partes[2],
 			'name' => $nombrePartido[0],
-			'download' => false,
+			'download' => true,
 			'extension' => $nombrePartido[1],
 			'mimeType' => array(
 				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -599,7 +604,7 @@ class ProyectosController extends AppController {
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		$proyecto["Proyecto"]["publicacion_para_empresa"] = false;
 		if ($this -> Proyecto -> save($proyecto)) {
-			debug($proyecto);
+			echo "OK";
 		} else {
 			echo "NO";
 		}

@@ -25,17 +25,21 @@
 	</dl>
 </div>
 <div class="actions">
-	<h3><?php __('Acciones'); ?></h3>
+	<h3><?php echo __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('Editar Empresa', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Listar Clientes', true), array('action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Listar Empresas', true), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('Nueva Empresa', true), array('action' => 'add')); ?> </li>
 		
 	</ul>
 </div>
 <div class="related">
-		<?php if(isset($servicios[1])): //if($type=="mantenimientos"): //***************MANTENIMIENTOS?>
-
+		<?php
+			if(
+				isset($servicios[1])
+				&& isset($this -> params['pass'][1])
+				&& $this -> params['pass'][1] == 'mantenimientos'
+			): //if($type=="mantenimientos"): //***************MANTENIMIENTOS?>
 
 		<h3><?php echo __('Cotizaciones de Mantenimiento');?></h3>
 		<?php if (!empty($empresa['Contrato'])):?>
@@ -100,19 +104,19 @@
 		
 		</table>
 		<div style="clear:both;"></div>
-		<h3><?php printf(__('Contratos de Mantenimiento', true) );?></h3>
+		<h3><?php echo __('Contratos de Mantenimiento'); ?></h3>
 			
 		<table cellpadding = "0" cellspacing = "0">
 		<tr>
 		
-			<th><?php __('Alertas'); ?></th>
-			<th><?php __('C.C. Contrato'); ?></th>
-			<th><?php __('Nombre'); ?></th>
-			<th><?php __('Tipo'); ?></th>
-			<th><?php __('Estado'); ?></th>
+			<th><?php echo __('Alertas'); ?></th>
+			<th><?php echo __('C.C. Contrato'); ?></th>
+			<th><?php echo __('Nombre'); ?></th>
+			<th><?php echo __('Tipo'); ?></th>
+			<th><?php echo __('Estado'); ?></th>
 			
 			
-			<th class="actions"><?php __('Acciones');?></th>
+			<th class="actions"><?php echo __('Acciones');?></th>
 		</tr>
 		<?php
 			$i = 0;
@@ -158,20 +162,18 @@
 		endforeach; ?>
 		</table>
 		<?php endif; //if sin contrato?>
-		
-
-	
-
-
-
-
 	<div class="actions">
 		<ul>
 			<li><?php echo $this->Html->link(__('Cotizar Mantenimiento', true), array('controller' => 'contratos', 'action' => 'add',$empresa["Empresa"]["id"]));?> </li>
 		</ul>
 	</div>
 <?php endif;?>
-<?php if(isset($servicios[2])): //if($type=="proyectos"):?>
+<?php
+	if(
+		isset($servicios[2])
+		&& isset($this -> params['pass'][1])
+		&& $this -> params['pass'][1] == 'proyectos'
+	): //if($type=="proyectos"):?>
 	<!--  COTIZACION DE PROYECTOS -->
 	<?php if (!empty($empresa['Proyecto'])):?>
 	<div style="clear:both;"></div>
@@ -180,14 +182,14 @@
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 	
-		<th><?php __('Alertas'); ?></th>
-		<th><?php __('C.C. Proyecto'); ?></th>
-		<th><?php __('Nombre'); ?></th>
+		<th><?php echo __('Alertas'); ?></th>
+		<th><?php echo __('C.C. Proyecto'); ?></th>
+		<th><?php echo __('Nombre'); ?></th>
 
-		<th><?php __('Estado'); ?></th>
+		<th><?php echo __('Estado'); ?></th>
 		
 		
-		<th class="actions"><?php __('Acciones');?></th>
+		<th class="actions"><?php echo __('Acciones');?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -244,19 +246,19 @@
 	
 	<!-- PROYECTOS EN EJECUCION -->
 		<div style="clear:both;"></div>
-	<h3><?php printf(__('Planeación y Prestación de Servicio', true) );?></h3>
+	<h3><?php echo __('Planeación y Prestación de Servicio');?></h3>
 
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 	
-		<th><?php __('Alertas'); ?></th>
-		<th><?php __('C.C. Proyecto'); ?></th>
-		<th><?php __('Nombre'); ?></th>
+		<th><?php echo __('Alertas'); ?></th>
+		<th><?php echo __('C.C. Proyecto'); ?></th>
+		<th><?php echo __('Nombre'); ?></th>
 
-		<th><?php __('Estado'); ?></th>
+		<th><?php echo __('Estado'); ?></th>
 		
 		
-		<th class="actions"><?php __('Acciones');?></th>
+		<th class="actions"><?php echo __('Acciones');?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -317,7 +319,7 @@
 		<th><?php echo __('Estado'); ?></th>
 		
 		
-		<th class="actions"><?php __('Acciones');?></th>
+		<th class="actions"><?php echo __('Acciones');?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -369,7 +371,7 @@
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('Cotizar Proyecto ', true), array('controller' => 'proyectos', 'action' => 'add',$empresa["Empresa"]["id"]));?> </li>
+			<li><?php echo $this->Html->link(__('Creación De Proyecto', true), array('controller' => 'proyectos', 'action' => 'add',$empresa["Empresa"]["id"]));?> </li>
 		</ul>
 	</div>
 	

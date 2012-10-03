@@ -1,26 +1,24 @@
-	<div class="equipos faces admin">
-	
-
-		<div class="marcoEquipo">
-			
-			
-			<div class="lineaSuperior">
-				<div class="info"> <span style="color:#e10000"><?php echo $proyecto['Proyecto']["nombre"];?> </span> <?php echo $this->Html->link("volver",array("controller"=>"empresas","action"=>"view",$proyecto["Proyecto"]["empresa_id"],"proyectos"),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
-			
+<div class="equipos faces admin">
+	<div class="marcoEquipo">
+		<div class="lineaSuperior">
+			<div class="info">
+				<span style="color:#e10000">
+					<?php echo $proyecto['Proyecto']["nombre"];?>
+				</span>
+				<?php echo $this -> Html -> link("volver", array("controller"=>"empresas","action"=>"view",$proyecto["Proyecto"]["empresa_id"],"proyectos"),array("style"=>"font-size:10px;vertical-align:top;"));?>
 			</div>
-			
-			
-			<div style="clear:both;"></div>
-			<div class=panelInformativo>
-				<br />
-					<table cellpadding="0" cellspacing="0">
-						<tr>
-							<th>Subproyecto</th>
-							<th>Presupuesto</th>
-							<th>Cronograma</th>
-							<th>Estado</th>
-							<th class="actions"><?php __('Acciones');?></th>
-						</tr>
+		</div>
+		<div style="clear:both;"></div>
+		<div class=panelInformativo>
+			<br />
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<th>Subproyecto</th>
+					<th>Presupuesto</th>
+					<th>Cronograma</th>
+					<th>Estado</th>
+					<th class="actions"><?php echo __('Acciones');?></th>
+				</tr>
 						<?php
 						$i = 0;
 						foreach ($proyecto["Subproyecto"] as $subproyecto):
@@ -68,9 +66,9 @@
 							<td><span style="color:#e10000">Solicitud Nueva&nbsp;</span></td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
 							<td class="actions">
 								<?php echo $this->Html->link(__('Revisar', true), array('controller'=>'solicitudProyectos','action' => 'view', $solicitud['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox")); ?>
-								
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -93,8 +91,8 @@
 			<div class="panel_lateral">
 				<?php echo $this->Html->link("VER ARCHIVOS (".count($proyecto["Archivo"]).")",array("controller"=>"archivoProyectos","action"=>"index",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
-				<?php echo $this->Html->link(sprintf(__('AÑADIR %s', true), __('SUB PROYECTO', true)), array("controller"=>"subproyectos",'action' => 'add', $proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
-				<?php echo $this->Html->link(sprintf(__('Lista de Correo', true), __('Contratos', true)), array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link('AÑADIR SUB PROYECTO', array("controller"=>"subproyectos",'action' => 'add', $proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array('style' => 'font-size:12px;', "class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link('Lista de Correo', array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 			</div>
 				<div style="clear:both;"></div>
 			<br />
@@ -128,6 +126,4 @@ $(window).unload(function() {
 		
 	});
 });
-
-
 </script>

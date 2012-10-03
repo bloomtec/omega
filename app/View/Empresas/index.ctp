@@ -122,7 +122,7 @@
 <?php if(in_array(2, $servicios_usuario)): ?>	
 	<!-- COTIZACIONES DE PROYECTOS -->
 	<div style="clear:both;"></div>
-	<?php if (!empty($proyectos)):?>
+	<?php if(!empty($proyectos)): ?>
 	<h3><?php echo __('Desarrollo de Negocios'); ?></h3>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
@@ -156,7 +156,7 @@
 	?>
 	<tr<?php echo $class; ?>>	
 		<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this -> element("alertasProyectos", array("alertas"=>$proyecto["Alarma"], "cliente"=>true, "publicaciones"=>$alarmaPublicacion)); ?>
 		</td>
 		<td><?php  echo $proyecto["Proyecto"]['centro_de_costo']; ?></td>
 		<td><?php  echo $proyecto["Proyecto"]['nombre']; ?></td>

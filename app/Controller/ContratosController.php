@@ -550,7 +550,6 @@ class ContratosController extends AppController {
 			$this -> Session -> setFlash("No se pudo guardar el correo");
 			$this -> redirect(array('action' => 'listaCorreo', $this -> request -> data["Contrato"]["contrato_id"]));
 		}
-
 	}
 
 	public function admin_borrarCorreo($correoId, $contratoId) {

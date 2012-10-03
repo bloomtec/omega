@@ -22,9 +22,21 @@ class EmpresasController extends AppController {
 				'conditions' => array(
 					'Contrato.empresa_id' => $this -> Auth -> user('empresa_id')
 				)
+			),
+			'Proyecto' => array(
+				'conditions' => array(
+					'Proyecto.empresa_id' => $this -> Auth -> user('empresa_id')
+				)
 			)
 		);
+		
+		$estadosProyectosCotizacion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("id <" => 3)));
+		$estadosProyectosEjecucion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("id >=" => 3)));
+		
+		$this -> set('empresa', $this -> Empresa -> read(null, $this -> Auth -> user('empresa_id')));		
 		$this -> set('contratos', $this -> paginate('Contrato'));
+		$this -> set('proyectos', $this -> paginate('Proyecto'));
+		$this -> set(compact("estadosProyectosCotizacion", "estadosProyectosEjecucion"));
 	}
 
 	/**
