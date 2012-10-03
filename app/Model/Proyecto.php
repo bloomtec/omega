@@ -88,13 +88,11 @@ class Proyecto extends AppModel {
 			$this -> Alarma -> create();
 			$this -> Alarma -> save($alarma);
 			if ($paraCliente) {
-				$this -> read(null, $proyectoId);
-				$this -> set("alerta_para_empresa", true);
-				$this -> save();
+				$this -> id = $proyectoId;
+				$this -> saveField("alerta_para_empresa", true);
 			} else {
-				$this -> read(null, $proyectoId);
-				$this -> set("alerta_para_omega", true);
-				$this -> save();
+				$this -> id = $proyectoId;
+				$this -> saveField("alerta_para_omega", true);
 			}
 		}
 		return true;
@@ -107,15 +105,13 @@ class Proyecto extends AppModel {
 			$this -> Alarma -> delete($alarma["Alarma"]["id"]);
 		$alarmasDelProyectoParaCliente = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Proyecto', "Alarma.llave_foranea" => $proyectoId, "Alarma.para_empresa" => true)));
 		if ($alarmasDelProyectoParaCliente <= 0) {
-			$this -> read(null, $proyectoId);
-			$this -> set("alerta_para_empresa", false);
-			$this -> save();
+			$this -> id = $proyectoId;
+			$this -> saveField("alerta_para_empresa", false);
 		}
 		$alarmasDelProyectoParaOmega = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Proyecto', "Alarma.llave_foranea" => $proyectoId, "Alarma.para_empresa" => false)));
 		if ($alarmasDelProyectoParaOmega <= 0) {
-			$this -> read(null, $proyectoId);
-			$this -> set("alerta_para_omega", 0);
-			$this -> save();
+			$this -> id = $proyectoId;
+			$this -> saveField("alerta_para_omega", 0);
 		}
 
 	}
@@ -127,17 +123,15 @@ class Proyecto extends AppModel {
 			$this -> Alarma -> delete($alarmaId);
 			$alarmasDelProyectoParaCliente = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Proyecto', "Alarma.llave_foranea" => $alarma["Alarma"]["llave_foranea"], "Alarma.para_empresa" => true)));
 			if ($alarmasDelProyectoParaCliente <= 0) {
-				$this -> read(null, $proyectoId);
-				$this -> set("alerta_para_empresa", 0);
-				$this -> save();
+				$this -> id = $proyectoId;
+				$this -> saveField("alerta_para_empresa", 0);
 			}
 
 			$alarmasDelProyectoParaOmega = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Proyecto', "Alarma.llave_foranea" => $proyectoId)));
 
 			if ($alarmasDelProyectoParaOmega == 0) {
-				$this -> read(null, $proyectoId);
-				$this -> set("alerta_para_omega", 0);
-				debug($this -> save());
+				$this -> id = $proyectoId;
+				$this -> saveField("alerta_para_omega", 0);
 			}
 
 			return $alarmasDelProyectoParaOmega;

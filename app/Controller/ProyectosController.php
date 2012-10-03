@@ -147,6 +147,20 @@ class ProyectosController extends AppController {
 				$this -> Proyecto -> Correo -> create();
 				$this -> Proyecto -> Correo -> save($correo);
 				// --------------
+				$lista_correos = $this -> request -> data['Proyecto']['correos'];
+				$lista_correos = trim($lista_correos);
+				$lista_correos = explode(",", $lista_correos);
+				foreach ($lista_correos as $key => $correo) {
+					$lista_correos[$key] = trim($correo);
+					$correo = array();
+					$correo["Correo"]["modelo"] = 'Proyecto';
+					$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
+					$correo["Correo"]["correo"] = $lista_correos[$key];
+					$correo["Correo"]["nombre"] = $lista_correos[$key];
+					$this -> Proyecto -> Correo -> create();
+					$this -> Proyecto -> Correo -> save($correo);
+				}
+				// --------------
 				$this -> Session -> setFlash(__('Se agregó el proyecto'), 'crud/success');
 				$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Proyecto"]["empresa_id"], "proyectos"));
 			} else {
@@ -227,6 +241,54 @@ class ProyectosController extends AppController {
 		Configure::Write("debug", 0);
 		$this -> Autorender = false;
 		exit(0);
+	}
+	
+	public function admin_verCronograma($id) {
+		$proyecto = $this -> Proyecto -> read("cronograma", $id);
+		$partes = explode("/", $proyecto["Proyecto"]["cronograma"]);
+		$nombrePartido = explode(".", $partes[2]);
+		$this -> viewClass = 'Media';
+		$params = array(
+			'id' => $partes[2],
+			'name' => $nombrePartido[0],
+			'download' => true,
+			'extension' => $nombrePartido[1],
+			'mimeType' => array(
+				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
+				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+			),
+			'path' => $partes[1] . DS
+		);
+		$this -> set($params);		
+	}
+
+	public function verCronograma($id) {
+		$proyecto = $this -> Proyecto -> read("cronograma", $id);
+		$partes = explode("/", $proyecto["Proyecto"]["cronograma"]);
+		$nombrePartido = explode(".", $partes[2]);
+		$this -> viewClass = 'Media';
+		$params = array(
+			'id' => $partes[2],
+			'name' => $nombrePartido[0],
+			'download' => true,
+			'extension' => $nombrePartido[1],
+			'mimeType' => array(
+				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
+				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+			),
+			'path' => $partes[1] . DS
+		);
+		$this -> set($params);
 	}
 
 	public function admin_verCotizacion($id) {
@@ -322,15 +384,19 @@ class ProyectosController extends AppController {
 		$verificacion = $uno . $dos . $tres . $cuatro;
 		$this -> set("proyectoId", $id);
 		$this -> set("verificacion", $verificacion);
+		$this -> set('proyecto', $this -> Proyecto -> read(null, $id));
 	}
 
 	public function confirmarAprobacion() {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Proyecto"]["id"];
 		$proyecto = $this -> Proyecto -> read(null, $id);
-		$this -> Proyecto -> set("estado_proyecto_id", 2);
-		$this -> Proyecto -> set("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
-		$this -> Proyecto -> save();
+		$this -> Proyecto -> id = $id;
+		$this -> Proyecto -> saveField("estado_proyecto_id", 2);
+		//$this -> Proyecto -> set("estado_proyecto_id", 2);
+		$this -> Proyecto -> saveField("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
+		//$this -> Proyecto -> set("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
+		//$this -> Proyecto -> save();
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "en espera de aprobación por el cliente");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto en espera de aprobación");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto nuevo");
@@ -351,6 +417,7 @@ class ProyectosController extends AppController {
 		$verificacion = $uno . $dos . $tres . $cuatro;
 		$this -> set("proyectoId", $id);
 		$this -> set("verificacion", $verificacion);
+		$this -> set('proyecto', $this -> Proyecto -> read(null, $id));
 	}
 
 	public function confirmarRechazo() {
@@ -424,8 +491,8 @@ class ProyectosController extends AppController {
 	}
 
 	public function AJAX_cambiarEstado() {
-		$proyectoId = $this -> params["form"]["id"];
-		$estadoProyectoId = $this -> params["form"]["estado_proyecto_id"];
+		$proyectoId = $this -> request -> data["id"];
+		$estadoProyectoId = $this -> request -> data["estado_proyecto_id"];
 		$this -> Proyecto -> recursive = -1;
 		$this -> Proyecto -> read(null, $proyectoId);
 		$this -> Proyecto -> set("estado_proyecto_id", $estadoProyectoId);

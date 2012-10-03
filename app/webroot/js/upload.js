@@ -36,6 +36,48 @@ $(document).ready(function() {
 
 		}
 	});
+	
+	//SUBIR COTIZACIÓN
+	$('#cotizacion').uploadify({
+		'uploader' : server + 'swf/uploadify.swf',
+		'script' : server + 'uploadify.php',
+		'folder' : server + 'app/webroot' + path,
+		'width' : 109,
+		'height' : 32,
+		'auto' : true,
+		'cancelImg' : server + 'img/cancel.png',
+		'onComplete' : function(a, b, c, d) {
+			var path = $('#cotizacion').attr('path');
+			var file = d.split("/");
+			var name = path + "/" + file[(file.length - 1)];
+			//var name=path+"/"+c.name;
+			$("#ProyectoCotizacion").val(name);
+			$("#ProyectoCotizacion1").val(name);
+			$(".uploaded").html("Se ha subido con exito la cotización");
+
+		}
+	});
+	
+	//SUBIR CRONOGRAMA PROYECTO
+	$('#procrono').uploadify({
+		'uploader' : server + 'swf/uploadify.swf',
+		'script' : server + 'uploadify.php',
+		'folder' : server + 'app/webroot' + path,
+		'width' : 109,
+		'height' : 32,
+		'auto' : true,
+		'cancelImg' : server + 'img/cancel.png',
+		'onComplete' : function(a, b, c, d) {
+			var path = $('#procrono').attr('path');
+			var file = d.split("/");
+			var name = path + "/" + file[(file.length - 1)];
+			//var name=path+"/"+c.name;
+			$("#ProyectoCronograma").val(name);
+			$("#ProyectoCronograma").val(name);
+			$(".uploaded").html("Se ha subido con exito el cronograma");
+
+		}
+	});
 
 	//SUBIR CRONOGRAMA
 	var path = $('#cronograma').attr('path');

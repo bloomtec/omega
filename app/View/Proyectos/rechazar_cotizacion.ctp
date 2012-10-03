@@ -1,6 +1,13 @@
 <div class="aprobar">
-	<br />
-	<br />
+	<table cellpadding="0" cellspacing="0">
+		<tr><td>Fecha De Entrega</td><td><?php echo $proyecto['Proyecto']['fecha_de_entrega']; ?></td></tr>
+		<tr><td>Fecha De Inicio</td><td><?php echo $proyecto['Proyecto']['fecha_de_inicio']; ?></td></tr>
+		<tr><td>Cotización</td><td><?php echo $this -> Html -> link("Ver Cotización", array("controller" => "proyectos", "action" => "verCotizacion", $proyecto['Proyecto']['id'])); ?></td></tr>
+		<tr><td>Cronograma</td><td><?php echo $this -> Html -> link($this -> Html -> image('/img/Calendario.png', array('title' => 'Ver Cronograma', 'alt' => 'Ver Cronograma', 'height' => '25')), array("controller" => "proyectos", "action" => "verCronograma", $proyecto['Proyecto']['id']), array('escape' => false)); ?></td></tr>
+		<tr><td>Responsable Comercial</td><td><?php echo $proyecto['Proyecto']['responsable_comercial']; ?></td></tr>
+		<tr><td>Descripción</td><td><?php echo $proyecto['Proyecto']['descripcion']; ?></td></tr>
+		<tr><td>Comentarios</td><td><?php echo $proyecto['Proyecto']['comentarios']; ?></td></tr>
+	</table>
 	<p>
 		Ayúdenos a mejorar. Por favor indíquenos el motivo del rechazo de la cotización	
 	</p>

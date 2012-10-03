@@ -233,7 +233,8 @@
 				<?php echo $this->Html->link(__('Ver', true), array('controller' => 'proyectos', 'action' => 'view', $proyecto['id'])); ?>
 				
 				<?php  echo $this->Html->link(__('Borrar', true), array('controller' => 'proyectos', 'action' => 'delete', $proyecto['id']), null, sprintf(__('Esta seguro que desea eliminar el proyecto?', true), $proyecto['id'])); ?>
-				<?php if($proyecto["estado_proyecto_id"]== 1 && $days<=$proyecto['validez'])echo $this->Html->link("Subir cotización PDF",array("controller"=>"proyectos","action"=>"subirCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
+				<?php //if($proyecto["estado_proyecto_id"]== 1 && $days<=$proyecto['validez'])echo $this->Html->link("Subir cotización PDF",array("controller"=>"proyectos","action"=>"subirCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
+				<?php if($proyecto["estado_proyecto_id"]== 1)echo $this->Html->link("Subir cotización PDF",array("controller"=>"proyectos","action"=>"subirCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($proyecto["estado_proyecto_id"]== 2)echo $this->Html->link("Iniciar Ejecución",array("controller"=>"proyectos","action"=>"ingresarCc",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($proyecto["estado_proyecto_id"]== 2)echo $this->Html->link("Anular",array("controller"=>"proyectos","action"=>"anularCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($proyecto["estado_proyecto_id"]== 2 || $proyecto["estado_proyecto_id"]== 9)echo $this->Html->link("Comentarios",array("controller"=>"proyectos","action"=>"comentarios",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
@@ -279,11 +280,11 @@
 		<tr<?php echo $class;?>>
 		
 			<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php  echo $proyecto['centro_de_costo']; ?></td>
 			<td><?php  echo $proyecto['nombre']; ?></td>
-			<td><?php echo $form->input("estado",array("id"=>"estadoProyectoC","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosEjecucion,"selected"=>$proyecto["estado_proyecto_id"]));?></td>
+			<td><?php echo $this -> Form->input("estado",array("id"=>"estadoProyectoC","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosEjecucion,"selected"=>$proyecto["estado_proyecto_id"]));?></td>
 			
 			<td class="actions">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
@@ -344,7 +345,7 @@
 			</td>
 			<td><?php  echo $proyecto['centro_de_costo']; ?></td>
 			<td><?php  echo $proyecto['nombre']; ?></td>
-			<td><?php echo $form->input("estado",array("id"=>"estadoProyectoC","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosEjecucion,"selected"=>$proyecto["estado_proyecto_id"]));?></td>
+			<td><?php echo $this -> Form->input("estado",array("id"=>"estadoProyectoC","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosEjecucion,"selected"=>$proyecto["estado_proyecto_id"]));?></td>
 			
 			<td class="actions">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
@@ -359,22 +360,11 @@
 		</tr>
 	<?php } endforeach; ?>
 	</table>
-	
-	
-
-
-
-
-
-
-
-
 	<div class="actions">
 		<ul>
 			<li><?php echo $this->Html->link(__('Creación De Proyecto', true), array('controller' => 'proyectos', 'action' => 'add',$empresa["Empresa"]["id"]));?> </li>
 		</ul>
-	</div>
-	
+	</div>	
 </div>
 <?php endif;?>
 <div style="display:none">

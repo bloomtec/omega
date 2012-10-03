@@ -92,9 +92,9 @@ class Contrato extends AppModel {
 		$existe = $this -> Alarma -> find("first", array("conditions" => array('Alarma.modelo' => 'Contrato', "Alarma.llave_foranea" => $contratoId, "Alarma.texto" => $mensaje)));
 		if (!$existe) {
 			$this -> recursive = -1;
+			$this -> id = $contratoId;
+			$this -> saveField("tiene_alerta", true);
 			$contrato = $this -> read(null, $contratoId);
-			$this -> set("tiene_alerta", true);
-			$this -> save();
 			$alarma['Alarma']['modelo'] = 'Contrato';
 			$alarma["Alarma"]["llave_foranea"] = $contratoId;
 			$alarma["Alarma"]["texto"] = $mensaje;
@@ -102,9 +102,9 @@ class Contrato extends AppModel {
 			$alarma["Alarma"]["empresa_id"] = $contrato["Contrato"]["empresa_id"];
 			$this -> Alarma -> create();
 			$this -> Alarma -> save($alarma);
-			$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
-			$this -> Empresa -> set("tiene_alerta", true);
-			$this -> Empresa -> save();
+			//$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
+			$this -> Empresa -> id = $contrato["Contrato"]["empresa_id"];
+			$this -> Empresa -> saveField("tiene_alerta", true);
 		}
 	}
 
@@ -119,14 +119,14 @@ class Contrato extends AppModel {
 
 		$alarmasDelContrato = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Contrato', "Alarma.llave_foranea" => $contratoId)));
 		if ($alarmasDelContrato < 1) {
-			$this -> set("tiene_alerta", false);
-			$this -> save();
+			$this -> id = $contratoId;
+			$this -> saveField("tiene_alerta", false);
 		}
 		$alarmasCliente = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Contrato', "Alarma.empresa_id" => $contrato["Contrato"]["empresa_id"])));
 		if ($alarmasCliente < 1) {
-			$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
-			$this -> Empresa -> set("tiene_alerta", false);
-			$this -> Empresa -> save();
+			//$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
+			$this -> Empresa -> id = $contrato["Contrato"]["empresa_id"];
+			$this -> Empresa -> saveField("tiene_alerta", false);
 		}
 	}
 
@@ -140,14 +140,14 @@ class Contrato extends AppModel {
 
 			$alarmasDelContrato = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Contrato', "Alarma.llave_foranea" => $contratoId)));
 			if ($alarmasDelContrato < 1) {
-				$this -> set("tiene_alerta", false);
-				$this -> save();
+				$this -> id = $contratoId;
+				$this -> saveField("tiene_alerta", false);
 			}
 			$alarmasCliente = $this -> Alarma -> find("count", array("conditions" => array('Alarma.modelo' => 'Contrato', "Alarma.empresa_id" => $contrato["Contrato"]["empresa_id"])));
 			if ($alarmasCliente < 1) {
-				$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
-				$this -> Empresa -> set("tiene_alerta", false);
-				$this -> Empresa -> save();
+				//$cliente = $this -> Empresa -> read(null, $contrato["Contrato"]["empresa_id"]);
+				$this -> Empresa -> id = $contrato["Contrato"]["empresa_id"];
+				$this -> Empresa -> saveField("tiene_alerta", false);
 			}
 			return true;
 		} else {

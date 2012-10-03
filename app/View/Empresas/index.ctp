@@ -150,9 +150,9 @@
 				if ($i++ % 2 == 0) {
 					$class = ' class="altrow"';
 				}
-				if(($days<=$proyecto["Proyecto"]['validez'])) {
+				/*if(($days<=$proyecto["Proyecto"]['validez'])) {
 					$class = ' class="rechazado"';
-				}
+				}*/
 	?>
 	<tr<?php echo $class; ?>>	
 		<td style="width:180px;">
@@ -171,11 +171,13 @@
 			?>
 			<?php  //echo $this->Html->link(__('Borrar', true), array('controller' => 'contratos', 'action' => 'delete', $proyecto['id']), null, sprintf(__('Esta seguro que desea eliminar el contrato?', true), $proyecto['id'])); ?>
 			<?php
-				if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"] && ($days <= $proyecto["Proyecto"]['validez']))
+				//if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"] && ($days <= $proyecto["Proyecto"]['validez']))
+				if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"])
 					echo $this -> Html -> link("Aprobar Cotización", array("controller" => "proyectos", "action" => "aprobarCotizacion", $proyecto["Proyecto"]['id'], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "thickbox"));
 			?>
 			<?php
-				if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"] && ($days <= $proyecto["Proyecto"]['validez']))
+				//if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"] && ($days <= $proyecto["Proyecto"]['validez']))
+				if ($proyecto["Proyecto"]["estado_proyecto_id"] == 1 && $proyecto["Proyecto"]["cotizacion"])
 					echo $this -> Html -> link("Rechazar Cotización", array("controller" => "proyectos", "action" => "rechazarCotizacion", $proyecto["Proyecto"]['id'], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "thickbox"));
 			?>	
 			</td>
@@ -205,7 +207,7 @@
 		?>
 		<tr<?php echo $class; ?>>
 			<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php  echo $proyecto["Proyecto"]['centro_de_costo']; ?></td>
 			<td><?php  echo $proyecto["Proyecto"]['nombre']; ?></td>
@@ -250,7 +252,7 @@
 		?>
 		<tr<?php echo $class; ?>>
 			<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php  echo $proyecto["Proyecto"]['centro_de_costo']; ?></td>
 			<td><?php  echo $proyecto["Proyecto"]['nombre']; ?></td>

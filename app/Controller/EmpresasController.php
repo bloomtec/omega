@@ -25,7 +25,8 @@ class EmpresasController extends AppController {
 			),
 			'Proyecto' => array(
 				'conditions' => array(
-					'Proyecto.empresa_id' => $this -> Auth -> user('empresa_id')
+					'Proyecto.empresa_id' => $this -> Auth -> user('empresa_id'),
+					'Proyecto.estado_proyecto_id <>' => 9
 				)
 			)
 		);
