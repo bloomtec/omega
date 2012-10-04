@@ -317,6 +317,40 @@ class ObservacionesController extends AppController {
 		return true;
 	}
 	
+	function admin_AJAX_addComentarioPrivado() {
+		$this -> Observacion -> bindModel(
+			array(
+				'belongsTo' => array(
+					'Usuario' => array('className' => 'Usuario', 'foreignKey' => 'usuario_id', 'conditions' => '', 'fields' => '', 'order' => ''),
+					'Proyecto' => array('className' => 'Proyecto', 'foreignKey' => 'llave_foranea', 'conditions' => array('modelo' => 'Proyecto'), 'fields' => '', 'order' => '')
+				)
+			)
+		);
+		$comentario["Observacion"]["usuario_id"] = $this -> data['Observacion']["usuario_id"];
+		$comentario["Observacion"]["llave_foranea"] = $this -> data['Observacion']["proyecto_id"];
+		$comentario["Observacion"]["texto"] = $this -> data['Observacion']["observacion"];
+		$comentario["Observacion"]["modelo"] = 'Proyecto';
+		$comentario["Observacion"]["es_publico"] = 0;
+		if($comentario["Observacion"]["texto"]) {
+			$this -> Observacion -> create();
+			if ($this->Observacion->save($comentario)) {
+				$proyecto = $this -> Observacion -> Proyecto -> read(null,$comentario["Observacion"]["llave_foranea"]);
+				if($this -> Auth -> user('rol_id') < 3){
+					if(!$proyecto["Proyecto"]["publicacion_para_empresa"]) $proyecto["Proyecto"]["publicacion_para_empresa"]=true;
+				}	
+				$this->Observacion->Proyecto->save($proyecto);
+				echo "OK";
+			} else {
+				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
+			}
+		} else {
+			echo "Debe escribir un comentario";
+		}
+		configure::Write("debug", 0);
+		$this -> autoRender = false;
+		exit(0);
+	}
+	
 	function admin_AJAX_addComentarioPublico() {
 		$this -> Observacion -> bindModel(
 			array(
@@ -338,8 +372,7 @@ class ObservacionesController extends AppController {
 				if($this -> Auth -> user('rol_id') < 3){
 					if(!$proyecto["Proyecto"]["publicacion_para_empresa"]) $proyecto["Proyecto"]["publicacion_para_empresa"]=true;
 				}	
-				$this->Observacion->Proyecto->save($proyecto);
-				$usuario=$this->Observacion->Usuario->read(null,$comentario["Observacion"]["usuario_id"]);				
+				$this->Observacion->Proyecto->save($proyecto);				
 				echo "OK";	
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";

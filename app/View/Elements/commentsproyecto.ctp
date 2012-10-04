@@ -15,7 +15,7 @@ if($modelo=="Publico") {
 		foreach($observacionesPrivadas as $observacion) :
 ?>
 	<div class="observacion privada">
-		<div class="encabezado"><div class="nombre"><?php echo $observacion["Usuario"]["username"]; ?>:</div>  <div class="fecha"> <?php echo $observacion["Observacion"]["created"]; ?></div></div>
+		<div class="encabezado"><div class="nombre"><?php echo $observacion["Usuario"]["nombre_de_usuario"]; ?>:</div>  <div class="fecha"> <?php echo $observacion["Observacion"]["created"]; ?></div></div>
 		<div class="cuerpo"><?php echo $observacion["Observacion"]["texto"]; ?></div>
 	</div>
 <?php
