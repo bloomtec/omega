@@ -515,8 +515,8 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_verificarVisitas() {
-		$visita["contrato_id"] = $this -> params["form"]["contrato_id"];
-		$visita["usuario_id"] = $this -> params["form"]["usuarioId"];
+		$visita["contrato_id"] = $this -> data["contrato_id"];
+		$visita["usuario_id"] = $this -> data["usuarioId"];
 		$this -> Equipo -> bindModel(
 			array(
 				"hasMany" => array(
@@ -647,8 +647,8 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_guardarDiagnostico() {
-		$contratoEquipoId = $this -> params["form"]["id"];
-		$texto = $this -> params["form"]["texto"];
+		$contratoEquipoId = $this -> data["id"];
+		$texto = $this -> data["texto"];
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> read(null, $contratoEquipoId);
 		$contratoEquipo["ContratosEquipo"]["diagnostico"] = $texto;
 		if ($this -> Equipo -> ContratosEquipo -> save($contratoEquipo)) {
@@ -662,8 +662,8 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_guardarObservacionesFinales() {
-		$contratoEquipoId = $this -> params["form"]["id"];
-		$texto = $this -> params["form"]["texto"];
+		$contratoEquipoId = $this -> data["id"];
+		$texto = $this -> data["texto"];
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> read(null, $contratoEquipoId);
 		$contratoEquipo["ContratosEquipo"]["observaciones_finales"] = $texto;
 		if ($this -> Equipo -> ContratosEquipo -> save($contratoEquipo)) {
@@ -677,8 +677,8 @@ class EquiposController extends AppController {
 	}
 
 	public function AJAX_guardarActividadesConcluidas() {
-		$contratoEquipoId = $this -> params["form"]["id"];
-		$texto = $this -> params["form"]["texto"];
+		$contratoEquipoId = $this -> data["id"];
+		$texto = $this -> data["texto"];
 		$contratoEquipo = $this -> Equipo -> ContratosEquipo -> read(null, $contratoEquipoId);
 		$contratoEquipo["ContratosEquipo"]["actividades_concluida"] = $texto;
 		if ($this -> Equipo -> ContratosEquipo -> save($contratoEquipo)) {

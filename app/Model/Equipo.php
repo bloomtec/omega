@@ -13,7 +13,7 @@ class Equipo extends AppModel {
 	 *
 	 * @var string
 	 */
-	public $displayField = 'referencia';
+	public $displayField = 'codigo';
 
 	/**
 	 * Validation rules

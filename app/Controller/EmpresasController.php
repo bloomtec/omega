@@ -203,7 +203,22 @@ class EmpresasController extends AppController {
 					$subject = "Datos de cuenta de usuario";
 
 					//optional headerfields
-					$mail_body = "Bienvenido a nuestra plataforma de atención de clientes.\nSus datos son los siguientes:\nUsuario: " . $this -> request -> data["Usuario"]["nombre_de_usuario"] . "\nContraseña: " . $this -> request -> data["Usuario"]["contraseña"];
+					$mail_body =
+						"Bienvenido a nuestra plataforma de atención de clientes.
+						\n
+						Sus datos son los siguientes:
+						\n
+						Usuario: " . $this -> request -> data["Usuario"]["nombre_de_usuario"] . "
+						\n
+						Contraseña: " . $this -> request -> data["Usuario"]["contraseña"] . "
+						\n
+						";
+					
+					if(isset($this -> request -> data['Email']['body']) && !empty($this -> request -> data['Email']['body'])) {
+						$mail_body .= '
+						
+						' . $this -> request -> data['Email']['body'];
+					}
 
 					$this -> sendbySMTP('', $recipient_email, $subject, $mail_body);
 

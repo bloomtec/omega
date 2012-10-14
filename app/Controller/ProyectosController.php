@@ -121,52 +121,92 @@ class ProyectosController extends AppController {
 		);
 		$this -> set(compact('proyecto', 'comentariosPrivados', 'comentariosPublicos'));
 	}
+	
+	function isValidEmail($email){
+		return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email);
+	}
 
 	public function admin_add($id = null) {
 		$empresaId = $id;
 		if (!empty($this -> request -> data)) {
-
-			$this -> Proyecto -> create();
-			if ($this -> Proyecto -> save($this -> request -> data)) {
-				$usuarios = $this -> requestAction("/usuarios/getOmega");
-				// --------------
-				$correo = array();
-				$correo["Correo"]["modelo"] = 'Proyecto';
-				$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
-				$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["encargado"];
-				$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["encargado"]];
-				$this -> Proyecto -> Correo -> create();
-				$this -> Proyecto -> Correo -> save($correo);
-				// --------------
-				$this -> Proyecto -> Correo -> id = 0;
-				$correo = array();
-				$correo["Correo"]["modelo"] = 'Proyecto';
-				$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
-				$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["supervisor"];
-				$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["supervisor"]];
-				$this -> Proyecto -> Correo -> create();
-				$this -> Proyecto -> Correo -> save($correo);
-				// --------------
-				$lista_correos = $this -> request -> data['Proyecto']['correos'];
+			$procesar_correos = true;
+			$correos_validos = true;
+			$texto_no_validos = "";
+			$lista_correos = trim($this -> request -> data['Proyecto']['correos']);
+			if(!empty($lista_correos)) {
 				$lista_correos = trim($lista_correos);
 				$lista_correos = explode(",", $lista_correos);
 				foreach ($lista_correos as $key => $correo) {
 					$lista_correos[$key] = trim($correo);
+					$lista_correos[$key] = explode('<', $lista_correos[$key]);
+					$lista_correos[$key][0] = trim($lista_correos[$key][0]);
+					if(isset($lista_correos[$key][1])) {
+						$lista_correos[$key][1] = trim($lista_correos[$key][1], '> ');
+						$lista_correos[$key][2] = $this -> isValidEmail($lista_correos[$key][1]);
+					} else {
+						$lista_correos[$key][2] = false;
+					}
+					if(!$lista_correos[$key][2]) {
+						$correos_validos = false;
+						if(isset($lista_correos[$key][1])) {
+							$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][1] . '"';
+						} else {
+							$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][0] . '"';
+						}
+						break;
+					}
+				}
+			} else {
+				$procesar_correos = false;
+			}
+			
+			//debug($lista_correos);
+			
+			if($correos_validos) {
+				$this -> Proyecto -> create();
+				if ($this -> Proyecto -> save($this -> request -> data)) {
+					$usuarios = $this -> requestAction("/usuarios/getOmega");
+					// --------------
 					$correo = array();
 					$correo["Correo"]["modelo"] = 'Proyecto';
 					$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
-					$correo["Correo"]["correo"] = $lista_correos[$key];
-					$correo["Correo"]["nombre"] = $lista_correos[$key];
+					$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["encargado"];
+					$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["encargado"]];
 					$this -> Proyecto -> Correo -> create();
 					$this -> Proyecto -> Correo -> save($correo);
+					// --------------
+					$this -> Proyecto -> Correo -> id = 0;
+					$correo = array();
+					$correo["Correo"]["modelo"] = 'Proyecto';
+					$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
+					$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["supervisor"];
+					$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["supervisor"]];
+					$this -> Proyecto -> Correo -> create();
+					$this -> Proyecto -> Correo -> save($correo);
+					// --------------
+					if($procesar_correos) {
+						foreach ($lista_correos as $key => $correo) {
+							$correo = array();
+							$correo["Correo"]["modelo"] = 'Proyecto';
+							$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
+							$correo["Correo"]["nombre"] = $lista_correos[$key][0];
+							$correo["Correo"]["correo"] = $lista_correos[$key][1];
+							$this -> Proyecto -> Correo -> create();
+							$this -> Proyecto -> Correo -> save($correo);
+						}
+					}
+					// --------------
+					$this -> Session -> setFlash(__('Se agregó el proyecto'), 'crud/success');
+					$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Proyecto"]["empresa_id"], "proyectos"));
+				} else {
+					$empresaId = $this -> request -> data["Proyecto"]["empresa_id"];
+					$this -> Session -> setFlash(__('No se pudo agregar el proyecto. Por favor, intente de nuevo.'), 'crud/error');
 				}
-				// --------------
-				$this -> Session -> setFlash(__('Se agregó el proyecto'), 'crud/success');
-				$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Proyecto"]["empresa_id"], "proyectos"));
 			} else {
 				$empresaId = $this -> request -> data["Proyecto"]["empresa_id"];
-				$this -> Session -> setFlash(__('No se pudo agregar el proyecto. Por favor, intente de nuevo.'), 'crud/error');
+				$this -> Session -> setFlash($texto_no_validos, 'crud/error');
 			}
+			
 		}
 		$empresas = $this -> Proyecto -> Empresa -> find('list');
 		$this -> set(compact('empresas', 'empresaId'));
@@ -227,7 +267,7 @@ class ProyectosController extends AppController {
 	}
 
 	public function AJAX_eliminarAlarma() {
-		$alarmaId = $this -> params["form"]["alarmaId"];
+		$alarmaId = $this -> data["alarmaId"];
 		if ($alarmaId) {
 
 			if ($this -> Proyecto -> eliminarAlarmaSola($alarmaId)) {
@@ -598,8 +638,8 @@ class ProyectosController extends AppController {
 	}
 
 	public function AJAX_subirFicha() {
-		$proyectoId = $this -> params["form"]["id"];
-		$fichaPath = $this -> params["form"]["path"];
+		$proyectoId = $this -> data["id"];
+		$fichaPath = $this -> data["path"];
 		//$this -> Proyecto -> recursive = -1;
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		if ($proyecto["Proyecto"]["ficha_tecnica"]) {
@@ -651,7 +691,7 @@ class ProyectosController extends AppController {
 	}
 
 	public function quitarPulicacionParaOmega() {
-		$proyectoId = $this -> params["form"]["id"];
+		$proyectoId = $this -> data["id"];
 		//$this -> Proyecto -> recursive = -1;
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		$proyecto["Proyecto"]["publicacion_para_omega"] = false;
@@ -666,7 +706,7 @@ class ProyectosController extends AppController {
 	}
 
 	public function quitarPulicacionParaCliente() {
-		$proyectoId = $this -> params["form"]["id"];
+		$proyectoId = $this -> data["id"];
 		//$this -> Proyecto -> recursive = -1;
 		$proyecto = $this -> Proyecto -> read(null, $proyectoId);
 		$proyecto["Proyecto"]["publicacion_para_empresa"] = false;

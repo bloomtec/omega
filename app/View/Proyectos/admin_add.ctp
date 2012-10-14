@@ -24,9 +24,10 @@
 		echo $this -> Form -> input('supervisor', array("type" => "select", "options" => $usuarios));
 		echo $this -> Form -> input('encargado', array("type" => "select", "options" => $usuarios, "label" => "Ingeniero"));
 		echo $this -> Form -> input('descripcion', array("label" => "Descripción"));
-		echo $this -> Form -> input('correos', array('label' => 'Correos (separados por coma ",")', 'type' => 'textarea'));
+		echo $this -> Form -> input('correos', array('label' => 'Correos (Formato: Nombre &lt;correo&gt;, Nombre 2 &lt;correo 2&gt;, ...)</code>', 'type' => 'textarea'));
 		?>
 	</fieldset>
+	
 	<?php echo $this -> Form -> end(__('Guardar', true)); ?>
 </div>
 <div class="actions">

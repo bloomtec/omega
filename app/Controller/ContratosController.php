@@ -269,7 +269,7 @@ class ContratosController extends AppController {
 	}
 
 	public function AJAX_eliminarAlarma() {
-		$alarmaId = $this -> params["form"]["alarmaId"];
+		$alarmaId = $this -> data["alarmaId"];
 		if ($alarmaId) {
 			if ($this -> Contrato -> eliminarAlarmaSola($alarmaId)) {
 				echo "SI";

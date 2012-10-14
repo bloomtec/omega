@@ -53,6 +53,16 @@ class Proyecto extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'nombre' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Debe ingresar un nombre',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		/*'comentarios' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),

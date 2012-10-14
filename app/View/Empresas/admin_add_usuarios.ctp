@@ -14,6 +14,7 @@
 		echo $this -> Form -> input('Usuario.verificar_contraseña', array('type' => 'password'));
 		echo $this -> Form -> input('Usuario.servicios', array('multiple' => 'checkbox'));
 		//echo $this -> Form -> input('Usuario.empresa_id', array('type' => 'hidden', 'value' => $empresaId));
+		echo $this -> Form -> input('Email.body', array('label' => 'Mensaje Personalizado Para El Correo', 'type' => 'textarea'));
 	?>
 	</fieldset>
 	
