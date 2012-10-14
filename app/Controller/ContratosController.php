@@ -203,9 +203,6 @@ class ContratosController extends AppController {
 	}
 
 	public function admin_delete($id = null) {
-		if (!$this -> request -> is('post')) {
-			throw new MethodNotAllowedException();
-		}
 		$this -> Contrato -> id = $id;
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
@@ -328,16 +325,22 @@ class ContratosController extends AppController {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Contrato"]["id"];
 		//$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
-		$this -> Contrato -> set("estado_id", 7);
-		$this -> Contrato -> save();
-		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato en espera de aprobación");
-		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "contrato nuevo");
-		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
+		$this -> Contrato -> id = $this -> request -> data["Contrato"]["id"];
+		$this -> Contrato -> saveField("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> saveField("estado_id", 7);
+		//$this -> Contrato -> save();
+		$this -> Contrato -> eliminarAlarma($id, "contrato en espera de aprobación");
+		$this -> Contrato -> eliminarAlarma($id, "contrato nuevo");
+		$this -> Contrato -> eliminarAlarma($id, "debe subir la cotización");
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
+		$contrato = $this -> Contrato -> read('nombre', $id);
 		$mail_body = "Se ha anulado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
-		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		if(isset($this -> request -> data['Email']['body']) && !empty($this -> request -> data['Email']['body'])) {
+			$mail_body .= '
+			
+			' . $this -> request -> data['Email']['body'];
+		}
+		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Se ha anulado la cotizazción'), 'crud/success');
 	}
 
