@@ -12,6 +12,8 @@ $(document).ready(function() {
 		'width' : 109,
 		'height' : 32,
 		'auto' : true,
+		'fileDesc' : 'Documentos PDF (*.pdf)',
+		'fileExt' : '*.pdf',
 		'cancelImg' : server + 'img/cancel.png',
 		'onComplete' : function(a, b, c, d) {
 			var path = "/files";
