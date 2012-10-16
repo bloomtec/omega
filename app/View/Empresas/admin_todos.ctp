@@ -11,17 +11,14 @@
 		<?php
 			$i = 0;
 			foreach ($empresas as $empresa) :
-				debug($empresa);
-				debug(count($empresa["Usuario"]));
-				if(count($empresa["Usuario"]) < 2) {
-					$solicitudes = false;
-					if(!empty($empresa["Solicitud"])) {
-						$solicitudes = true;
-					}
-					$class = null;
-					if ($i++ % 2 == 0) {
-						$class = ' class="altrow"';
-					}
+				$solicitudes = false;
+				if(!empty($empresa["Solicitud"])) {
+					$solicitudes = true;
+				}
+				$class = null;
+				if ($i++ % 2 == 0) {
+					$class = ' class="altrow"';
+				}
 		?>
 		<tr<?php echo $class; ?>>
 			<td><?php echo $empresa['Empresa']['nombre']; ?>&nbsp;</td>
@@ -31,7 +28,6 @@
 				<?php  echo $this -> Html -> link(__('Añadir Usuario', true), array('action' => 'add_usuarios', $empresa['Empresa']['id'])); ?>
 			</td>
 		</tr>
-		<?php 	} ?>
 		<?php endforeach; ?>
 	</table>
 	<p>

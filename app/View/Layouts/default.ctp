@@ -56,7 +56,7 @@
 					<div class="logo"><?php echo $this -> Html -> image('logo.png'); ?></div>
 					<div class="logout"><?php echo $this -> Html -> link('Salir', array('controller' => 'usuarios', 'action' => 'logout')); ?></div>
 				</div>
-				<?php if($this -> Session -> read('Auth.User.rol_id') != 3) { ?>
+				<?php if($this -> Session -> read('Auth.User') && $this -> Session -> read('Auth.User.rol_id') != 3) { ?>
 				<div class="sf-menu-container">
 					<ul class="sf-menu">
 						<li>
@@ -97,7 +97,7 @@
 						</li>
 					</ul>
 				</div>
-				<?php } else { ?>
+				<?php } elseif($this -> Session -> read('Auth.User')) { ?>
 				<div class="sf-menu-container">
 					<ul class="sf-menu">
 						<li>
