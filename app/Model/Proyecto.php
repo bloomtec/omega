@@ -64,6 +64,36 @@ class Proyecto extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'cotizacion' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Debe subir la cotización',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'supervisor' => array(
+			'validarEncargadoYSupervisor' => array(
+				'rule' => array('validarEncargadoYSupervisor'),
+				'message' => 'Debe seleccionar un supervisor si no selecciona un ingeniero',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'encargado' => array(
+			'validarEncargadoYSupervisor' => array(
+				'rule' => array('validarEncargadoYSupervisor'),
+				'message' => 'Debe seleccionar un ingeniero si no selecciona un supervidor',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		/*'comentarios' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
@@ -75,6 +105,16 @@ class Proyecto extends AppModel {
 			),
 		),*/
 	);
+	
+	function validarEncargadoYSupervisor() {
+		if(empty($this -> data['Proyecto']['supervisor']) && empty($this -> data['Proyecto']['encargado'])) {
+			return false;
+		} elseif (!empty($this -> data['Proyecto']['supervisor']) || !empty($this -> data['Proyecto']['encargado'])) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	function afterSave($created) {
 		if ($created) {
