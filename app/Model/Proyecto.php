@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Proyecto Model
  *
@@ -83,9 +84,49 @@ class Proyecto extends AppModel {
 			 $this->Alarma->create();
 			 $this->Alarma->save($alarma);*/
 			//$this->crearAlarma($this->id,"contrato nuevo",true);
-			$this -> crearAlarmaProyecto($this -> id, "debe subir la cotización", false);
+			if(empty($this -> data['Proyecto']['cotizacion'])) {
+				$this -> crearAlarmaProyecto($this -> id, "debe subir la cotización", false);
+			} elseif($created) {
+				$this -> crearAlarmaProyecto($this -> id, "proyecto en espera de aprobación", true);
+				$this -> crearAlarmaProyecto($this -> id, "en espera de aprobación por el cliente", false);
+				
+				$proyectoId = $this -> id;
+				$mail_body = 'Se ha subido la cotización del proyecto: ' . $this -> data['Proyecto']['nombre'];
+				$proyecto = $this -> read(null, $proyectoId);
+				//$this -> Proyecto -> Empresa -> ClientesUsuario -> bindModel(array("belongsTo" => array("Usuario")));
+				//$usuarios = $this -> Proyecto -> Empresa -> ClientesUsuario -> find("all", array("conditions" => array("cliente_id" => $proyecto["Empresa"]["id"])));
+				$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/2');
+				$usuarios = $this -> Empresa -> Usuario -> find("all", array("conditions" => array("Usuario.id" => $usuarios, "Usuario.empresa_id" => $proyecto["Proyecto"]["empresa_id"])));
+				$empresa = $this -> Empresa -> read(null, $proyecto['Proyecto']['empresa_id']);
+				$correoUsuario = "";
+				foreach ($usuarios as $usuario) {
+					$correoUsuario = $usuario["Usuario"]["correo"];
+				}
+				$correos = $this -> Correo -> find("all", array("conditions" => array('Correo.modelo' => 'Proyecto', "Correo.llave_foranea" => $proyectoId)));
+				$Name = "OMEGA INGENIEROS";
+				//senders name
+		
+				/*$correo = "no-responder@omegaingenieros.com"; //senders e-mail adress
+				 $subject = "Nueva actividad en el Proyecto: ".$proyecto["Proyecto"]["nombre"]; //subject
+				 $header = "From: ". $Name . " <" . $correo . ">\r\n"; //optional headerfields
+				 mail($proyecto["Empresa"]["correo"], $subject, $mail_body, $header);
+				 mail($correoUsuario, $subject, $mail_body, $header);*/
+				$subject = "Nueva actividad en el Proyecto: " . $proyecto["Proyecto"]["nombre"];
+				//subject
+				$email = new CakeEmail('smtp');
+				$email -> emailFormat('html');
+				$email -> to($empresa["Empresa"]["correo"]);
+				$email -> subject($subject);
+				$email -> send($mail_body);
+				foreach ($correos as $correo) {
+					$email = new CakeEmail('smtp');
+					$email -> emailFormat('html');
+					$email -> to($correo["Correo"]["correo"]);
+					$email -> subject($subject);
+					$email -> send($mail_body);
+				}
+			}
 		}
-
 	}
 
 	function crearAlarmaProyecto($proyectoId, $mensaje, $paraCliente) {

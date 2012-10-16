@@ -9,8 +9,8 @@
 		//echo $this->Form->input('centro_de_costo');
 		echo $this -> Form -> input('fecha_de_entrega');
 		echo $this -> Form -> input('fecha_de_inicio');
-		echo $this -> Form -> input('cotizacion');
-		echo $this -> Form -> input('cronograma');
+		echo $this -> Form -> input('cotizacion', array('autocomplete' => 'off'));
+		echo $this -> Form -> input('cronograma', array('autocomplete' => 'off'));
 		?>
 		<label style="float:left; margin-right:10px; margin-top:5px;">Cotización: </label>
 		<div id="cotizacion" path='/files'></div>
@@ -27,12 +27,16 @@
 		echo $this -> Form -> input('correos', array('label' => 'Correos (Formato: Nombre &lt;correo&gt;, Nombre 2 &lt;correo 2&gt;, ...)</code>', 'type' => 'textarea'));
 		?>
 	</fieldset>
-	
 	<?php echo $this -> Form -> end(__('Guardar', true)); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>		
-		<li><?php echo $this -> Html -> link("Volver", array('controller' => 'empresas', 'action' => 'view', $empresaId)); ?> </li>
-	</ul>
+	<div class="actions">
+		<!--<h3><?php echo __('Acciones'); ?></h3>-->
+		<ul>		
+			<li>
+				<?php
+					//echo $this -> Html -> link("Volver", array('controller' => 'empresas', 'action' => 'view', $empresaId));
+				?>
+				<a href="<?php echo $referer; ?>">Volver</a>
+			</li>
+		</ul>
+	</div>
 </div>

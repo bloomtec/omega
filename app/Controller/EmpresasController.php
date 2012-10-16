@@ -362,6 +362,7 @@ class EmpresasController extends AppController {
 			$servicios_prestados[$servicio['id']] = $servicio['id'];
 		}
 		$this -> set(compact('servicios', 'servicios_prestados'));
+		$this -> set('referer', $this -> referer());
 	}
 
 	/**

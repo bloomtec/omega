@@ -2,7 +2,22 @@
 body div#container div#content div.actions {
 	display:		none;
 }
+body div#container div#content div.related div.actions {
+	display:		inherit;
+}
+body div#container div#content div.form div.actions {
+	display:		inherit;
+	float:			right;
+	margin-top:		-15px;
+}
 body div#container div#content div.index {
+	border-left: 0;
+    float: none;
+    /*margin-top: 5px;*/
+    /*padding: 10px 2%;*/
+    width: auto;
+}
+body div#container div#content div.form {
 	border-left: 0;
     float: none;
     /*margin-top: 5px;*/

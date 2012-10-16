@@ -12,7 +12,18 @@
 	echo $this -> Form -> input('servicios', array('multiple' => 'checkbox', 'selected' => $servicios_prestados));
 	?>
 	</fieldset>
-<?php echo $this -> Form -> end(__('Guardar', true)); ?>
+	<?php echo $this -> Form -> end(__('Guardar', true)); ?>
+	<div class="actions">
+		<!--<h3><?php echo __('Acciones'); ?></h3>-->
+		<ul>		
+			<li>
+				<?php
+					//echo $this -> Html -> link("Volver", array('controller' => 'empresas', 'action' => 'view', $empresaId));
+				?>
+				<a href="<?php echo $referer; ?>">Volver</a>
+			</li>
+		</ul>
+	</div>
 </div>
 <div class="actions">
 	<h3><?php __('Acciones'); ?></h3>

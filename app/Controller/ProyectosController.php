@@ -210,6 +210,7 @@ class ProyectosController extends AppController {
 		}
 		$empresas = $this -> Proyecto -> Empresa -> find('list');
 		$this -> set(compact('empresas', 'empresaId'));
+		$this -> set('referer', $this -> referer());
 	}
 
 	public function admin_add2($id = null) {
@@ -253,17 +254,17 @@ class ProyectosController extends AppController {
 		$this -> set("proyecto", $id);
 	}
 
-	public function delete($id = null) {
+	public function admin_delete($id = null) {
 		if (!$id) {
 			$this -> Session -> setFlash(__('Proyecto no válido'), 'crud/error');
-			$this -> redirect(array('action' => 'index'));
+			$this -> redirect($this -> referer());
 		}
 		if ($this -> Proyecto -> delete($id)) {
 			$this -> Session -> setFlash(__('Se eliminó el proyecto'), 'crud/success');
-			$this -> redirect(array('action' => 'index'));
+			$this -> redirect($this -> referer());
 		}
 		$this -> Session -> setFlash(__('No se eliminó el proyecto'), 'crud/error');
-		$this -> redirect(array('action' => 'index'));
+		$this -> redirect($this -> referer());
 	}
 
 	public function AJAX_eliminarAlarma() {
@@ -430,7 +431,6 @@ class ProyectosController extends AppController {
 	public function confirmarAprobacion() {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Proyecto"]["id"];
-		$proyecto = $this -> Proyecto -> read(null, $id);
 		$this -> Proyecto -> id = $id;
 		$this -> Proyecto -> saveField("estado_proyecto_id", 2);
 		//$this -> Proyecto -> set("estado_proyecto_id", 2);
@@ -442,10 +442,13 @@ class ProyectosController extends AppController {
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto nuevo");
 		$this -> Proyecto -> crearAlarmaProyecto($id, "proyecto en perfeccionamiento", false);
 		//$this->Proyecto->crearAlarmaProyecto($id,"debe ingresar el centro de costo",false);
-		$mail_body = "Usted ha apropado la cotizaciòn del proyecto: " . $proyecto["Proyecto"]["nombre"];
-		$this -> enviarCorreo($proyecto["Proyecto"]["id"], $mail_body);
+		$proyecto = $this -> Proyecto -> read('nombre', $id);
+		$mail_body =
+			"Usted ha apropado la cotizaciòn del proyecto: "
+			. $proyecto["Proyecto"]["nombre"]
+			. "\n" . $this -> request -> data["Proyecto"]["comentarios"];
+		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
-
 	}
 
 	public function rechazarCotizacion($id) {
@@ -464,17 +467,21 @@ class ProyectosController extends AppController {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Proyecto"]["id"];
 		//$id = $this -> request -> data["id"];
-		$proyecto = $this -> Proyecto -> read(null, $id);
-		$this -> Proyecto -> set("estado_proyecto_id", 9);
-		$this -> Proyecto -> set("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
-		$this -> Proyecto -> save();
+		$this -> Proyecto -> id = $id;
+		$this -> Proyecto -> saveField("estado_proyecto_id", 9);
+		$this -> Proyecto -> saveField("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
+		//$this -> Proyecto -> save();
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "en espera de aprobación por el cliente");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto en espera de aprobación");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto nuevo");
 		$this -> Proyecto -> crearAlarmaProyecto($id, "proyecto en rechazado", false);
 		//$this->Proyecto->crearAlarmaProyecto($id,"debe ingresar el centro de costo",false);
-		$mail_body = "Se ha rechazado la cotización del proyecto: " . $proyecto["Proyecto"]["nombre"];
-		$this -> enviarCorreo($proyecto["Proyecto"]["id"], $mail_body);
+		$proyecto = $this -> Proyecto -> read('nombre', $id);
+		$mail_body =
+			"Se ha rechazado la cotización del proyecto: "
+			. $proyecto["Proyecto"]["nombre"]
+			. "\n" . $this -> request -> data["Proyecto"]["comentarios"];
+		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos'), 'crud/success');
 	}
 
@@ -742,7 +749,6 @@ class ProyectosController extends AppController {
 		 mail($correoUsuario, $subject, $mail_body, $header);*/
 		$subject = "Nueva actividad en el Proyecto: " . $proyecto["Proyecto"]["nombre"];
 		//subject
-		$this -> sendbySMTP("", $correoUsuario, $subject, $mail_body);
 		$this -> sendbySMTP($proyecto["Empresa"]["nombre"], $proyecto["Empresa"]["correo"], $subject, $mail_body);
 		foreach ($correos as $correo) {
 			$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);

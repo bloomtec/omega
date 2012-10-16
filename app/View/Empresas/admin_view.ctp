@@ -24,13 +24,10 @@
 		</dd>
 	</dl>
 </div>
-<div class="actions">
+<div class="actions" style="display: inherit;">
 	<h3><?php echo __('Acciones'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Editar Empresa', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Listar Empresas', true), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nueva Empresa', true), array('action' => 'add')); ?> </li>
-		
+		<li><?php echo $this->Html->link(__('Editar Empresa', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?> </li>		
 	</ul>
 </div>
 <div class="related">
@@ -252,7 +249,6 @@
 		<th><?php echo __('Alertas'); ?></th>
 		<th><?php echo __('C.C. Proyecto'); ?></th>
 		<th><?php echo __('Nombre'); ?></th>
-
 		<th><?php echo __('Estado'); ?></th>
 		
 		
@@ -365,9 +361,8 @@
 </div>
 <?php endif;?>
 <div style="display:none">
-		<div id="usuario" usuarioId="<?php echo $this -> Session->read("Auth.Usuario.id");?>"></div>
-		
-	</div>
+	<div id="usuario" usuarioId="<?php echo $this -> Session->read("Auth.Usuario.id");?>"></div>
+</div>
 <script>
 
 

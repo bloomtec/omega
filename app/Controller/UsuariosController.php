@@ -271,6 +271,7 @@ class UsuariosController extends AppController {
 		unset($roles[3]);
 		$servicios = $this -> Usuario -> Servicio -> find('list');
 		$this -> set(compact('empresas', 'roles', 'servicios'));
+		$this -> set('referer', $this -> referer());
 	}
 
 	/**
