@@ -264,7 +264,7 @@ class EmpresasController extends AppController {
 	 * @return void
 	 */
 	public function admin_index() {
-		//$this -> Empresa -> recursive = 0;
+		$this -> Empresa -> contain('Contrato', 'Solicitud');
 		$this -> set('empresas', $this -> paginate());
 	}
 
