@@ -258,20 +258,14 @@
 		$i = 0;
 		foreach ($empresa['Proyecto'] as $proyecto):
 		if($proyecto['estado_proyecto_id']>=3&&$proyecto['estado_proyecto_id']<6){
-		$alarmaPublicacion=false;
-		
-				if($proyecto["publicacion_para_omega"]) $alarmaPublicacion=true;
-	
-		
-
-		
+			$alarmaPublicacion=false;
+			if($proyecto["publicacion_para_omega"]) $alarmaPublicacion=true;		
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';
 			}
 		?>
-		<tr<?php echo $class;?>>
-		
+		<tr<?php echo $class;?>>		
 			<td style="width:180px;">
 			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
@@ -282,76 +276,56 @@
 			<td class="actions">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
 				<?php echo $this->Html->link(__('Ver', true), array('controller' => 'proyectos', 'action' => 'view', $proyecto['id'])); ?>
-				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'proyectos', 'action' => 'edit', $proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				
+				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'proyectos', 'action' => 'edit', $proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>				
 				<?php  //echo $this->Html->link(__('Borrar', true), array('controller' => 'contratos', 'action' => 'delete', $contrato['id']), null, sprintf(__('Esta seguro que desea eliminar el contrato?', true), $contrato['id'])); ?>
 				<?php if($proyecto["estado_proyecto_id"]== 1)echo $this->Html->link("Subir cotización PDF",array("controller"=>"proyectos","action"=>"subirCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				<?php if($proyecto["estado_proyecto_id"]== 2)echo $this->Html->link("Iniciar Ejecución",array("controller"=>"proyectos","action"=>"ingresarCc",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				
+				<?php if($proyecto["estado_proyecto_id"]== 2)echo $this->Html->link("Iniciar Ejecución",array("controller"=>"proyectos","action"=>"ingresarCc",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>				
 			</td>
 		</tr>
 	<?php } endforeach; ?>
 	</table>
-	
-	
 <?php endif; ?>
-
-
-
-
 	<!-- PROYECTOS CANCELADOS O FINALIZADOS -->
 	<div style="clear:both;"></div>
-	<h3 class="post"><?php printf(__('Post Venta', true) );?></h3>
+	<h3 class="post"><?php echo __('Post Venta');?></h3>
 
 	<table cellpadding = "0" cellspacing = "0" class="postventa">
 	<tr>
-	
 		<th><?php echo __('Alertas'); ?></th>
 		<th><?php echo __('C.C. Proyecto'); ?></th>
 		<th><?php echo __('Nombre'); ?></th>
-
-		<th><?php echo __('Estado'); ?></th>
-		
-		
+		<th><?php echo __('Estado'); ?></th>		
 		<th class="actions"><?php echo __('Acciones');?></th>
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($empresa['Proyecto'] as $proyecto):
-		if($proyecto['estado_proyecto_id']==7 || $proyecto['estado_proyecto_id']==6){
-		$alarmaPublicacion=false;
-		
-				if($proyecto["publicacion_para_omega"]) $alarmaPublicacion=true;
-	
-		
-
-		
+		foreach ($empresa['Proyecto'] as $proyecto) {
+		if($proyecto['estado_proyecto_id'] == 7 || $proyecto['estado_proyecto_id'] == 6) {
+			$alarmaPublicacion=false;
+			if($proyecto["publicacion_para_omega"]) $alarmaPublicacion = true;		
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';
 			}
 		?>
 		<tr<?php echo $class;?>>
-		
 			<td style="width:180px;">
-			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["AlarmaProyecto"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
+			<?php echo $this->element("alertasProyectos",array("alertas"=>$proyecto["Alarma"],"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
-			<td><?php  echo $proyecto['centro_de_costo']; ?></td>
-			<td><?php  echo $proyecto['nombre']; ?></td>
+			<td><?php echo $proyecto['centro_de_costo']; ?></td>
+			<td><?php echo $proyecto['nombre']; ?></td>
 			<td><?php echo $this -> Form->input("estado",array("id"=>"estadoProyectoC","modelId"=>$proyecto["id"],"label"=>false,"options"=>$estadosProyectosEjecucion,"selected"=>$proyecto["estado_proyecto_id"]));?></td>
 			
 			<td class="actions">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
 				<?php echo $this->Html->link(__('Ver', true), array('controller' => 'proyectos', 'action' => 'view', $proyecto['id'])); ?>
 				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'proyectos', 'action' => 'edit', $proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				
 				<?php  //echo $this->Html->link(__('Borrar', true), array('controller' => 'contratos', 'action' => 'delete', $contrato['id']), null, sprintf(__('Esta seguro que desea eliminar el contrato?', true), $contrato['id'])); ?>
 				<?php if($proyecto["estado_proyecto_id"]== 1)echo $this->Html->link("Subir cotización PDF",array("controller"=>"proyectos","action"=>"subirCotizacion",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($proyecto["estado_proyecto_id"]== 2)echo $this->Html->link("Iniciar Ejecución",array("controller"=>"proyectos","action"=>"ingresarCc",$proyecto['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				
 			</td>
 		</tr>
-	<?php } endforeach; ?>
+	<?php } } ?>
 	</table>
 	<div class="actions">
 		<ul>
@@ -369,15 +343,15 @@
 var server="/";
 
 $(document).ready(function(){
-	$(".postventa").hide();
+	//$(".postventa").hide();
+	
 	$(".post").toggle(
 		function(){
 			$(".postventa").show();
 		},
 		function(){
 			$(".postventa").hide();
-		}
-		
+		}	
 	);
 	$("#estadoProyectoC").change(function(){
 			var select=($("#estadoProyectoC option:selected").val());
@@ -386,7 +360,7 @@ $(document).ready(function(){
 					alert("No se pudo Actualizar el estado por favor intentelo de nuevo");
 					}else{
 						alert(data);
-						}
+					}
 				});
 		});	
 });
@@ -396,7 +370,7 @@ $.each($(".equipo"), function(i, val){
 			$(val).before("<img src='"+server+"img/alerta.gif' >");
 		}else{
 			$(val).before("<img src='"+server+"img/ninguno.gif' >");
-			}
+		}
 		//$(val).before(data);
 	});	
 });
