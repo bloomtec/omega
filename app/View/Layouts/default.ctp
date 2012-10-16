@@ -57,7 +57,7 @@
 						<?php echo $this -> Html -> image('logo.png'); ?>
 						<br />
 						<br />
-						<?php echo $this -> element('menu');?>
+						<?php if($this -> action != "login") echo $this -> element('menu');?>
 					</div>
 				
 					<div style='clear:both;'></div>
