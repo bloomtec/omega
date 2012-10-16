@@ -3,12 +3,12 @@
 
 <?php 
 	if(!isset($flash)){
-	echo $form->create("Proyecto",array("action"=>"ingresarCc"));
-	echo $form->input("id",array("value"=>$proyecto,"type"=>"hidden"));
-	echo $form->input("nombre");
-	echo $form->input("centro_de_costo",array("id"=>"centro_de_costo"));
-	echo $form->input("centro_de_costo2",array("id"=>"centro_de_costo2","label"=>"Confirmar"));
-	echo $form->end("Guardar");
+	echo $this -> Form->create("Proyecto",array("action"=>"ingresarCc"));
+	echo $this -> Form->input("id",array("value"=>$proyecto,"type"=>"hidden"));
+	echo $this -> Form->input("nombre");
+	echo $this -> Form->input("centro_de_costo",array("id"=>"centro_de_costo"));
+	echo $this -> Form->input("centro_de_costo2",array("id"=>"centro_de_costo2","label"=>"Confirmar"));
+	echo $this -> Form->end("Guardar");
 	}else{
 		echo "Se ha guardado el centro de costo, ya puede iniciar el desarrollo";
 	}

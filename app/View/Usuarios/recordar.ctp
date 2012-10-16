@@ -4,10 +4,10 @@
 			Ingrese su correo eléctronico.
 		</p>
 	<?php
-		   echo $session->flash('auth');
-		   echo $form->create('Usuario', array('action' => 'recordar'));
-		    echo $form->input('email',array("label"=>"email"));
-		    echo $form->end('Acceder');
+		   echo $this -> Session->flash('auth');
+		   echo $this -> Form->create('Usuario', array('action' => 'recordar'));
+		    echo $this -> Form->input('email',array("label"=>"email"));
+		    echo $this -> Form->end('Acceder');
 		?>
 	</div>
 
