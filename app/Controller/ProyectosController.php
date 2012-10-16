@@ -196,6 +196,9 @@ class ProyectosController extends AppController {
 						}
 					}
 					// --------------
+					if(!empty($this -> request -> data['Proyecto']['cotizacion'])) {
+						$this -> enviarCorreo($this -> Proyecto -> id, "Se ha subido la cotización del proyecto: " . $this -> request -> data["Proyecto"]["nombre"]);
+					}
 					$this -> Session -> setFlash(__('Se agregó el proyecto'), 'crud/success');
 					$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Proyecto"]["empresa_id"], "proyectos"));
 				} else {
