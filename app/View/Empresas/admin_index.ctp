@@ -15,6 +15,7 @@
 		<th><?php echo $this -> paginator -> sort('Empresa.nombre', 'Nombre/Razón Social'); ?></th>
 		<th><?php echo $this -> paginator -> sort('Empresa.identificacion', 'Identificación'); ?></th>
 		<th><?php echo $this -> paginator -> sort('Empresa.correo', 'Correo'); ?></th>
+		<th class="actions"><?php echo __('Servicios'); ?></th>
 		<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	<?php
@@ -46,7 +47,6 @@
 		<td><?php echo $empresa['Empresa']['identificacion']; ?>&nbsp;</td>
 		<td><?php echo $empresa['Empresa']['correo']; ?>&nbsp;</td>
 		<td class="actions">
-			<?php //if($solicitudes) echo $this->Html->link("Solicitudes",array("controller"=>"clientes","action"=>"solicitudes",$empresa["Empresa"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox importante")); ?>
 			<?php
 				if(key_exists(1, $servicios)) {
 					echo $this -> Html -> link(__('Mantenimiento', true), array('action' => 'view', $empresa['Empresa']['id'], "mantenimientos"));
@@ -60,8 +60,10 @@
 					}
 				}
 			?>
-			<?php echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?>
+		</td>
+		<td class="actions">
 			<?php echo $this -> Html -> link(__('Añadir Usuario', true), array('action' => 'add_usuarios', $empresa['Empresa']['id'])); ?>
+			<?php echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?>
 			<?php echo $this -> Html -> link(__('Borrar', true), array('action' => 'delete', $empresa['Empresa']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $empresa['Empresa']['id'])); ?>
 		</td>
 	</tr>
