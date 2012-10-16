@@ -13,7 +13,7 @@
 <div style="clear:both"></div>
 <br />
 <?php echo $this -> Form -> input("comentarios", array("id" => "inputVerificacion", "label" => "Comentarios")); ?>
-<?php echo $this -> Form -> input('Email.body', array('label' => 'Mensaje Personalizado Para El Correo', 'type' => 'textarea')); ?>
+<?php //echo $this -> Form -> input('Email.body', array('label' => 'Mensaje Personalizado Para El Correo', 'type' => 'textarea')); ?>
 <?php echo $this -> Form -> end("Anular Cotización", array("class" => "boton")); ?>
 <?php
 	//echo $html->link("Aprobar Cotización",array("controller"=>"contratos","action"=>"confirmarAprobacion",$contratoId,$this->Form->value('Contrato.comentarios')),array("class"=>"boton","style"=>"margin-left:40px;"));

@@ -46,7 +46,7 @@
 		<div id="container">
 			<div id="header">
 				<div class="wrap">
-					<div class="llave"><?php echo $html -> link($html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "clientes"), array('escape' => false)); ?></div>
+					<div class="llave"><?php echo $html -> link($html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "empresas"), array('escape' => false)); ?></div>
 					<div class="titulo">ZONA EXCLUSIVA <span style="font-weight:bold;">Clientes V.I.P.</div>
 					<div class="logo"><?php echo $html -> image("logo.png"); ?></div>
 					<div class="logout"><?php echo $html -> link("Salir", array("controller" => "usuarios", "action" => "logout")); ?></div>

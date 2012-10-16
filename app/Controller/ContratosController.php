@@ -295,17 +295,24 @@ class ContratosController extends AppController {
 	public function confirmarAprobacion() {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Contrato"]["id"];
-		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
-		$this -> Contrato -> set("estado_id", 3);
-		$this -> Contrato -> save();
+		
+		$this -> Contrato -> id = $id;
+		$this -> Contrato -> saveField("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> saveField("estado_id", 3);
+		//$this -> Contrato -> save();
 
 		$this -> Contrato -> eliminarAlarma($id, "contrato en espera de aprobación");
 		$this -> Contrato -> eliminarAlarma($id, "contrato nuevo");
 		$this -> Contrato -> crearAlarma($id, "contrato en perfeccionamiento", false);
 		$this -> Contrato -> crearAlarma($id, "debe ingresar el centro de costo", false);
-		$mail_body = "Se ha apropado la cotización del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
-		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		
+		$contrato = $this -> Contrato -> read('nombre', $id);
+		$mail_body =
+			"Se ha apropado la cotización del contrato de mantenimiento: "
+			. $contrato["Contrato"]["nombre"]
+			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
+		
+		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
 
@@ -334,12 +341,10 @@ class ContratosController extends AppController {
 		$this -> Contrato -> eliminarAlarma($id, "debe subir la cotización");
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$contrato = $this -> Contrato -> read('nombre', $id);
-		$mail_body = "Se ha anulado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
-		if(isset($this -> request -> data['Email']['body']) && !empty($this -> request -> data['Email']['body'])) {
-			$mail_body .= '
-			
-			' . $this -> request -> data['Email']['body'];
-		}
+		$mail_body =
+			"Se ha anulado la cotizaciòn del contrato de mantenimiento: "
+			. $contrato["Contrato"]["nombre"]
+			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
 		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Se ha anulado la cotizazción'), 'crud/success');
 	}
@@ -438,15 +443,21 @@ class ContratosController extends AppController {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Contrato"]["id"];
 		//$this -> Contrato -> recursive = -1;
-		$contrato = $this -> Contrato -> read(null, $this -> request -> data["Contrato"]["id"]);
-		$this -> Contrato -> set("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
-		$this -> Contrato -> set("estado_id", 6);
-		$this -> Contrato -> save();
+		$this -> Contrato -> id = $id;
+		$this -> Contrato -> saveField("comentarios", $this -> request -> data["Contrato"]["comentarios"]);
+		$this -> Contrato -> saveField("estado_id", 6);
+		//$this -> Contrato -> save();
 		$this -> Contrato -> crearAlarma($id, "Se ha rechazado la cotización", false);
 		$this -> Contrato -> eliminarAlarma($id, "contrato en espera de aprobación");
 		$this -> Contrato -> eliminarAlarma($id, "contrato nuevo");
+		
+		$contrato = $this -> Contrato -> read('nombre', $id);
 
-		$mail_body = "Se ha rechazado la cotizaciòn del contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
+		$mail_body =
+			"Se ha rechazado la cotizaciòn del contrato de mantenimiento: "
+			. $contrato["Contrato"]["nombre"]
+			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
+		
 		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
 		$this -> Session -> setFlash(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos.'), 'crud/success');
 

@@ -26,9 +26,10 @@
 		</title>
 		<?php
 		echo $this -> Html -> meta('icon');
-
+		
 		echo $this -> Html -> css('cake.generic');
 		echo $this -> Html -> css('thickbox');
+		echo $this -> Html -> css('superfish');
 		
 		echo $this -> Html -> script('jquery.min');
 		echo $this -> Html -> script('jquery.tools.min');
@@ -37,6 +38,9 @@
 		echo $this -> Html -> script('thickbox');
 		echo $this -> Html -> script('common');
 		echo $this -> Html -> script('upload');
+		
+		echo $this -> Html -> script('hoverIntent');
+		echo $this -> Html -> script('superfish');
 		
 		echo $this -> fetch('meta');
 		echo $this -> fetch('css');
@@ -52,6 +56,58 @@
 					<div class="logo"><?php echo $this -> Html -> image('logo.png'); ?></div>
 					<div class="logout"><?php echo $this -> Html -> link('Salir', array('controller' => 'usuarios', 'action' => 'logout')); ?></div>
 				</div>
+				<?php if($this -> Session -> read('Auth.User.rol_id') != 3) { ?>
+				<div class="sf-menu-container">
+					<ul class="sf-menu">
+						<li>
+							<a href="/admin/empresas">
+								Empresas
+							</a>
+							<ul>
+								<li>
+									<a href="/admin/empresas/add">
+										Crear Empresa
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="/admin/usuarios">
+								Usuarios
+							</a>
+							<ul>
+								<li>
+									<a href="/admin/usuarios/add">
+										Crear Admin.
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								Parametros
+							</a>
+							<ul>
+								<li>
+									<a href="/admin/categorias_archivos">
+									Cat. De Archivos
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<?php } else { ?>
+				<div class="sf-menu-container">
+					<ul class="sf-menu">
+						<li>
+							<a href="/admin/empresas">
+								Empresas
+							</a>
+						</li>
+					</ul>
+				</div>
+				<?php } ?>
 			</div>
 			<div id="content">
 				<?php echo $this -> Session -> flash(); ?>
