@@ -13,6 +13,7 @@
 		echo $this -> Form -> input('contraseña', array('type' => 'password', 'required' => 'required'));
 		echo $this -> Form -> end('Acceder');
 		?>
+		
 	</div>
 	<ul>
 		<li>
