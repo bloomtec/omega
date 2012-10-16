@@ -72,7 +72,7 @@
 		<th>Nombre</th>
 		<th>Tipo</th>
 		<th>Estado</th>
-		<th class="actions"><?php __('Acciones'); ?></th>
+		<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	<?php
 	$i = 0;
@@ -188,11 +188,11 @@
 	<h3><?php echo __('Planeación y Prestación de Servicio'); ?></h3>
 	<table cellpadding = "0" cellspacing = "0">
 		<tr>	
-			<th><?php __('Alertas'); ?></th>
-			<th><?php __('C.C. Proyecto'); ?></th>
-			<th><?php __('Nombre'); ?></th>
-			<th><?php __('Estado'); ?></th>
-			<th class="actions"><?php __('Acciones'); ?></th>
+			<th><?php echo __('Alertas'); ?></th>
+			<th><?php echo __('C.C. Proyecto'); ?></th>
+			<th><?php echo __('Nombre'); ?></th>
+			<th><?php echo __('Estado'); ?></th>
+			<th class="actions"><?php echo __('Acciones'); ?></th>
 		</tr>
 		<?php
 			$i = 0;
@@ -237,7 +237,7 @@
 		<th><?php echo __('C.C. Proyecto'); ?></th>
 		<th><?php echo __('Nombre'); ?></th>
 		<th><?php echo __('Estado'); ?></th>
-		<th class="actions"><?php __('Acciones'); ?></th>
+		<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	<?php
 		$i = 0;
