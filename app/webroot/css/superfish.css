@@ -26,9 +26,10 @@ body div#container div#content div.form {
 }
 
 .sf-menu-container {
-	float:			left;
-	margin:			0 auto;
-	width:			1280px;
+	float:right;
+	clear:both;
+	text-align: center;
+
 }
 
 /*** ESSENTIAL STYLES ***/
@@ -103,7 +104,7 @@ ul.sf-menu li li li.sfHover ul {
 .sf-menu li {
 	/*background:		#BDD2FF;*/
 	background:		url("../img/boton-gris Grande.jpg");
-	min-width: 187px;
+	min-width: 130px;
 }
 .sf-menu li li {
 	/*background:		#AABDE6;*/

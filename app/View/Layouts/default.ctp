@@ -53,61 +53,16 @@
 				<div class="wrap">
 					<div class="llave"><?php echo $this -> Html -> link($this -> Html -> image('llave.png', array('alt' => 'Volver al inicio')), array('controller' => 'empresas', 'action' => 'index'), array('escape' => false)); ?></div>
 					<div class="titulo">ZONA EXCLUSIVA <span style="font-weight:bold;">OMEGA</div>
-					<div class="logo"><?php echo $this -> Html -> image('logo.png'); ?></div>
-					<div class="logout"><?php echo $this -> Html -> link('Salir', array('controller' => 'usuarios', 'action' => 'logout')); ?></div>
+					<div class="logo">
+						<?php echo $this -> Html -> image('logo.png'); ?>
+						<br />
+						<br />
+						<?php echo $this -> element('menu');?>
+					</div>
+				
+					<div style='clear:both;'></div>
 				</div>
-				<?php if($this -> Session -> read('Auth.User') && $this -> Session -> read('Auth.User.rol_id') != 3) { ?>
-				<div class="sf-menu-container">
-					<ul class="sf-menu">
-						<li>
-							<a href="/admin/empresas">
-								Empresas
-							</a>
-							<ul>
-								<li>
-									<a href="/admin/empresas/add">
-										Crear Empresa
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="/admin/usuarios">
-								Usuarios
-							</a>
-							<ul>
-								<li>
-									<a href="/admin/usuarios/add">
-										Crear Admin.
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#">
-								Parametros
-							</a>
-							<ul>
-								<li>
-									<a href="/admin/categorias_archivos">
-									Cat. De Archivos
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<?php } elseif($this -> Session -> read('Auth.User')) { ?>
-				<div class="sf-menu-container">
-					<ul class="sf-menu">
-						<li>
-							<a href="/admin/empresas">
-								Empresas
-							</a>
-						</li>
-					</ul>
-				</div>
-				<?php } ?>
+				
 			</div>
 			<div id="content">
 				<?php echo $this -> Session -> flash(); ?>
