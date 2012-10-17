@@ -47,7 +47,7 @@
 					<ul class="sf-menu">
 						<li>
 							<a href="/admin/empresas">
-								Empresas
+								Inicio
 							</a>
 						</li>
 						<li>
