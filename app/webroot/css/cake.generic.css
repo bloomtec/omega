@@ -150,19 +150,21 @@ div.login{
 	height:314px;
 	margin:0 auto;
 	margin-top:20px;
+	position: relative;
 	
 }
 .login .wrapper{
-	float:right;
 	width:340px;
-	padding-right:40px;
+	padding-left:230px;
 	margin-top:10px;
 }
 .login p{
 	margin-bottom:5px;
 }
 .login ul{
-	clear:both;
+	position:absolute;
+	bottom:-30px;
+
 }
 
 div.form,
