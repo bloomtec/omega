@@ -21,8 +21,8 @@
 		<?php
 		echo $this -> Form -> input('responsable_comercial');
 		$usuarios = $this -> requestAction("/usuarios/getOmega");
-		echo $this -> Form -> input('supervisor', array("type" => "select", "options" => $usuarios));
-		echo $this -> Form -> input('encargado', array("type" => "select", "options" => $usuarios, "label" => "Ingeniero"));
+		echo $this -> Form -> input('supervisor', array("type" => "select", "options" => $usuarios, 'empty' => 'Seleccione Supervisor...'));
+		echo $this -> Form -> input('encargado', array("type" => "select", "options" => $usuarios, "label" => "Ingeniero", 'empty' => 'Seleccione Ingeniero...'));
 		echo $this -> Form -> input('descripcion', array("label" => "Descripción"));
 		echo $this -> Form -> input('correos', array('label' => 'Correos (Formato: Nombre &lt;correo&gt;, Nombre 2 &lt;correo 2&gt;, ...)</code>', 'type' => 'textarea'));
 		?>

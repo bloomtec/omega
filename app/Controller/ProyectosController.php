@@ -167,22 +167,26 @@ class ProyectosController extends AppController {
 				if ($this -> Proyecto -> save($this -> request -> data)) {
 					$usuarios = $this -> requestAction("/usuarios/getOmega");
 					// --------------
-					$correo = array();
-					$correo["Correo"]["modelo"] = 'Proyecto';
-					$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
-					$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["encargado"];
-					$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["encargado"]];
-					$this -> Proyecto -> Correo -> create();
-					$this -> Proyecto -> Correo -> save($correo);
+					if(!empty($this -> request -> data["Proyecto"]["encargado"])) {
+						$correo = array();
+						$correo["Correo"]["modelo"] = 'Proyecto';
+						$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
+						$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["encargado"];
+						$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["encargado"]];
+						$this -> Proyecto -> Correo -> create();
+						$this -> Proyecto -> Correo -> save($correo);
+					}
 					// --------------
 					$this -> Proyecto -> Correo -> id = 0;
-					$correo = array();
-					$correo["Correo"]["modelo"] = 'Proyecto';
-					$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
-					$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["supervisor"];
-					$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["supervisor"]];
-					$this -> Proyecto -> Correo -> create();
-					$this -> Proyecto -> Correo -> save($correo);
+					if(!empty($this -> request -> data["Proyecto"]["supervisor"])) {
+						$correo = array();
+						$correo["Correo"]["modelo"] = 'Proyecto';
+						$correo["Correo"]["llave_foranea"] = $this -> Proyecto -> id;
+						$correo["Correo"]["correo"] = $this -> request -> data["Proyecto"]["supervisor"];
+						$correo["Correo"]["nombre"] = $usuarios[$this -> request -> data["Proyecto"]["supervisor"]];
+						$this -> Proyecto -> Correo -> create();
+						$this -> Proyecto -> Correo -> save($correo);
+					}
 					// --------------
 					if($procesar_correos) {
 						foreach ($lista_correos as $key => $correo) {
