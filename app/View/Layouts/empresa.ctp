@@ -31,6 +31,7 @@
 		echo $this -> Html -> css('cake.generic');
 		echo $this -> Html -> css('thickbox');
 		echo $this -> Html -> css('cake.generic');
+		echo $this -> Html -> css('superfish');
 		echo $this -> Html -> script('jquery.min');
 		echo $this -> Html -> script("jquery.tools.min");
 		echo $this -> Html -> script('jquery.uploadify.v2.1.4.min');
@@ -38,6 +39,7 @@
 		echo $this -> Html -> script("thickbox");
 		echo $this -> Html -> script("common");
 		echo $this -> Html -> script("upload");
+		echo $this -> Html -> script('superfish');
 
 		echo $scripts_for_layout;
 		?>
