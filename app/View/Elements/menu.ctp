@@ -46,7 +46,7 @@
 				<div class="sf-menu-container">
 					<ul class="sf-menu">
 						<li>
-							<?php echo $html -> link('Inicio',array('controller'=>'empresas'));?>
+							<?php echo $this ->Html -> link('Inicio',array('controller'=>'empresas'));?>
 							
 						</li>
 						<li>
