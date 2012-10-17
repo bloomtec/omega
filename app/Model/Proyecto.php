@@ -90,7 +90,7 @@ class Proyecto extends AppModel {
 				$this -> crearAlarmaProyecto($this -> id, "proyecto en espera de aprobación", true);
 				$this -> crearAlarmaProyecto($this -> id, "en espera de aprobación por el cliente", false);
 				
-				$proyectoId = $this -> id;
+				/*$proyectoId = $this -> id;
 				$mail_body = 'Se ha subido la cotización del proyecto: ' . $this -> data['Proyecto']['nombre'];
 				$proyecto = $this -> read(null, $proyectoId);
 				//$this -> Proyecto -> Empresa -> ClientesUsuario -> bindModel(array("belongsTo" => array("Usuario")));
@@ -111,7 +111,7 @@ class Proyecto extends AppModel {
 				 $header = "From: ". $Name . " <" . $correo . ">\r\n"; //optional headerfields
 				 mail($proyecto["Empresa"]["correo"], $subject, $mail_body, $header);
 				 mail($correoUsuario, $subject, $mail_body, $header);*/
-				$subject = "Nueva actividad en el Proyecto: " . $proyecto["Proyecto"]["nombre"];
+				/*$subject = "Nueva actividad en el Proyecto: " . $proyecto["Proyecto"]["nombre"];
 				//subject
 				$email = new CakeEmail('smtp');
 				$email -> emailFormat('html');
@@ -124,7 +124,7 @@ class Proyecto extends AppModel {
 					$email -> to($correo["Correo"]["correo"]);
 					$email -> subject($subject);
 					$email -> send($mail_body);
-				}
+				}*/
 			}
 		}
 	}
@@ -225,7 +225,7 @@ class Proyecto extends AppModel {
 		'Alarma' => array(
 			'className' => 'Alarma',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Alarma.modelo' => 'Proyecto'),
 			'fields' => '',
 			'order' => '',
@@ -238,7 +238,7 @@ class Proyecto extends AppModel {
 		'Observacion' => array(
 			'className' => 'Observacion',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Observacion.modelo' => 'Proyecto'),
 			'fields' => '',
 			'order' => '',
@@ -251,7 +251,7 @@ class Proyecto extends AppModel {
 		'Correo' => array(
 			'className' => 'Correo',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Correo.modelo' => 'Proyecto'),
 			'fields' => '',
 			'order' => '',
@@ -264,7 +264,7 @@ class Proyecto extends AppModel {
 		'Subproyecto' => array(
 			'className' => 'Subproyecto',
 			'foreignKey' => 'proyecto_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -277,7 +277,7 @@ class Proyecto extends AppModel {
 		'SolicitudProyecto' => array(
 			'className' => 'SolicitudProyecto',
 			'foreignKey' => 'proyecto_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -290,7 +290,7 @@ class Proyecto extends AppModel {
 		'Archivo' => array(
 			'className' => 'Archivo',
 			'foreignKey' => 'llave_foranea',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => array('Archivo.modelo' => 'Proyecto'),
 			'fields' => '',
 			'order' => '',
