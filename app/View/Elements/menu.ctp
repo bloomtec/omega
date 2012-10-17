@@ -46,9 +46,8 @@
 				<div class="sf-menu-container">
 					<ul class="sf-menu">
 						<li>
-							<a href="/admin/empresas">
-								Inicio
-							</a>
+							<?php echo $html -> link('Inicio',array('controller'=>'empresas'));?>
+							
 						</li>
 						<li>
 							<?php echo $this -> Html -> link('Salir', array('controller' => 'usuarios', 'action' => 'logout')); ?>
