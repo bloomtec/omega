@@ -212,6 +212,7 @@ class ObservacionesController extends AppController {
 
 	function enviarCorreoObservacionesPublicas($observacionId, $contratoId, $mail_body) {
 		$this -> loadModel('Contrato');
+		$this -> loadModel('Usuario');
 		$this -> Contrato -> contain('Correo', 'Empresa');
 		$contrato = $this -> Contrato -> read(null, $contratoId);
 		$observacion = $this -> Observacion -> read(null, $observacionId);
@@ -244,6 +245,12 @@ class ObservacionesController extends AppController {
 				// Enviar a otros contactos registrados
 				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);
 			}
+		}
+		$empresaId = $contrato['Contrato']['empresa_id'];
+		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/1');
+		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.empresa_id' => $empresaId)));
+		foreach ($usuarios as $key => $usuario) {
+			$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $usuario["Usuario"]["correo"], $subject, $mail_body);
 		}
 		return true;
 	}
@@ -279,6 +286,7 @@ class ObservacionesController extends AppController {
 	
 	public function enviarCorreoComentariosPublicos($observacionId,$proyectoId,$mail_body) {
 		$this -> loadModel('Proyecto');
+		$this -> loadModel('Usuario');
 		$this -> Proyecto -> contain('Correo', 'Empresa');
 		$proyecto = $this -> Proyecto -> read(null,$proyectoId);
 		$modelo = 'Proyecto';
@@ -314,6 +322,14 @@ class ObservacionesController extends AppController {
 				$this->sendbySMTP($correo["Correo"]["nombre"],$correo["Correo"]["correo"],$subject,$mail_body);
 			}
 		}
+		
+		$empresaId = $proyecto['Proyecto']['empresa_id'];
+		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/2');
+		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.empresa_id' => $empresaId)));
+		foreach ($usuarios as $key => $usuario) {
+			$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $usuario["Usuario"]["correo"], $subject, $mail_body);
+		}
+		
 		return true;
 	}
 	
