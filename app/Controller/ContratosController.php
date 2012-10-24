@@ -14,11 +14,42 @@ class ContratosController extends AppController {
 	}
 
 	public function view($id = null) {
+
+		if($id) {
+			$this -> Session -> write('Contrato.id', $id);
+		} else {
+			$id = $this -> Session -> read('Contrato.id');
+		}
+
 		$this -> layout = "empresa";
 		$this -> Contrato -> id = $id;
+
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
 		}
+		
+		$this -> Contrato -> contain(
+			'Estado',
+			'Tipo',
+			'Empresa',
+			'Equipo.CategoriasEquipo'
+		);
+		
+		$contrato = $this -> Contrato -> read(null, $id);
+		
+		$equiposContrato = $this -> Contrato -> ContratosEquipo -> find(
+			'list',
+			array(
+				'conditions' => array(
+					'contrato_id' => $contrato['Contrato']['id']
+				)
+			)
+		);
+		
+		$conditions = array(
+			'Equipo.id' => $equiposContrato
+		);
+		
 		if($this -> request -> is('post')) {
 			$conditions = array();
 			if(isset($this -> request -> data['Contrato']['codigo']) && !empty($this -> request -> data['Contrato']['codigo'])) {
@@ -33,7 +64,7 @@ class ContratosController extends AppController {
 						)
 					)
 				);
-				$conditions['equipo_id'] = $equipos;
+				$conditions['Equipo.id'] = $equipos;
 			}
 			if(isset($this -> request -> data['Contrato']['categorias_equipo_id']) && !empty($this -> request -> data['Contrato']['categorias_equipo_id'])) {
 				$equipos = $this -> Contrato -> Equipo -> find(
@@ -51,7 +82,7 @@ class ContratosController extends AppController {
 					$equipos_tmp = $conditions['equipo_id'];
 					$equipos = array_merge($equipos, $equipos_tmp);
 				}
-				$conditions['equipo_id'] = $equipos;
+				$conditions['Equipo.id'] = $equipos;
 			}
 			$this -> Contrato -> bindModel(
 				array(
@@ -76,32 +107,15 @@ class ContratosController extends AppController {
 				)
 			);
 		}
-		$this -> Contrato -> contain(
-			'Estado',
-			'Tipo',
-			'Empresa',
-			'Equipo.CategoriasEquipo'
-		);
-		$contrato = $this -> Contrato -> read(null, $id);
-		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
-		$this -> set(compact('contrato', 'categoriasEquipos'));
-		$equiposContrato = $this -> Contrato -> ContratosEquipo -> find(
-			'list',
-			array(
-				'conditions' => array(
-					'contrato_id' => $contrato['Contrato']['id']
-				)
-			)
-		);
-		//debug($equiposContrato);
 		$this -> paginate = array(
 			'Equipo' => array(
-				'conditions' => array(
-					'Equipo.id' => $equiposContrato
-				)
+				'conditions' => $conditions,
+				'limit' => 10
 			)		
 		);
 		$this -> set('equipos', $this -> paginate('Equipo'));
+		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
+		$this -> set(compact('contrato', 'categoriasEquipos'));
 	}
 
 	public function admin_index() {

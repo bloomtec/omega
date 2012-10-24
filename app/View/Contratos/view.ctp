@@ -51,8 +51,8 @@
 	<table cellpadding = "0" cellspacing = "0">
 		<tr>
 			<th><?php echo __('Alertas'); ?></th>
-			<th><?php echo __('Código'); ?></th>
-			<th><?php echo __('Categoría'); ?></th>
+			<th><?php echo $this -> paginator -> sort('codigo', 'Código'); ?></th>
+			<th><?php echo $this -> paginator -> sort('categorias_equipo_id', 'Categoría'); ?></th>
 			<th><?php echo __('Ficha Tecnica'); ?></th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
 		</tr>
@@ -66,7 +66,7 @@
 				if ($i++ % 2 == 0) {
 					$class = ' class="altrow"';
 				}
-				debug($equipo);
+				//debug($equipo);
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">
@@ -88,7 +88,18 @@
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
+<p>
+	<?php echo $this -> Paginator -> counter(array('format' => __('Página {:page} de {:pages}. Mostrando {:current} registros de un total de {:count}. Inicia con el  {:start} y termina con el {:end}'))); ?>
+</p>
+<div class="paging">
+	<?php
+	echo $this -> Paginator -> first('<< ', array(), null, array('class' => 'prev disabled'));
+	echo $this -> Paginator -> prev('< ' . __('anterior'), array(), null, array('class' => 'prev disabled'));
+	echo $this -> Paginator -> numbers(array('separator' => ''));
+	echo $this -> Paginator -> next(__('siguiente') . ' >', array(), null, array('class' => 'next disabled'));
+	echo $this -> Paginator -> last(' >>', array(), null, array('class' => 'next disabled'));
+	?>
+</div>
 </div>
 <div style="display:none">
 		<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>		
