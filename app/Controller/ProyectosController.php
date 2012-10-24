@@ -56,7 +56,7 @@ class ProyectosController extends AppController {
 
 	public function view($id = null) {
 		$this -> layout = "empresa";
-		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo');
+		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo', 'EventosServicio');
 		$this -> Proyecto -> id = $id;
 		if (!$this -> Proyecto -> exists()) {
 			throw new NotFoundException(__('Proyecto no válido'));
@@ -73,7 +73,8 @@ class ProyectosController extends AppController {
 				)
 			)
 		);
-		$this -> set(compact('proyecto', 'comentariosPublicos'));
+		$eventos = $proyecto['EventosServicio'];
+		$this -> set(compact('proyecto', 'comentariosPublicos', 'eventos'));
 	}
 
 	public function solicitudAdicional($proyectoId = null) {
@@ -93,7 +94,7 @@ class ProyectosController extends AppController {
 
 	public function admin_view($id = null) {
 		$this -> Proyecto -> id = $id;
-		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo');
+		$this -> Proyecto -> contain('Subproyecto', 'SolicitudProyecto', 'Archivo', 'EventosServicio');
 		if (!$this -> Proyecto -> exists()) {
 			throw new NotFoundException(__('Proyecto no válido'));
 			//$this -> redirect(array('action' => 'index'));
@@ -119,7 +120,8 @@ class ProyectosController extends AppController {
 				)
 			)
 		);
-		$this -> set(compact('proyecto', 'comentariosPrivados', 'comentariosPublicos'));
+		$eventos = $proyecto['EventosServicio'];
+		$this -> set(compact('proyecto', 'comentariosPrivados', 'comentariosPublicos', 'eventos'));
 	}
 	
 	function isValidEmail($email){

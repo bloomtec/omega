@@ -1,11 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 /**
- * Eventos Controller
+ * EventosServicios Controller
  *
  * @property Evento $Evento
  */
-class EventosController extends AppController {
+class EventosServiciosController extends AppController {
 
 	function view($id = null) {
 		if (!$id) {
@@ -16,10 +16,11 @@ class EventosController extends AppController {
 	}
 
 	function admin_AJAX_add() {
-		$evento["Evento"]["texto"] = $this -> data["texto"];
-		$evento["Evento"]["contratos_equipo_id"] = $this -> data["contratosEquipoId"];
-		$this -> Evento -> create();
-		if ($this -> Evento -> save($evento))
+		$evento["EventosServicio"]["texto"] = $this -> data["texto"];
+		$evento["EventosServicio"]["modelo"] = $this -> data["modelo"];
+		$evento["EventosServicio"]["llave_foranea"] = $this -> data["llave_foranea"];
+		$this -> EventosServicio -> create();
+		if ($this -> EventosServicio -> save($evento))
 			echo "YES";
 		else
 			echo "No se pudo guardar su comentario. Por favor, intente de nuevo";

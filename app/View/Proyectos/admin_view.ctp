@@ -76,16 +76,23 @@
 					
 		
 				<div style="clear:both;"></div>
+				<div class="pestana3">Bitácora</div>
+				<div class="comentarios eventos">
+					<?php echo $this->element("eventsproyecto",array("eventos"=>$eventos,"modelo"=>"EventosServicio","omega"=>true));?>
+					<div style="clear:both;"></div>
+				</div>	
 				<div style="clear:both;"></div>
+				<!--		
 				<div class="textAreaTitulo pestana3">Bitácora</div>
 				<?php if($proyecto["Proyecto"]["desarrollo"]&&$proyecto["Proyecto"]["desarrollo"]!="") $value=$proyecto["Proyecto"]["desarrollo"]; else $value="Descripción de actividades u observaciones de la ejecucion del proyecto";?>
-				<textarea id=desarrollo disabled="disabled" name="data[actividad]" modelId="<?php echo $proyecto["Proyecto"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>	
+				<textarea id=desarrollo disabled="disabled" name="data[actividad]" modelId="<?php echo $proyecto["Proyecto"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>
 				
 					<div class="textArearBotones">
 						<div class="textAreaBoton editar">editar</div>
 						<div class="textAreaBoton guardarDesarrollo guardar" modelId="<?php echo $proyecto["Proyecto"]["id"];?>">guardar</div>
 						<div class="textAreaBoton cancelar" valor="<?php echo $value?>">cancelar</div>
 					</div>
+				-->
 				</div>
 			
 			<div class="panel_lateral">

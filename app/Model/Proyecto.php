@@ -370,6 +370,19 @@ class Proyecto extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+		'EventosServicio' => array(
+			'className' => 'EventosServicio',
+			'foreignKey' => 'llave_foranea',
+			'dependent' => true,
+			'conditions' => array('EventosServicio.modelo' => 'Proyecto'),
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 	);
 
 }

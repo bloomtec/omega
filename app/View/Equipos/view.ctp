@@ -19,7 +19,7 @@
 					<textarea id=diagnostico disabled="disabled" name="data[actividad]" modelId="<?php echo $contratoEquipo["ContratosEquipo"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>
 				</div>
 				<div style="clear:both;"></div>			
-				<div class="pestana3">Comentarios / Observaciones</div>
+				<div class="pestana3">Chat</div>
 				<div class="comentarios publicos">				
 					<?php echo $this->element("comments",array("observacionesPublicas"=>$observacionesPublicas,"modelo"=>"Publica"));?>
 					<div style="clear:both;"></div>
@@ -61,7 +61,7 @@
 					<textarea id=diagnostico disabled="disabled" name="data[actividad]" modelId="<?php echo $contratoEquipo["ContratosEquipo"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>	
 				</div>
 				<div style="clear:both;"></div>
-				<div class="pestana3">Comentarios / Observaciones</div>
+				<div class="pestana3">Chat</div>
 				<div class="comentarios publicos">
 					<?php echo $this->element("comments",array("observacionesPublicas"=>$observacionesPublicas,"modelo"=>"Publica"));?>
 					<div style="clear:both;"></div>
@@ -105,7 +105,7 @@
 					<textarea style="width:300px;" id=diagnostico disabled="disabled" name="data[actividad]" modelId="<?php echo $contratoEquipo["ContratosEquipo"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>	
 				</div>	
 				<div style="clear:both;"></div>
-				<div class="pestana3">Comentarios / Observaciones</div>
+				<div class="pestana3">Chat</div>
 				<div class="comentarios publicos">
 					<?php echo $this->element("comments",array("observacionesPublicas"=>$observacionesPublicas,"modelo"=>"Publica"));?>
 					<div style="clear:both;"></div>

@@ -100,6 +100,27 @@ $(document).ready(function() {
 		});
 	});
 	//**************************************____AÑADIR EVENTOS___*****************
+	$("#formularioEventosServicios").submit(function() {
+		if($("#textoEvento").val().length > 0) {
+			$.post($(this).attr("action"), {
+				contratosEquipoId : $("#EventoContratoEquipo").val(),
+				texto : $("#EventosServicioUsuario").val() + ": " + $("#textoEvento").val(),
+				modelo : $("#EventosServicioModelo").val(),
+				llave_foranea : $("#EventosServicioLlaveForanea").val()
+			}, function(data) {
+				if (data == "YES") {
+					$(".contenedorEventos").append('<div class="observacion nueva"><div class="encabezado"><div class="fecha">HOY</div></div> <div class="cuerpo">' + $("#EventosServicioUsuario").val() + ": " + $("#textoEvento").val() + '</div></div>');
+					$("#textoEvento").val("");
+					$('.eventos .historial').scrollTop(10000);
+				} else {
+					alert(data);
+				}
+			})
+		} else {
+			alert("Debe ingresar texto a la bitácora");
+		}
+		return false;
+	});
 	$("#formularioEvento").submit(function() {
 		$.post($(this).attr("action"), {
 			contratosEquipoId : $("#EventoContratoEquipo").val(),
