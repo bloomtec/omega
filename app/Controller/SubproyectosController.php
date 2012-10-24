@@ -38,7 +38,14 @@ class SubproyectosController extends AppController {
 		$subproyecto["Subproyecto"]["comentarios"]=$this->data["Subproyecto"]["comentarios"];
 		$this->Subproyecto->save($subproyecto);*/
 		$this->Subproyecto->Proyecto->crearAlarmaProyecto($subproyecto["Subproyecto"]["proyecto_id"],"Se ha aprobado un subproyecto",true);
-		$this->enviarCorreo($subproyecto["Subproyecto"]["proyecto_id"],"Se ha aprobado un subproyecto");
+		$message =
+			"Se ha aprobado un subproyecto"
+			. "\n" . "LA APROBACION DE PROYECTO QUE USTED ACABA DE REALIZAR,
+			SERA TRANSMITIDA A NUESTRA AREA DE OPERACIONES  EN  UN
+			TIEMPO DE 24 HORAS.    DURANTE ESTE PERIODO USTED PUEDRA
+			MODIFICAR LA SOLICITUD COMUNICANDOSE CON SU CONTACTO  O
+			CON NUESTRA AREA DE CALIDAD sico@omegaingenieros.com";
+		$this->enviarCorreo($subproyecto["Subproyecto"]["proyecto_id"], $message);
 		$this->Session->setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
 	function rechazarCotizacion($subProyectoId){
