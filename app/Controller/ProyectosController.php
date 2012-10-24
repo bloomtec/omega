@@ -83,7 +83,14 @@ class ProyectosController extends AppController {
 		if (!empty($this -> request -> data)) {
 			$proyectoId = $this -> request -> data["SolicitudProyecto"]["proyecto_id"];
 			if ($this -> Proyecto -> SolicitudProyecto -> save($this -> request -> data)) {
-
+				$proyecto = $this -> Proyecto -> read(null, $proyectoId);
+				$this -> sendBySMTP(
+					$proyecto['Proyecto']['responsable_comercial'],
+					$proyecto['Proyecto']['correo_comercial'],
+					"Solicitud De Subproyecto",
+					"Se ha solicitado un subproyecto en el proyecto " . $proyecto['Proyecto']['nombre'] 
+				);
+				//public function sendbySMTP($nombrePara, $correoPara, $subject, $body, $headers = false) {
 				$this -> Session -> setFlash(__('Su solicitud ha sido registrada, pronto uno de nuestros Ingenieros se contactará con usted.'), 'crud/success');
 			} else {
 				$this -> Session -> setFlash(__('No se pudo procesar su solicitud por favor intente de nuevo'), 'crud/error');
