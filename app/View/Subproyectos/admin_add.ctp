@@ -6,8 +6,8 @@
 		echo $this -> Form -> input('proyecto_id', array("type" => "hidden", "value" => $proyectoId));
 		echo $this -> Form -> input('solicitud_proyecto_id', array("type" => "hidden", "value" => $solicitudProyectoId));
 		echo $this -> Form -> input('nombre');
-		echo $this -> Form -> input('presupuesto_path');
-		echo $this -> Form -> input('cronograma_path');
+		echo $this -> Form -> hidden('presupuesto_path');
+		echo $this -> Form -> hidden('cronograma_path');
 		?>
 		<label style="float:left; margin-right:10px; margin-top:5px;">Presupuesto: </label>
 		<div id="presupuesto" path='/files'></div>

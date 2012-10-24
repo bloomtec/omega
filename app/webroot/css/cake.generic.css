@@ -233,6 +233,14 @@ td.actions {
 	text-align: left;
 	white-space: nowrap;
 }
+td#TDServiciosEmpresa, th#THServiciosEmpresa {
+	max-width: 350px;
+}
+td#TDServiciosEmpresa a {
+	float: left;
+    max-height: 17px;
+    max-width: 106px;
+}
 table td.actions a {
 	margin: 0px 6px;
 	padding:2px 5px;

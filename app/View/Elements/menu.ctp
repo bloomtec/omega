@@ -34,6 +34,11 @@
 									<a href="/admin/categorias_archivos">
 									Cat. De Archivos
 									</a>
+									<ul>
+										<li>
+											<a href="/admin/categorias_archivos/add">Crear Categoría</a>
+										</li>
+									</ul>
 								</li>
 							</ul>
 						</li>

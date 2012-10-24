@@ -185,7 +185,7 @@ class UsuariosController extends AppController {
 	 * @param string $id
 	 * @return void
 	 */
-	public function delete($id = null) {
+	/*public function delete($id = null) {
 		if (!$this -> request -> is('post')) {
 			throw new MethodNotAllowedException();
 		}
@@ -199,7 +199,7 @@ class UsuariosController extends AppController {
 		}
 		$this -> Session -> setFlash(__('No se eliminó el usuario'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
-	}
+	}*/
 	
 	/**
 	 * admin_login method
@@ -232,7 +232,36 @@ class UsuariosController extends AppController {
 	 */
 	public function admin_index() {
 		$this -> Usuario -> contain('Rol');
+		$paginate = array(
+			'order' => array(
+				'activo' => 'DESC',
+				'rol_id' => 'ASC'
+			)
+		);
+		if($this -> request -> is('post')) {
+			$conditions = array();
+			if(!empty($this -> request -> data['Usuario']['rol_id'])) {
+				$conditions['rol_id'] = $this -> request -> data['Usuario']['rol_id'];
+			}
+			$conditions['activo'] = $this -> request -> data['Usuario']['activo'];
+			$paginate['conditions'] = $conditions;
+			$this -> Session -> write('Usuario.filtro', $paginate);
+		}
+		if($this -> Session -> read('Usuario.filtro')) {
+			$this -> paginate = $this -> Session -> read('Usuario.filtro');
+			$this -> set('filtro', 1);
+		} else {
+			$this -> paginate = $paginate;
+			$this -> set('filtro', 0);
+		} 
 		$this -> set('usuarios', $this -> paginate());
+		$this -> set('roles', $this -> Usuario -> Rol -> find('list'));
+		$this -> set('activos', array(1 => 'Activo', 0 => 'Inactivo'));
+	}
+	
+	public function admin_removeFilter() {
+		$this -> Session -> delete('Usuario.filtro');
+		$this -> redirect(array('action' => 'index'));
 	}
 
 	/**
@@ -328,6 +357,38 @@ class UsuariosController extends AppController {
 			$this -> set('servicios', $this -> requestAction('/empresas/getServicios/' . $this -> request -> data['Empresa']['id']));
 		}
 	}
+	
+	public function admin_enable($id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Usuario -> id = $id;
+		if (!$this -> Usuario -> exists()) {
+			throw new NotFoundException(__('Usuario no válido'));
+		}
+		if ($this -> Usuario -> saveField('activo', 1)) {
+			$this -> Session -> setFlash(__('Se activó el usuario'), 'crud/success');
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Session -> setFlash(__('No se activó el usuario'), 'crud/error');
+		$this -> redirect(array('action' => 'index'));
+	}
+	
+	public function admin_disable($id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Usuario -> id = $id;
+		if (!$this -> Usuario -> exists()) {
+			throw new NotFoundException(__('Usuario no válido'));
+		}
+		if ($this -> Usuario -> saveField('activo', 0)) {
+			$this -> Session -> setFlash(__('Se desactivó el usuario'), 'crud/success');
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Session -> setFlash(__('No se desactivó el usuario'), 'crud/error');
+		$this -> redirect(array('action' => 'index'));
+	}
 
 	/**
 	 * admin_delete method
@@ -337,7 +398,7 @@ class UsuariosController extends AppController {
 	 * @param string $id
 	 * @return void
 	 */
-	public function admin_delete($id = null) {
+	/*public function admin_delete($id = null) {
 		if (!$this -> request -> is('post')) {
 			throw new MethodNotAllowedException();
 		}
@@ -351,6 +412,6 @@ class UsuariosController extends AppController {
 		}
 		$this -> Session -> setFlash(__('No se eliminó el usuario'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
-	}
+	}*/
 
 }
