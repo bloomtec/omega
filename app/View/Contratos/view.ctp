@@ -72,15 +72,15 @@
 			<td style="width:180px;">
 				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
-			<td><?php echo $equipo['codigo'];?></td>
+			<td><?php echo $equipo['Equipo']['codigo'];?></td>
 			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
-			<td><?php if($equipo['ficha_tecnica']&&$equipo['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['id']), array('target'=>'_BLANK'));?></td>
+			<td><?php if($equipo['Equipo']['ficha_tecnica']&&$equipo['Equipo']['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['Equipo']['id']), array('target'=>'_BLANK'));?></td>
 			<td class="actions">
 				<?php 
 					if ($contrato['Tipo']['id']==1 ){
-						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"mantenimiento"));
+						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"mantenimiento"));
 					}else{
-						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"reparacion"));
+						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"reparacion"));
 					}
 				 ?>				
 			</td>
