@@ -74,6 +74,26 @@ class Proyecto extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'responsable_comercial' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Ingrese la persona responsable',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'correo_comercial' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Ingrese el correo de la persona responsable',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		'supervisor' => array(
 			'validarEncargadoYSupervisor' => array(
 				'rule' => array('validarEncargadoYSupervisor'),
