@@ -31,6 +31,7 @@
 		echo $this -> Html -> css('cake.generic');
 		echo $this -> Html -> css('thickbox');
 		echo $this -> Html -> css('cake.generic');
+		echo $this -> Html -> css('superfish');
 		echo $this -> Html -> script('jquery.min');
 		echo $this -> Html -> script("jquery.tools.min");
 		echo $this -> Html -> script("jquery.uploadify.v2.1.0");
@@ -38,6 +39,7 @@
 		echo $this -> Html -> script("thickbox");
 		echo $this -> Html -> script("common");
 		echo $this -> Html -> script("upload");
+		echo $this -> Html -> script('superfish');
 
 		echo $scripts_for_layout;
 		?>
@@ -48,8 +50,13 @@
 				<div class="wrap">
 					<div class="llave"><?php echo $html -> link($html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "empresas"), array('escape' => false)); ?></div>
 					<div class="titulo">ZONA EXCLUSIVA <span style="font-weight:bold;">Clientes V.I.P.</div>
-					<div class="logo"><?php echo $html -> image("logo.png"); ?></div>
-					<div class="logout"><?php echo $html -> link("Salir", array("controller" => "usuarios", "action" => "logout")); ?></div>
+					<div class="logo">
+						<?php echo $html -> image("logo.png"); ?>
+						<br />
+						<br />
+						<?php if($this -> action != "login") echo $this -> element('menu');?>
+					</div>
+					
 				</div>
 			</div>
 			<div id="content">
