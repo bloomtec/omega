@@ -252,14 +252,11 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 			<div style="clear:both;"></div>
 			
 			<div class=panelInformativo>
-				
 				<div class="pestana3">Eventos</div>
-				<div class="comentarios eventos">
-				
+				<div class="comentarios eventos">				
 					<?php echo $this->element("events",array("eventos"=>$eventos,"modelo"=>"Eventos","omega"=>true));?>
 					<div style="clear:both;"></div>
-				</div>
-	
+				</div>	
 				<div style="clear:both;"></div>
 			<br />
 				<div class="pestana3">Chat con cliente</div>
