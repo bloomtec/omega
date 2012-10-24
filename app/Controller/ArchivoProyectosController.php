@@ -9,18 +9,72 @@ class ArchivoProyectosController extends AppController {
 
 	public $uses = array('Archivo');
 
-	function index($proyectoId) {
-		$this -> layout = "ajax";
-		$this -> Archivo -> contain('Proyecto', 'CategoriasArchivo');
-		$this -> paginate = array('Archivo' => array('conditions' => array('Archivo.modelo' => 'Proyecto', 'Archivo.llave_foranea' => $proyectoId)));
-		$this -> set('archivoProyectos', $this -> paginate());
-	}
-
 	function admin_index($proyectoId) {
 		$this -> layout = "ajax";
 		$this -> Archivo -> contain('Proyecto', 'CategoriasArchivo');
-		$this -> paginate = array('Archivo' => array('conditions' => array('Archivo.modelo' => 'Proyecto', 'Archivo.llave_foranea' => $proyectoId)));
+		$paginate = array(
+			'Archivo' => array(
+				'conditions' => array(
+					'Archivo.modelo' => 'Proyecto',
+					'Archivo.llave_foranea' => $proyectoId
+				)
+			)
+		);
+		if($this -> request -> is('post')) {
+			if(!empty($this -> request -> data['Filtro']['categorias_archivo_id'])) {
+				$paginate['Archivo']['conditions']['Archivo.categorias_archivo_id'] = $this -> request -> data['Filtro']['categorias_archivo_id'];
+			}
+			$this -> Session -> write('Archivo.filtro', $paginate);
+		}
+		if($this -> Session -> read('Archivo.filtro')) {
+			$this -> paginate = $this -> Session -> read('Archivo.filtro');
+			$this -> set('filtro', 1);
+		} else {
+			$this -> paginate = $paginate;
+			$this -> set('filtro', 0);
+		}
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
 		$this -> set('archivoProyectos', $this -> paginate('Archivo'));
+		$this -> set('proyectoId', $proyectoId);
+	}
+	
+	function index($proyectoId) {
+		$this -> layout = "ajax";
+		$this -> Archivo -> contain('Proyecto', 'CategoriasArchivo');
+		$paginate = array(
+			'Archivo' => array(
+				'conditions' => array(
+					'Archivo.modelo' => 'Proyecto',
+					'Archivo.llave_foranea' => $proyectoId
+				)
+			)
+		);
+		if($this -> request -> is('post')) {
+			if(!empty($this -> request -> data['Filtro']['categorias_archivo_id'])) {
+				$paginate['Archivo']['conditions']['Archivo.categorias_archivo_id'] = $this -> request -> data['Filtro']['categorias_archivo_id'];
+			}
+			$this -> Session -> write('Archivo.filtro', $paginate);
+		}
+		if($this -> Session -> read('Archivo.filtro')) {
+			$this -> paginate = $this -> Session -> read('Archivo.filtro');
+			$this -> set('filtro', 1);
+		} else {
+			$this -> paginate = $paginate;
+			$this -> set('filtro', 0);
+		}
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
+		$this -> set('archivoProyectos', $this -> paginate());
+		$this -> set('proyectoId', $proyectoId);
+	}
+	
+	public function admin_removeFilter($proyectoId) {
+		$this -> Session -> delete('Archivo.filtro');
+		$this -> redirect(array('action' => 'index', $proyectoId));
+	}
+	
+	public function removeFilter($proyectoId) {
+		$this -> Session -> delete('Archivo.filtro');
+		$this -> redirect(array('action' => 'index', $proyectoId));
 	}
 
 	function add($proyectoId = null) {

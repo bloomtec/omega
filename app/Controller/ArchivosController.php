@@ -6,7 +6,40 @@ App::uses('AppController', 'Controller');
  * @property Archivo $Archivo
  */
 class ArchivosController extends AppController {
-
+	
+	public function admin_index($equipoId) {
+		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
+		$this -> layout = "ajax";
+		$equipo_id = null;
+		if ($equipoId) {
+			$equipo_id = $equipoId;
+		} else {
+			$equipo_id = $this -> params["pass"][0];
+		}
+		$paginate = array(
+			'conditions' => array(
+				'Archivo.modelo' => 'Equipo',
+				'Archivo.llave_foranea' => $equipoId
+			)
+		);
+		if($this -> request -> is('post')) {
+			if(!empty($this -> request -> data['Filtro']['categorias_archivo_id'])) {
+				$paginate['conditions']['Archivo.categorias_archivo_id'] = $this -> request -> data['Filtro']['categorias_archivo_id'];
+			}
+			$this -> Session -> write('Archivo.filtro', $paginate);
+		}
+		if($this -> Session -> read('Archivo.filtro')) {
+			$this -> paginate = $this -> Session -> read('Archivo.filtro');
+			$this -> set('filtro', 1);
+		} else {
+			$this -> paginate = $paginate;
+			$this -> set('filtro', 0);
+		}
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
+		$this -> set('archivos', $this -> paginate());
+		$this -> set(compact("equipoId", $equipoId));
+	}
+	
 	public function index($equipoId) {
 		$this -> layout = "ajax";
 		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
@@ -16,9 +49,38 @@ class ArchivosController extends AppController {
 		} else {
 			$equipo_id = $this -> params["pass"][0];
 		}
-		$this -> paginate = array('conditions' => array('Archivo.modelo' => 'Equipo', 'Archivo.llave_foranea' => $equipoId));
+		$paginate = array(
+			'conditions' => array(
+				'Archivo.modelo' => 'Equipo',
+				'Archivo.llave_foranea' => $equipoId
+			)
+		);
+		if($this -> request -> is('post')) {
+			if(!empty($this -> request -> data['Filtro']['categorias_archivo_id'])) {
+				$paginate['conditions']['Archivo.categorias_archivo_id'] = $this -> request -> data['Filtro']['categorias_archivo_id'];
+			}
+			$this -> Session -> write('Archivo.filtro', $paginate);
+		}
+		if($this -> Session -> read('Archivo.filtro')) {
+			$this -> paginate = $this -> Session -> read('Archivo.filtro');
+			$this -> set('filtro', 1);
+		} else {
+			$this -> paginate = $paginate;
+			$this -> set('filtro', 0);
+		}
+		$this -> set('categoriasArchivos', $this -> Archivo -> CategoriasArchivo -> find('list'));
 		$this -> set('archivos', $this -> paginate());
 		$this -> set(compact("equipoId", $equipoId));
+	}
+	
+	public function admin_removeFilter($equipoId) {
+		$this -> Session -> delete('Archivo.filtro');
+		$this -> redirect(array('action' => 'index', $equipoId));
+	}
+	
+	public function removeFilter($equipoId) {
+		$this -> Session -> delete('Archivo.filtro');
+		$this -> redirect(array('action' => 'index', $equipoId));
 	}
 
 	public function view($id = null) {
@@ -78,20 +140,6 @@ class ArchivosController extends AppController {
 		}
 		$this -> Session -> setFlash(sprintf(__('%s was not deleted', true), 'Archivo'));
 		$this -> redirect(array('action' => 'index'));
-	}
-
-	public function admin_index($equipoId) {
-		$this -> Archivo -> contain('CategoriasArchivo', 'Equipo');
-		$this -> layout = "ajax";
-		$equipo_id = null;
-		if ($equipoId) {
-			$equipo_id = $equipoId;
-		} else {
-			$equipo_id = $this -> params["pass"][0];
-		}
-		$this -> paginate = array('conditions' => array('Archivo.modelo' => 'Equipo', 'Archivo.llave_foranea' => $equipoId));
-		$this -> set('archivos', $this -> paginate());
-		$this -> set(compact("equipoId", $equipoId));
 	}
 
 	public function admin_view($id = null) {

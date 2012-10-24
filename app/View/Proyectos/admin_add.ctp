@@ -28,7 +28,7 @@
 		?>
 	</fieldset>
 	<?php echo $this -> Form -> end(__('Guardar', true)); ?>
-	<div class="actions">
+	<div class="actions" style="display: inherit;">
 		<!--<h3><?php echo __('Acciones'); ?></h3>-->
 		<ul>		
 			<li>

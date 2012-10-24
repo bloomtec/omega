@@ -15,7 +15,7 @@
 	</fieldset>
 <?php echo $this -> Form -> end('Guardar'); ?>
 </div>
-<div class="actions">
+<div class="actions" style="display: inherit;">
 	<h3><?php echo __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this -> Html -> link(__('Volver'), array('controller' => 'contratos', 'action' => 'view', $contratoId)); ?></li>		

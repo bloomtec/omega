@@ -14,7 +14,7 @@
 	
 <?php echo $this -> Form -> end(__('Guardar', true)); ?>
 </div>
-<div class="actions">
+<div class="actions" style="display: inherit;">
 	<h3><?php __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this -> Html -> link(__('Listar Empresas', true), array('action' => 'index')); ?></li>	

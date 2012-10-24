@@ -93,7 +93,7 @@
 					
 			<div style="clear:both;"></div>
 			<div style="clear:both;"></div>
-			<div class="textAreaTitulo pestana3">Desarrollo Omega</div>
+			<div class="textAreaTitulo pestana3">Bitácora</div>
 			<?php
 				if ($proyecto["Proyecto"]["desarrollo"] && $proyecto["Proyecto"]["desarrollo"] != "")
 					$value = $proyecto["Proyecto"]["desarrollo"];
@@ -112,7 +112,7 @@
 		</div>
 		<div style="clear:both;"></div>
 		<br />
-		<div class="pestana3">Comentarios / Observaciones</div>
+		<div class="pestana3">Chat</div>
 		<div class="comentarios publicos">
 			<?php echo $this -> element("commentsproyecto", array("observacionesPublicas" => $comentariosPublicos, "modelo" => "Publico")); ?>
 			<div style="clear:both;"></div>
