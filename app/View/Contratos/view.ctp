@@ -58,13 +58,15 @@
 		</tr>
 		<?php
 			$i = 0;
-			foreach ($contrato['Equipo'] as $equipo):
+			//foreach ($contrato['Equipo'] as $equipo):
+			foreach ($equipos as $equipo):
 				$alarmaPublicacion=false;
-				if($equipo["ContratosEquipo"]["tiene_publicacion_omega"]) $alarmaPublicacion=true;
+				if($equipo['Contrato'][0]["ContratosEquipo"]["tiene_publicacion_omega"]) $alarmaPublicacion=true;
 				$class = null;
 				if ($i++ % 2 == 0) {
 					$class = ' class="altrow"';
 				}
+				debug($equipo);
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">

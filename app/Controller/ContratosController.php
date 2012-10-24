@@ -85,6 +85,23 @@ class ContratosController extends AppController {
 		$contrato = $this -> Contrato -> read(null, $id);
 		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set(compact('contrato', 'categoriasEquipos'));
+		$equiposContrato = $this -> Contrato -> ContratosEquipo -> find(
+			'list',
+			array(
+				'conditions' => array(
+					'contrato_id' => $contrato['Contrato']['id']
+				)
+			)
+		);
+		//debug($equiposContrato);
+		$this -> paginate = array(
+			'Equipo' => array(
+				'conditions' => array(
+					'Equipo.id' => $equiposContrato
+				)
+			)		
+		);
+		$this -> set('equipos', $this -> paginate('Equipo'));
 	}
 
 	public function admin_index() {
