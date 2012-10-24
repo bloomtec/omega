@@ -84,6 +84,16 @@ class Proyecto extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'centro_de_costo' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'Ingrese el centro de costo',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		'correo_comercial' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
