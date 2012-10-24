@@ -35,10 +35,10 @@ $(document).ready(function() {
 	//*********************________COMENTARIOS__________*********************//
 
 	$(document).ready(function() {
-		$("#observacionPublicasAJAXAddForm").submit(function() {
-			$.post($(this).attr("action"), {
-				datos : $(this).serializeArray()
-			}, function(data) {
+		$("#ObservacionAJAXAddComentarioPublicoForm").submit(function() {
+			$.post($(this).attr("action"), 
+				$(this).serialize(),
+				function(data) {
 				if (data == "OK") {
 					$(".publicos .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".publicos #observacion").val() + '</div></div>');
 					$(".publicos #observacion").val("");
@@ -50,10 +50,10 @@ $(document).ready(function() {
 
 			return false;
 		});
-		$("#observacionPrivadasAJAXAddForm").submit(function() {
-			$.post($(this).attr("action"), {
-				datos : $(this).serializeArray()
-			}, function(data) {
+		$("#ObservacionAJAXAddComentarioPrivadoForm").submit(function() {
+			$.post($(this).attr("action"), 
+				$(this).serialize(), 
+				function(data) {
 				if (data == "OK") {
 					$(".privados .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".privados #observacion").val() + '</div></div>');
 					$(".privados #observacion").val("");
