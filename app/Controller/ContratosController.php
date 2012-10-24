@@ -49,6 +49,7 @@ class ContratosController extends AppController {
 		$conditions = array(
 			'Equipo.id' => $equiposContrato
 		);
+		$limit = 10;
 		
 		if($this -> request -> is('post')) {
 			$conditions = array();
@@ -65,6 +66,7 @@ class ContratosController extends AppController {
 					)
 				);
 				$conditions['Equipo.id'] = $equipos;
+				$limit = 100;
 			}
 			if(isset($this -> request -> data['Contrato']['categorias_equipo_id']) && !empty($this -> request -> data['Contrato']['categorias_equipo_id'])) {
 				$equipos = $this -> Contrato -> Equipo -> find(
@@ -83,6 +85,7 @@ class ContratosController extends AppController {
 					$equipos = array_merge($equipos, $equipos_tmp);
 				}
 				$conditions['Equipo.id'] = $equipos;
+				$limit = 100;
 			}
 			$this -> Contrato -> bindModel(
 				array(
@@ -110,7 +113,7 @@ class ContratosController extends AppController {
 		$this -> paginate = array(
 			'Equipo' => array(
 				'conditions' => $conditions,
-				'limit' => 10
+				'limit' => $limit
 			)		
 		);
 		$this -> set('equipos', $this -> paginate('Equipo'));
