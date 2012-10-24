@@ -76,6 +76,19 @@
 					
 		
 				<div style="clear:both;"></div>
+				<table>
+					<?php echo $this -> Form -> create('Proyecto'); ?>
+					<?php echo $this -> Form -> hidden('id', array('value' => $proyecto['Proyecto']['id'])); ?>
+					<?php echo $this -> Form -> hidden('control_ejecucion', array('autocomplete' => 'off')); ?>
+					<tr>
+						<td>
+							<label style="float:left; margin-right:10px; margin-top:5px;">CONTROL DE EJECUCIÓN</label>
+							<div id="control_ejecucion" path='/files'></div>
+							<div class="uploadedControlEjecucion"></div>
+						</td>
+						<td><?php echo $this -> Form -> end('ACTUALIZAR'); ?></td>
+					</tr>
+				</table>
 				<div class="pestana3">Bitácora</div>
 				<div class="comentarios eventos">
 					<?php echo $this->element("eventsproyecto",array("eventos"=>$eventos,"modelo"=>"EventosServicio","omega"=>true));?>

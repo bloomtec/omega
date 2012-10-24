@@ -39,6 +39,27 @@ $(document).ready(function() {
 		}
 	});
 	
+	//SUBIR CONTROL DE EJECUCIÓN
+	$('#control_ejecucion').uploadify({
+		'uploader' : server + 'swf/uploadify.swf',
+		'script' : server + 'uploadify.php',
+		'folder' : server + 'app/webroot' + path,
+		'width' : 109,
+		'height' : 32,
+		'auto' : true,
+		'cancelImg' : server + 'img/cancel.png',
+		'onComplete' : function(a, b, c, d) {
+			var path = $('#control_ejecucion').attr('path');
+			var file = d.split("/");
+			var name = path + "/" + file[(file.length - 1)];
+			//var name=path+"/"+c.name;
+			$("#ProyectoControlEjecucion").val(name);
+			$("#ProyectoControlEjecucion1").val(name);
+			$(".uploaded").html("Se ha subido con exito la cotización");
+
+		}
+	});
+	
 	//SUBIR COTIZACIÓN
 	$('#cotizacion').uploadify({
 		'uploader' : server + 'swf/uploadify.swf',
