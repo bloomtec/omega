@@ -132,4 +132,8 @@
 			
 		});
 	});
+	$(function(){
+		$('.historial').scrollTop(10000);
+		
+	});
 </script>

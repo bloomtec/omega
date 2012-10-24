@@ -68,7 +68,7 @@
 	
 	<!-- PROYECTOS EN EJECUCION -->
 	<div style="clear:both;"></div>
-	<h3><?php echo __('Planeación y Prestación de Servicio');?></h3>
+	<h3><?php echo __('Prestación de Servicio');?></h3>
 
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>

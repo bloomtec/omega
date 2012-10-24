@@ -310,6 +310,8 @@ $(window).unload(function() {
 		//$("body").append(data);	
 	});;
 });
-
+$(function(){
+		$('.historial').scrollTop(10000);
+});
 
 </script>

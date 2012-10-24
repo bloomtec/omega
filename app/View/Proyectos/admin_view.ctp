@@ -126,5 +126,10 @@ $(window).unload(function() {
 	$.post(server+"proyectos/quitarPulicacionParaOmega",{"id":"<?php echo $proyecto["Proyecto"]["id"];?>"},function(data){
 		
 	});
+
 });
+$(function(){
+		$('.historial').scrollTop(10000);
+
+	});
 </script>
