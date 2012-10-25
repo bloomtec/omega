@@ -33,8 +33,8 @@
 		?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
+<div class="actions" style="display: inherit;">
+	<h3><?php echo __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('Nueva Categoría'), array('action' => 'add')); ?></li>
 	</ul>

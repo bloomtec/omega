@@ -1,5 +1,24 @@
 <div class="usuarios index">
 	<h2><?php __('Usuarios'); ?></h2>
+	<table>
+		<?php echo $this -> Form -> create('Usuario'); ?>
+		<tr>
+			<th>Rol</th>
+			<th>Estado</th>
+			<th></th>
+			<?php if($filtro) : ?>
+			<th></th>
+			<?php endif; ?>
+		</tr>
+		<tr>
+			<td><?php echo $this -> Form -> input('rol_id', array('label' => false, 'empty' => 'Seleccione...')); ?></td>
+			<td><?php echo $this -> Form -> input('activo', array('label' => false)); ?></td>
+			<td><?php echo $this -> Form -> end('Filtrar'); ?></td>
+			<?php if($filtro) : ?>
+			<td class="actions"><?php echo $this -> Form -> postLink(__('Quitar Filtro'), array('action' => 'removeFilter'), null, null); ?></td>
+			<?php endif; ?>
+		</tr>
+	</table>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this -> Paginator -> sort('nombre'); ?></th>
@@ -26,7 +45,13 @@
 		<td class="actions">
 			<?php echo $this -> Html -> link(__('Ver', true), array('action' => 'view', $usuario['Usuario']['id'])); ?>
 			<?php echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $usuario['Usuario']['id'])); ?>
-			<?php echo $this -> Html -> link(__('Borrar', true), array('action' => 'delete', $usuario['Usuario']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $usuario['Usuario']['id'])); ?>
+			<?php
+				if($usuario['Usuario']['activo']) {
+					echo $this -> Form -> postLink(__('Desactivar'), array('action' => 'disable', $usuario['Usuario']['id']), null, __('¿Seguro desea desactivar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
+				} else {
+					echo $this -> Form -> postLink(__('Activar'), array('action' => 'enable', $usuario['Usuario']['id']), null, __('¿Seguro desea activar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
+				}
+			?>
 		</td>
 	</tr>
 	<?php endforeach; ?>

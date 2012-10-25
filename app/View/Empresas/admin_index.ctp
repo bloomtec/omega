@@ -9,13 +9,24 @@
 </div>-->
 <div class="empresas index">
 	<h2><?php echo __('Empresas'); ?></h2>
+	<table>
+		<?php echo $this -> Form -> create('Empresa'); ?>
+		<tr>
+			<th>Nombre / Razón Social</th>
+			<th></th>
+		</tr>
+		<tr>
+			<td><?php echo $this -> Form -> input('nombre', array('label' => false, 'value' => '')); ?></td>
+			<td><?php echo $this -> Form -> end('Buscar'); ?></td>
+		</tr>
+	</table>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 		<th>Alertas</th>
 		<th><?php echo $this -> paginator -> sort('Empresa.nombre', 'Nombre/Razón Social'); ?></th>
 		<th><?php echo $this -> paginator -> sort('Empresa.identificacion', 'Identificación'); ?></th>
 		<th><?php echo $this -> paginator -> sort('Empresa.correo', 'Correo'); ?></th>
-		<th class="actions"><?php echo __('Servicios'); ?></th>
+		<th id="THServiciosEmpresa" class="actions"><?php echo __('Servicios'); ?></th>
 		<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	<?php
@@ -46,7 +57,7 @@
 		
 		<td><?php echo $empresa['Empresa']['identificacion']; ?>&nbsp;</td>
 		<td><?php echo $empresa['Empresa']['correo']; ?>&nbsp;</td>
-		<td class="actions">
+		<td id="TDServiciosEmpresa" class="actions">
 			<?php
 				if(key_exists(1, $servicios)) {
 					echo $this -> Html -> link(__('Mantenimiento', true), array('action' => 'view', $empresa['Empresa']['id'], "mantenimientos"));
@@ -58,6 +69,16 @@
 					if($solicitudes) {
 						 echo $this -> Html -> link("Solicitudes",array("controller"=>"empresas","action"=>"solicitudes",$empresa["Empresa"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox importante"));
 					}
+				}
+			?>
+			<?php
+				if(key_exists(3, $servicios)) {
+					echo $this -> Html -> link(__('Calidad De Aire', true), array('action' => 'view', $empresa['Empresa']['id'], "calidad"));
+				}
+			?>
+			<?php
+				if(key_exists(4, $servicios)) {
+					echo $this -> Html -> link(__('Ingeniería', true), array('action' => 'view', $empresa['Empresa']['id'], "ingenieria"));
 				}
 			?>
 		</td>

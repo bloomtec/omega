@@ -8,10 +8,9 @@
 		echo $this -> Form -> input('nombre');
 		//echo $this->Form->input('centro_de_costo');
 		echo $this -> Form -> input('fecha_de_inicio');
-		echo $this -> Form -> input('fecha_de_entrega');
-		
-		echo $this -> Form -> input('cotizacion', array('autocomplete' => 'off'));
-		echo $this -> Form -> input('cronograma', array('autocomplete' => 'off'));
+
+		echo $this -> Form -> hidden('cotizacion', array('autocomplete' => 'off'));
+		echo $this -> Form -> hidden('cronograma', array('autocomplete' => 'off'));
 		?>
 		<label style="float:left; margin-right:10px; margin-top:5px;">Cotización: </label>
 		<div id="cotizacion" path='/files'></div>
@@ -29,7 +28,7 @@
 		?>
 	</fieldset>
 	<?php echo $this -> Form -> end(__('Guardar', true)); ?>
-	<div class="actions">
+	<div class="actions" style="display: inherit;">
 		<!--<h3><?php echo __('Acciones'); ?></h3>-->
 		<ul>		
 			<li>

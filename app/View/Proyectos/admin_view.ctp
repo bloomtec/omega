@@ -77,7 +77,7 @@
 		
 				<div style="clear:both;"></div>
 				<div style="clear:both;"></div>
-				<div class="textAreaTitulo pestana3">Desarrollo Omega</div>
+				<div class="textAreaTitulo pestana3">Bitácora</div>
 				<?php if($proyecto["Proyecto"]["desarrollo"]&&$proyecto["Proyecto"]["desarrollo"]!="") $value=$proyecto["Proyecto"]["desarrollo"]; else $value="Descripción de actividades u observaciones de la ejecucion del proyecto";?>
 				<textarea id=desarrollo disabled="disabled" name="data[actividad]" modelId="<?php echo $proyecto["Proyecto"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>	
 				
@@ -93,18 +93,18 @@
 				<?php echo $this->Html->link("VER ARCHIVOS (".count($proyecto["Archivo"]).")",array("controller"=>"archivoProyectos","action"=>"index",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$proyecto["Proyecto"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this->Html->link('AÑADIR SUB PROYECTO', array("controller"=>"subproyectos",'action' => 'add', $proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array('style' => 'font-size:12px;', "class"=>"boton thickbox"));?>
-				<?php echo $this->Html->link('Lista de Correo', array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
+				<?php echo $this->Html->link('LISTA DE CORREOS', array("controller"=>"proyectos",'action' => 'listaCorreo',$proyecto['Proyecto']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 			</div>
 				<div style="clear:both;"></div>
 			<br />
 				<?php //debug($comentariosPrivados); ?>
-				<div class="pestana3">Comentarios / Observaciones</div>
+				<div class="pestana3">Chat con cliente</div>
 				<div class="comentarios publicos">
 					<?php echo $this->element("commentsproyecto",array("observacionesPublicas"=>$comentariosPublicos,"modelo"=>"Publico"));?>
 					<div style="clear:both;"></div>
 				</div>
 				<div style="border:3px dashed #E10000;">
-				<div class="pestana3 ">Comentarios / Observaciones</div>
+				<div class="pestana3 ">Chat interno</div>
 				<div class="comentarios privados" style="margin-top:0;">
 					<?php echo $this->element("commentsproyecto",array("observacionesPrivadas"=>$comentariosPrivados,"modelo"=>"Privado"));?>
 					<div style="clear:both;"></div>

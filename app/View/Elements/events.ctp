@@ -13,9 +13,9 @@
 	echo $this -> Form -> create("Evento", array("action" => "AJAX_add", "id" => "formularioEvento"));
 	echo $this -> Form -> input("contratos_equipo_id", array('type' => 'hidden', "value" => $contratoEquipo["ContratosEquipo"]["id"], "id" => "EventoContratoEquipo"));
 	if ($omega)
-		echo $this -> Form -> textArea("observacion", array("id" => "textoEvento"));
+		echo $this -> Form -> textArea("observacion", array("id" => "textoEvento", 'placeholder' => 'Verifique su ortografía y redacción, recuerde que todo lo que se escriba aquí será revisado por el cliente.'));
 	if ($omega)
-		echo $this -> Form -> end("Agregar");
+		echo $this -> Form -> end("AGREGAR");
 	else
 		echo $this -> Form -> end();
 	//debug($observacionesPublicas);

@@ -207,7 +207,7 @@ class ProyectosController extends AppController {
 					$this -> redirect(array('action' => 'view', "controller" => "empresas", $this -> request -> data["Proyecto"]["empresa_id"], "proyectos"));
 				} else {
 					$empresaId = $this -> request -> data["Proyecto"]["empresa_id"];
-					$this -> Session -> setFlash(__('No se pudo agregar el proyecto. Por favor, intente de nuevo.'), 'crud/error');
+					$this -> Session -> setFlash(__('No se pudo agregar el proyecto. Por favor, intente de nuevo. ¿Agregó la cotización?'), 'crud/error');
 				}
 			} else {
 				$empresaId = $this -> request -> data["Proyecto"]["empresa_id"];

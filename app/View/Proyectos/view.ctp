@@ -93,7 +93,7 @@
 					
 			<div style="clear:both;"></div>
 			<div style="clear:both;"></div>
-			<div class="textAreaTitulo pestana3">Desarrollo Omega</div>
+			<div class="textAreaTitulo pestana3">Bitácora</div>
 			<?php
 				if ($proyecto["Proyecto"]["desarrollo"] && $proyecto["Proyecto"]["desarrollo"] != "")
 					$value = $proyecto["Proyecto"]["desarrollo"];
@@ -107,12 +107,11 @@
 		<div class="panel_lateral">
 				<?php echo $this -> Html -> link("VER ARCHIVOS (" . count($proyecto["Archivo"]) . ")", array("controller" => "archivoProyectos", "action" => "index", $proyecto["Proyecto"]["id"], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "boton thickbox")); ?>
 				<?php echo $this -> Html -> link("SUBIR ARCHIVOS", array("controller" => "archivoProyectos", "action" => "add", $proyecto["Proyecto"]["id"], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "boton thickbox")); ?>
-				<?php echo $this -> Html -> link("SOLICITAR ADICIONAL", array("controller" => "proyectos", "action" => "solicitudAdicional", $proyecto["Proyecto"]["id"], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "boton thickbox")); ?>
-					
+				<?php echo $this -> Html -> link("SOLICITAR ADICIONAL", array("controller" => "proyectos", "action" => "solicitudAdicional", $proyecto["Proyecto"]["id"], "?KeepThis=true&TB_iframe=true&height=400&width=600"), array("class" => "boton thickbox")); ?>	
 		</div>
 		<div style="clear:both;"></div>
 		<br />
-		<div class="pestana3">Comentarios / Observaciones</div>
+		<div class="pestana3">Chat</div>
 		<div class="comentarios publicos">
 			<?php echo $this -> element("commentsproyecto", array("observacionesPublicas" => $comentariosPublicos, "modelo" => "Publico")); ?>
 			<div style="clear:both;"></div>

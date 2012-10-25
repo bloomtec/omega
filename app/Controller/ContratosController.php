@@ -179,7 +179,9 @@ class ContratosController extends AppController {
 			'Empresa',
 			'Equipo.CategoriasEquipo'
 		);
-		$this -> set('contrato', $this -> Contrato -> read(null, $id));
+		$contrato = $this -> Contrato -> read(null, $id);
+		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
+		$this -> set(compact('contrato', 'categoriasEquipos'));
 	}
 
 	public function admin_add($id = null) {

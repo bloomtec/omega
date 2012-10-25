@@ -266,13 +266,19 @@ class EmpresasController extends AppController {
 	 */
 	public function admin_index() {
 		$this -> Empresa -> contain('Contrato', 'Solicitud');
-		$this -> paginate = array(
+		$paginate = array(
 			'order' => array(
 				'Empresa.tiene_publicacion_empresa' => 'DESC',
 				'Empresa.tiene_publicacion_omega' => 'DESC',
 				'Empresa.tiene_alerta' => 'DESC'
 			)
 		);
+		if($this -> request -> is('post')) {
+			$paginate['conditions'] = array(
+				'nombre LIKE' => '%' . $this -> request -> data['Empresa']['nombre'] . '%'
+			);
+		}
+		$this -> paginate = $paginate;
 		$this -> set('empresas', $this -> paginate());
 	}
 

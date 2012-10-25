@@ -29,8 +29,23 @@ if($modelo=="Publico") {
 	echo $this -> Form -> create("Observacion", array("action" => "AJAX_addComentario".$modelo));
 	echo $this -> Form -> input("usuario_id", array('type' => 'hidden', "value" => $this -> Session -> read("Auth.User.id")));
 	echo $this -> Form -> input("proyecto_id", array('type' => 'hidden', "value" => $proyecto["Proyecto"]["id"]));
-	echo $this -> Form -> textArea("observacion", array("id" => "observacion"));
-	echo $this -> Form -> end("Agregar");
+	if($modelo == "Publico" && (isset($this -> params['prefix']) && $this -> params['prefix'] == 'admin')) {
+		echo $this -> Form -> textArea(
+			"observacion",
+			array(
+				"id" => "observacion",
+				"placeholder" => "Verifique su ortografía y redacción , recuerde que todo lo que se escriba aquí será revisado por el cliente."
+			)
+		);
+	} else {
+		echo $this -> Form -> textArea(
+			"observacion",
+			array(
+				"id" => "observacion"
+			)
+		);
+	}
+	echo $this -> Form -> end("AGREGAR");
 	//debug($observacionesPublicas);
 ?>
 </div>
