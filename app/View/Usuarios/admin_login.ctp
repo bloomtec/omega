@@ -4,7 +4,7 @@
 			ACCESO a <span class="bold">Empleados de OMEGA</span>
 		</div>
 		<p>
-			Ingrese su nombre de usuario y su contraseña asignada para acceder a la plataforma de clientes y proyectos Omega Ingenieros.
+			SICLOM &infin; un compromiso de ¡TODOS!.
 		</p>
 		<?php
 		echo $this -> Session -> flash('auth');

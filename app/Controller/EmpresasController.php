@@ -14,6 +14,7 @@ class EmpresasController extends AppController {
 	 */
 	public function index() {
 		//$this -> Empresa -> recursive = 0;
+		$this -> layout="empresa";
 		$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
 		$this -> set('servicios_usuario', $servicios_usuario);
 		$this -> set('empresa', $this -> Empresa -> read(null, $this -> Auth -> user('empresa_id')));

@@ -7,8 +7,9 @@
 		echo $this -> Form -> input('estado_proyecto_id', array("type" => "hidden", "value" => 1));
 		echo $this -> Form -> input('nombre');
 		//echo $this->Form->input('centro_de_costo');
-		echo $this -> Form -> input('fecha_de_entrega');
 		echo $this -> Form -> input('fecha_de_inicio');
+		echo $this -> Form -> input('fecha_de_entrega');
+		
 		echo $this -> Form -> input('cotizacion', array('autocomplete' => 'off'));
 		echo $this -> Form -> input('cronograma', array('autocomplete' => 'off'));
 		?>

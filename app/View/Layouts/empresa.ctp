@@ -49,7 +49,7 @@
 			<div id="header">
 				<div class="wrap">
 					<div class="llave"><?php echo $this -> Html -> link($this -> Html -> image("llave.png", array("alt" => "Volver al inicio")), array("controller" => "empresas"), array('escape' => false)); ?></div>
-					<div class="titulo">ZONA EXCLUSIVA <span style="font-weight:bold;">CLIENTES</div>
+					<div class="titulo" style="font-size:21px; text-decoration:none; font-style:italic">ESTIMADO CLIENTE,<br /> Gracias por emplear nuestra herramienta<span style="font-weight:bold; font-style:italic"> SICLOM &infin; </div>
 					<div class="logo">
 						<?php echo $this -> Html -> image("logo.png"); ?>
 						<br />

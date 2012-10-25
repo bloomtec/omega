@@ -1,10 +1,10 @@
 <div class="login">
 	<div class="wrapper">
 		<div class="titulo">
-			ACCESO a <span class="bold">CLIENTES REGISTRADOS</span>
+			ACCESO a <span class="bold">CLIENTES</span>
 		</div>
 		<p>
-			Ingrese su nombre de usuario y su contraseña asignada para acceder a la plataforma de clientes y proyectos Omega Ingenieros.
+			Ingrese su nombre de usuario y contraseña asignada para acceder al sistema de información SICLOM  &infin;
 		</p>
 		<?php
 		echo $this -> Session -> flash('auth');
