@@ -195,4 +195,7 @@ $(window).unload(function() {
 		
 	});;
 });
+$(function(){
+		$('.historial').scrollTop(10000);
+});
 </script>
