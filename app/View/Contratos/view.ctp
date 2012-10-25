@@ -51,34 +51,36 @@
 	<table cellpadding = "0" cellspacing = "0">
 		<tr>
 			<th><?php echo __('Alertas'); ?></th>
-			<th><?php echo __('Código'); ?></th>
-			<th><?php echo __('Categoría'); ?></th>
+			<th><?php echo $this -> paginator -> sort('codigo', 'Código'); ?></th>
+			<th><?php echo $this -> paginator -> sort('categorias_equipo_id', 'Categoría'); ?></th>
 			<th><?php echo __('Ficha Tecnica'); ?></th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
 		</tr>
 		<?php
 			$i = 0;
-			foreach ($contrato['Equipo'] as $equipo):
+			//foreach ($contrato['Equipo'] as $equipo):
+			foreach ($equipos as $equipo):
 				$alarmaPublicacion=false;
-				if($equipo["ContratosEquipo"]["tiene_publicacion_omega"]) $alarmaPublicacion=true;
+				if($equipo['Contrato'][0]["ContratosEquipo"]["tiene_publicacion_omega"]) $alarmaPublicacion=true;
 				$class = null;
 				if ($i++ % 2 == 0) {
 					$class = ' class="altrow"';
 				}
+				//debug($equipo);
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">
 				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
-			<td><?php echo $equipo['codigo'];?></td>
+			<td><?php echo $equipo['Equipo']['codigo'];?></td>
 			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
-			<td><?php if($equipo['ficha_tecnica']&&$equipo['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['id']), array('target'=>'_BLANK'));?></td>
+			<td><?php if($equipo['Equipo']['ficha_tecnica']&&$equipo['Equipo']['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['Equipo']['id']), array('target'=>'_BLANK'));?></td>
 			<td class="actions">
 				<?php 
 					if ($contrato['Tipo']['id']==1 ){
-						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"mantenimiento"));
+						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"mantenimiento"));
 					}else{
-						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"reparacion"));
+						echo $this->Html->link(__('Ver'), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"reparacion"));
 					}
 				 ?>				
 			</td>
@@ -86,7 +88,18 @@
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
+<p>
+	<?php echo $this -> Paginator -> counter(array('format' => __('Página {:page} de {:pages}. Mostrando {:current} registros de un total de {:count}. Inicia con el  {:start} y termina con el {:end}'))); ?>
+</p>
+<div class="paging">
+	<?php
+	echo $this -> Paginator -> first('<< ', array(), null, array('class' => 'prev disabled'));
+	echo $this -> Paginator -> prev('< ' . __('anterior'), array(), null, array('class' => 'prev disabled'));
+	echo $this -> Paginator -> numbers(array('separator' => ''));
+	echo $this -> Paginator -> next(__('siguiente') . ' >', array(), null, array('class' => 'next disabled'));
+	echo $this -> Paginator -> last(' >>', array(), null, array('class' => 'next disabled'));
+	?>
+</div>
 </div>
 <div style="display:none">
 		<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>		
