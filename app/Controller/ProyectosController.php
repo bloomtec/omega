@@ -439,7 +439,8 @@ class ProyectosController extends AppController {
 		$this -> layout = "ajax";
 		$id = $this -> request -> data["Proyecto"]["id"];
 		$this -> Proyecto -> id = $id;
-		$this -> Proyecto -> saveField("estado_proyecto_id", 2);
+		//$this -> Proyecto -> saveField("estado_proyecto_id", 2);
+		$this -> Proyecto -> saveField("estado_proyecto_id", 3);
 		//$this -> Proyecto -> set("estado_proyecto_id", 2);
 		$this -> Proyecto -> saveField("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
 		//$this -> Proyecto -> set("comentarios", $this -> request -> data["Proyecto"]["comentarios"]);
@@ -447,13 +448,18 @@ class ProyectosController extends AppController {
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "en espera de aprobación por el cliente");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto en espera de aprobación");
 		$this -> Proyecto -> eliminarAlarmaProyecto($id, "proyecto nuevo");
-		$this -> Proyecto -> crearAlarmaProyecto($id, "proyecto en perfeccionamiento", false);
+		//$this -> Proyecto -> crearAlarmaProyecto($id, "proyecto en perfeccionamiento", false);
 		//$this->Proyecto->crearAlarmaProyecto($id,"debe ingresar el centro de costo",false);
 		$proyecto = $this -> Proyecto -> read('nombre', $id);
 		$mail_body =
 			"Usted ha apropado la cotizaciòn del proyecto: "
 			. $proyecto["Proyecto"]["nombre"]
-			. "\n" . $this -> request -> data["Proyecto"]["comentarios"];
+			. "\n" . $this -> request -> data["Proyecto"]["comentarios"]
+			. "\n" . "LA APROBACION DE PROYECTO QUE USTED ACABA DE REALIZAR, 
+			SERA TRANSMITIDA A NUESTRA AREA DE OPERACIONES  EN  UN
+			TIEMPO DE 24 HORAS. DURANTE ESTE PERIODO USTED PUEDRA
+			MODIFICAR LA SOLICITUD COMUNICANDOSE CON SU CONTACTO  O
+			CON NUESTRA AREA DE CALIDAD sico@omegaingenieros.com";
 		$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
