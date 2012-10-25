@@ -20,6 +20,8 @@
 		<div class="uploadedCronograma"></div>
 		<?php
 		echo $this -> Form -> input('responsable_comercial');
+		echo $this -> Form -> input('correo_comercial');
+		echo $this -> Form -> input('centro_de_costo');
 		$usuarios = $this -> requestAction("/usuarios/getOmega");
 		echo $this -> Form -> input('supervisor', array("type" => "select", "options" => $usuarios, 'empty' => 'Seleccione Supervisor...'));
 		echo $this -> Form -> input('encargado', array("type" => "select", "options" => $usuarios, "label" => "Ingeniero", 'empty' => 'Seleccione Ingeniero...'));
