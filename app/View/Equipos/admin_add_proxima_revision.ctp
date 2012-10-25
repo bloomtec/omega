@@ -5,12 +5,12 @@
 	<fieldset>
  		<legend>Proxima Revisión</legend>
 	<?php
-		echo $this->Form->input('ContratosEquipo.id',array("value"=>$contratoEquipoId));
+		echo $this->Form->hidden('ContratosEquipo.id',array("value"=>$contratoEquipoId));
 	
 	?>
 	
 	<?php
-		echo $this->Form->input('ContratosEquipo.proxima_revision');
+		echo $this->Form->input('ContratosEquipo.proxima_revision',array('type'=>'datetime'));
 	
 	?>
 	</fieldset>
