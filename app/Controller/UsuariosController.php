@@ -322,19 +322,21 @@ class UsuariosController extends AppController {
 				$this -> Session -> setFlash(__('Seleccione al menos un servicio visible para el usuario'));
 			} else {
 				if ($this -> Usuario -> save($this -> request -> data)) {
-					$servicios_previos = $this -> Usuario -> ServiciosUsuario -> find('all', array('conditions' => array('ServiciosUsuario.usuario_id' => $this -> request -> data['Usuario']['id'])));
-					foreach($servicios_previos as $key => $servicio) {
-						$this -> Usuario -> ServiciosUsuario -> delete($servicio['ServiciosUsuario']['id']);
-					}
-					foreach($this -> request -> data['Usuario']['servicios'] as $key => $servicio_id) {
-						$this -> Usuario -> ServiciosUsuario -> create();
-						$tmp_data = array(
-							'ServiciosUsuario' => array(
-								'usuario_id' => $this -> Usuario -> id,
-								'servicio_id' => $servicio_id
-							)
-						);
-						$this -> Usuario -> ServiciosUsuario -> save($tmp_data);
+					if(isset($this -> request -> data['Usuario']['servicios'])) {
+						$servicios_previos = $this -> Usuario -> ServiciosUsuario -> find('all', array('conditions' => array('ServiciosUsuario.usuario_id' => $this -> request -> data['Usuario']['id'])));
+						foreach($servicios_previos as $key => $servicio) {
+							$this -> Usuario -> ServiciosUsuario -> delete($servicio['ServiciosUsuario']['id']);
+						}
+						foreach($this -> request -> data['Usuario']['servicios'] as $key => $servicio_id) {
+							$this -> Usuario -> ServiciosUsuario -> create();
+							$tmp_data = array(
+								'ServiciosUsuario' => array(
+									'usuario_id' => $this -> Usuario -> id,
+									'servicio_id' => $servicio_id
+								)
+							);
+							$this -> Usuario -> ServiciosUsuario -> save($tmp_data);
+						}
 					}
 					$this -> Session -> setFlash(__('Se guardaron los cambios del usuario'), 'crud/success');
 					$this -> redirect(array('action' => 'index'));
