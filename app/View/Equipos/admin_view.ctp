@@ -6,26 +6,19 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 	
 	<h3><span style="color:black">Mantenimiento</span> </h3>
 		<div class="marcoEquipo">
-			
-			
 			<div class="lineaSuperior">
-				<div class="info"><span style="color:#e10000"><?php echo $contrato['Cliente']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
+				<div class="info"><span style="color:#e10000"><?php echo $contrato['Empresa']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
 				<div class="accionesFicha">
-				
 					<?php if($equipo["Equipo"]["ficha_tecnica"]) echo $this -> Html->link("VER FICHA TECNICA",array("controller"=>"equipos","action"=>"verFicha",$equipo["Equipo"]["id"]),array("class"=>"boton","target"=>"_blank"));?>
 					<?php echo $this -> Html->link("SUBIR FICHA TECNICA",array("controller"=>"equipos","action"=>"subirFicha",$equipo_id),array("class"=>"boton thickbox"));?>
 				</div>
 			</div>
 			<div style="clear:both;"></div>
-			
-			
 			<div class=panelInformativo>
-				
 				<div class="areaInformativa">
 				<div class="textAreaTitulo pestana3">DIAGNOSTICO</div>
 				<?php if($contratoEquipo["ContratosEquipo"]["diagnostico"]&&$contratoEquipo["ContratosEquipo"]["diagnostico"]!="") $value=$contratoEquipo["ContratosEquipo"]["diagnostico"]; else $value="El cliente debe aprobar Cotización";?>
 				<textarea id=diagnostico disabled="disabled" name="data[actividad]" modelId="<?php echo $contratoEquipo["ContratosEquipo"]["id"];?>" valor="<?php echo $value?>"><?php echo $value?></textarea>	
-				
 					<div class="textArearBotones">
 					<?php if($contrato["Contrato"]["estado_id"]<5):?>
 						<div class="textAreaBoton editar">editar</div>
@@ -34,9 +27,7 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 					<?php endif;?>
 					</div>
 				</div>
-	
 				<div style="clear:both;"></div>
-			
 				<div class="pestana3">Chat con cliente</div>
 				<div class="comentarios publicos">
 					<?php echo $this->element("comments",array("observacionesPublicas"=>$observacionesPublicas,"modelo"=>"Publica"));?>
@@ -50,7 +41,6 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 				</div>
 				</div>
 			</div>
-					
 			<div class="panel_lateral">
 				<?php echo $this -> Html->link("VER ARCHIVOS (".count($equipo["Archivo"]).")",array("controller"=>"archivoProyestos","action"=>"index",$equipo["Equipo"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
 				<?php echo $this -> Html->link("SUBIR ARCHIVOS",array("controller"=>"archivoProyectos","action"=>"add",$equipo["Equipo"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?>
@@ -63,10 +53,9 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 			</div>
 	</div>
 	<?php 
-	
-	endif;
-	
-	if($contratoEquipo["ContratosEquipo"]["fase_id"]==2):?>
+		endif;
+		if($contratoEquipo["ContratosEquipo"]["fase_id"]==2):
+	?>
 	<div class="equipos faces admin">
 	
 	<h3><span style="color:black">Mantenimiento</span> </h3>
@@ -74,7 +63,7 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 			
 			
 			<div class="lineaSuperior">
-				<div class="info"><span style="color:#e10000"><?php echo $contrato['Cliente']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
+				<div class="info"><span style="color:#e10000"><?php echo $contrato['Empresa']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
 				<div class="accionesFicha">
 				
 					<?php if($equipo["Equipo"]["ficha_tecnica"]) echo $this -> Html->link("VER FICHA TECNICA",array("controller"=>"equipos","action"=>"verFicha",$equipo["Equipo"]["id"]),array("class"=>"boton","target"=>"_blank"));?>
@@ -150,7 +139,7 @@ if($tipoContrato!="mantenimiento"){ // Si el contrato no es de mantenimiento
 			
 			
 			<div class="lineaSuperior">
-				<div class="info"><span style="color:#e10000"><?php echo $contrato['Cliente']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
+				<div class="info"><span style="color:#e10000"><?php echo $contrato['Empresa']["nombre"];?></span><span style="color:#a5a5a4"><?php echo $this -> Html->link(" - ".$equipo['Equipo']["codigo"],array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"text-decoration:none;color:#a5a5a4 "));?></span> <?php echo $this -> Html->link("volver",array("controller"=>"contratos","action"=>"view",$contrato["Contrato"]["id"]),array("style"=>"font-size:10px;vertical-align:top;"));?></div>
 				<div class="accionesFicha">
 				
 					<?php if($equipo["Equipo"]["ficha_tecnica"]) echo $this -> Html->link("VER FICHA TECNICA",array("controller"=>"equipos","action"=>"verFicha",$equipo["Equipo"]["id"]),array("class"=>"boton","target"=>"_blank"));?>
