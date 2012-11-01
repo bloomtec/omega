@@ -6,21 +6,19 @@
  		<legend><?php echo __('Añadir Equipo'); ?> al contrato <?php echo $contratos[$contratoId];?></legend>
 	<?php
 	$i=0;
-		foreach ($contratosCompleto as $contrato){
+		foreach ($contratosCompleto as $contrato) {
 			$equipos=array();
 				foreach($contrato["Equipo"] as $equipo){
 					if(!isset($equiposDelContrato[$equipo["id"]])){
-						$equipos[$equipo["id"]]=$equipo["referencia"];
+						$equipos[$equipo["id"]]=$equipo["codigo"];
 					}
 				}
-			if($equipos){
+			if($equipos) {
 				echo "<div class='bloqueContrato'>";
 					echo $this->Form->label($contrato["Contrato"]["centro_de_costo"]."-".$contrato["Contrato"]["nombre"]);
 					echo $this->Form->input("Equipos.".$contrato["Contrato"]["id"],array("multiple"=>"checkbox","options"=>$equipos,"div"=>"equiposDeContrato","label"=>false));
 				echo "</div>";
 			}
-	
-			
 		}
 		//echo $this->Form->input('referencia');
 		//echo $this->Form->input('descripcion');

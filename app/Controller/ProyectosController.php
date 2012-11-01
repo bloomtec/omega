@@ -334,6 +334,30 @@ class ProyectosController extends AppController {
 		$this -> set($params);		
 	}
 	
+	public function admin_verControlEjecucion($id) {
+		$proyecto = $this -> Proyecto -> read("control_ejecucion", $id);
+		$partes = explode("/", $proyecto["Proyecto"]["control_ejecucion"]);
+		$nombrePartido = explode(".", $partes[2]);
+		$this -> viewClass = 'Media';
+		$params = array(
+			'id' => $partes[2],
+			'name' => $nombrePartido[0],
+			'download' => true,
+			'extension' => $nombrePartido[1],
+			'mimeType' => array(
+				'docx' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				"dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+				"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+				"ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+				"potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
+				"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+			),
+			'path' => $partes[1] . DS
+		);
+		$this -> set($params);
+	}
+	
 	public function verControlEjecucion($id) {
 		$proyecto = $this -> Proyecto -> read("control_ejecucion", $id);
 		$partes = explode("/", $proyecto["Proyecto"]["control_ejecucion"]);

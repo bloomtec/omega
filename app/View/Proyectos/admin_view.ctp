@@ -86,8 +86,14 @@
 							<div id="control_ejecucion" path='/files'></div>
 							<div class="uploadedControlEjecucion"></div>
 						</td>
-						<td><?php echo $this -> Form -> end('ACTUALIZAR'); ?></td>
+						<td><?php echo $this -> Form -> end('SUBIR'); ?></td>
 					</tr>
+					<?php if(!empty($proyecto['Proyecto']['cronograma'])) : ?>
+					<tr><td>Cronograma</td><td><?php echo $this -> Html -> link($this -> Html -> image('/img/Calendario.png', array('title' => 'Ver Cronograma', 'alt' => 'Ver Cronograma', 'height' => '25')), array("controller" => "proyectos", "action" => "verCronograma", $proyecto['Proyecto']['id']), array('escape' => false)); ?></td></tr>
+					<?php endif; ?>
+					<?php if(!empty($proyecto['Proyecto']['control_ejecucion'])) : ?>
+					<tr><td>Control De Ejecución</td><td><?php echo $this -> Html -> link($this -> Html -> image('/img/Calendario.png', array('title' => 'Ver Control De Ejecución', 'alt' => 'Ver Cronograma', 'height' => '25')), array("controller" => "proyectos", "action" => "verControlEjecucion", $proyecto['Proyecto']['id']), array('escape' => false)); ?></td></tr>
+					<?php endif; ?>
 				</table>
 				<div class="pestana3">Bitácora</div>
 				<div class="comentarios eventos">
