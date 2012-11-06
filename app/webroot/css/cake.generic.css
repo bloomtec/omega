@@ -228,6 +228,7 @@ td.actions {
 }
 td#TDServiciosEmpresa, th#THServiciosEmpresa {
 	max-width: 350px;
+	min-width: 350px;
 }
 td#TDServiciosEmpresa a {
 	float: left;

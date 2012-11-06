@@ -1,10 +1,12 @@
 $(document).ready(function() {
+	
 	var server = '/'
 	var path = '/files';
 	var message = $('#upload').attr('message');
 	var controller = $('#upload').attr('controller');
 	var action = $('#upload').attr('action');
 	var id = $('#upload').attr('modelId');
+	
 	$('#upload').uploadify({
 		'uploader' : server + 'swf/uploadify.swf',
 		'script' : server + 'uploadify.php',
@@ -40,7 +42,7 @@ $(document).ready(function() {
 	});
 	
 	//SUBIR CONTROL DE EJECUCIÓN
-	$('#control_ejecucion').uploadify({
+	$('#upload_control_ejecucion').uploadify({
 		'uploader' : server + 'swf/uploadify.swf',
 		'script' : server + 'uploadify.php',
 		'folder' : server + 'app/webroot' + path,
@@ -49,14 +51,23 @@ $(document).ready(function() {
 		'auto' : true,
 		'cancelImg' : server + 'img/cancel.png',
 		'onComplete' : function(a, b, c, d) {
-			var path = $('#control_ejecucion').attr('path');
+			var path = "/files";
 			var file = d.split("/");
 			var name = path + "/" + file[(file.length - 1)];
 			//var name=path+"/"+c.name;
 			$("#ProyectoControlEjecucion").val(name);
-			$("#ProyectoControlEjecucion1").val(name);
-			$(".uploaded").html("Se ha subido con exito la cotización");
-
+			$.post(server + $('#upload_control_ejecucion').attr('controller') + "/" + $('#upload_control_ejecucion').attr('action'), {
+				"id" : $('#upload_control_ejecucion').attr('model_id'),
+				"path" : name
+			}, function(data) {
+				if (data != "NO") {
+					$(".uploaded").html(data);
+				}
+				$('#ControlViewRow').remove();
+				$('#ServiceDataTBody').append(
+					'<tr id="ControlViewRow"><td>Control De Ejecución</td><td id="ControlView"><a href="/admin/proyectos/verControlEjecucion/' + $('#upload_control_ejecucion').attr('model_id') + '"><img height="25" alt="Ver Cronograma" title="Ver Control De Ejecución" src="/img/Calendario.png"></a></td></tr>'
+				);
+			});
 		}
 	});
 	

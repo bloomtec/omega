@@ -145,7 +145,7 @@ class EquiposController extends AppController {
 		$this -> set(compact('empresas'));
 	}
 
-	public function delete($id = null) {
+	/*public function delete($id = null) {
 		if (!$id) {
 			$this -> Session -> setFlash(__('Equipo no válido'), 'crud/error');
 			$this -> redirect(array('action' => 'index'));
@@ -156,7 +156,7 @@ class EquiposController extends AppController {
 		}
 		$this -> Session -> setFlash(__('No se eliminó el equipo'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
-	}
+	}*/
 
 	public function admin_index() {
 		//$this -> Equipo -> recursive = 0;
@@ -380,7 +380,7 @@ class EquiposController extends AppController {
 		$this -> set("categoriasEquipos", $categoriasEquipos);
 	}
 
-	public function admin_delete($id = null) {
+	/*public function admin_delete($id = null) {
 		if (!$id) {
 			$this -> Session -> setFlash(__('Equipo no válido'), 'crud/error');
 			$this -> redirect(array('action' => 'index'));
@@ -391,6 +391,38 @@ class EquiposController extends AppController {
 		}
 		$this -> Session -> setFlash(__('No se eliminó el equipo'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
+	}*/
+	
+	public function admin_enable($id, $contrato_id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Equipo -> id = $id;
+		if (!$this -> Equipo -> exists()) {
+			throw new NotFoundException(__('Equipo no válido'));
+		}
+		if ($this -> Equipo -> saveField('activo', 1)) {
+			$this -> Session -> setFlash(__('Se activó el equipo'), 'crud/success');
+			$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
+		}
+		$this -> Session -> setFlash(__('No se activó el equipo'), 'crud/error');
+		$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
+	}
+	
+	public function admin_disable($id, $contrato_id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Equipo -> id = $id;
+		if (!$this -> Equipo -> exists()) {
+			throw new NotFoundException(__('Equipo no válido'));
+		}
+		if ($this -> Equipo -> saveField('activo', 0)) {
+			$this -> Session -> setFlash(__('Se desactivó el equipo'), 'crud/success');
+			$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
+		}
+		$this -> Session -> setFlash(__('No se desactivó el equipo'), 'crud/error');
+		$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
 	}
 
 	public function admin_subirFicha() {

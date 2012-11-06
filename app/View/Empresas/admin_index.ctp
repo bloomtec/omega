@@ -59,33 +59,39 @@
 		<td><?php echo $empresa['Empresa']['correo']; ?>&nbsp;</td>
 		<td id="TDServiciosEmpresa" class="actions">
 			<?php
-				if(key_exists(1, $servicios)) {
-					echo $this -> Html -> link(__('Mantenimiento', true), array('action' => 'view', $empresa['Empresa']['id'], "mantenimientos"));
-				}
-			?>
-			<?php
-				if(key_exists(2, $servicios)) {
-					echo $this->Html->link(__('Proyectos', true), array('action' => 'view', $empresa['Empresa']['id'],"proyectos"));
-					if($solicitudes) {
-						 echo $this -> Html -> link("Solicitudes",array("controller"=>"empresas","action"=>"solicitudes",$empresa["Empresa"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox importante"));
+				if($empresa['Empresa']['activa']) {
+					if(key_exists(1, $servicios)) {
+						echo $this -> Html -> link(__('Mantenimiento', true), array('action' => 'view', $empresa['Empresa']['id'], "mantenimientos"));
 					}
-				}
-			?>
-			<?php
-				if(key_exists(3, $servicios)) {
-					echo $this -> Html -> link(__('Calidad De Aire', true), array('action' => 'view', $empresa['Empresa']['id'], "calidad"));
-				}
-			?>
-			<?php
-				if(key_exists(4, $servicios)) {
-					echo $this -> Html -> link(__('Ingeniería', true), array('action' => 'view', $empresa['Empresa']['id'], "ingenieria"));
+					if(key_exists(2, $servicios)) {
+						echo $this->Html->link(__('Proyectos', true), array('action' => 'view', $empresa['Empresa']['id'],"proyectos"));
+						if($solicitudes) {
+							 echo $this -> Html -> link("Solicitudes",array("controller"=>"empresas","action"=>"solicitudes",$empresa["Empresa"]["id"],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox importante"));
+						}
+					}
+					if(key_exists(3, $servicios)) {
+						echo $this -> Html -> link(__('Calidad De Aire', true), array('action' => 'view', $empresa['Empresa']['id'], "calidad"));
+					}
+					if(key_exists(4, $servicios)) {
+						echo $this -> Html -> link(__('Ingeniería', true), array('action' => 'view', $empresa['Empresa']['id'], "ingenieria"));
+					}
 				}
 			?>
 		</td>
 		<td class="actions">
-			<?php echo $this -> Html -> link(__('Añadir Usuario', true), array('action' => 'add_usuarios', $empresa['Empresa']['id'])); ?>
-			<?php echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $empresa['Empresa']['id'])); ?>
-			<?php echo $this -> Html -> link(__('Borrar', true), array('action' => 'delete', $empresa['Empresa']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $empresa['Empresa']['id'])); ?>
+			<?php
+				if($empresa['Empresa']['activa']) {
+					echo $this -> Html -> link(__('Añadir Usuario', true), array('action' => 'add_usuarios', $empresa['Empresa']['id']));
+					echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $empresa['Empresa']['id']));
+				}
+			?>
+			<?php
+				if($empresa['Empresa']['activa']) {
+					echo $this -> Form -> postLink(__('Desactivar'), array('action' => 'disable', $empresa['Empresa']['id']), null, __('¿Seguro desea desactivar la empresa %s?', $empresa['Empresa']['nombre']));
+				} else {
+					echo $this -> Form -> postLink(__('Activar'), array('action' => 'enable', $empresa['Empresa']['id']), null, __('¿Seguro desea activar la empresa %s?', $empresa['Empresa']['nombre']));
+				}
+			?>
 		</td>
 	</tr>
 	<?php endforeach; ?>

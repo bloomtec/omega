@@ -122,7 +122,14 @@
 					}
 				?>
 				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'equipos', 'action' => 'edit', $equipo['id'],$contrato['Contrato']['id'])); ?>
-				<?php echo $this->Html->link(__('Borrar', true), array('controller' => 'equipos', 'action' => 'delete', $equipo['id']), null, sprintf(__('¿Seguro desea borrar el equipo con código %s?'), $equipo['codigo'])); ?>
+				<?php //echo $this->Html->link(__('Borrar', true), array('controller' => 'equipos', 'action' => 'delete', $equipo['id']), null, sprintf(__('¿Seguro desea borrar el equipo con código %s?'), $equipo['codigo'])); ?>
+				<?php
+					if($equipo['activo']) {
+						echo $this -> Form -> postLink(__('Desactivar'), array('controller' => 'equipos', 'action' => 'disable', $equipo['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea desactivar el equipo %s?', $equipo['codigo']));
+					} else {
+						echo $this -> Form -> postLink(__('Activar'), array('controller' => 'equipos', 'action' => 'enable', $equipo['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea activar el equipo %s?', $equipo['codigo']));
+					}
+				?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -136,12 +143,12 @@
 	</div>
 </div>
 <div style="display:none">
-	<div id="usuario" usuarioId="<?php echo $this -> Session-> read("Auth.Usuario.id"); ?>"></div>		
+	<div id="usuario" usuarioId="<?php echo $this -> Session-> read("Auth.User.id"); ?>"></div>		
 </div>
 <script>
 var server="/";
 $.each($(".equipo"), function(i, val){
-	$.post(server+"equipos/AJAX_verificarVisitas",{"equipoId":$(val).attr("equipoId"),"usuarioId":"<?php echo $this -> Session->read('Auth.Usuario.id');?>"},function(data){
+	$.post(server+"equipos/AJAX_verificarVisitas",{"equipoId":$(val).attr("equipoId"),"usuarioId":"<?php echo $this -> Session->read('Auth.User.id');?>"},function(data){
 		if(parseInt(data)>0){
 			$(val).before("<img src='"+server+"img/alerta.gif' >");
 		}else{

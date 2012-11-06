@@ -1,6 +1,5 @@
-<?php //debug($servicios); ?>
 <div class="clientes view">
-<h2><span style="color:black;"><?php echo __('Cliente: ');?> </span><?php echo $empresa['Empresa']['nombre']; ?></h2>
+<h2><span style="color:black;"><?php echo __('Empresa: ');?> </span><?php echo $empresa['Empresa']['nombre']; ?></h2>
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php echo __('Identificación'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
@@ -31,65 +30,98 @@
 	</ul>
 </div>
 <div class="related">
-		<?php
-			if(
-				isset($servicios[1])
-				&& isset($this -> params['pass'][1])
-				&& $this -> params['pass'][1] == 'mantenimientos'
-			): //if($type=="mantenimientos"): //***************MANTENIMIENTOS?>
-
-			<?php echo $this -> element('panel_mantenimiento'); ?>
-<?php endif;?>
 <?php
+	// MANTENIMIENTOS
+	if(
+		isset($servicios[1])
+		&& isset($this -> params['pass'][1])
+		&& $this -> params['pass'][1] == 'mantenimientos'
+	) {
+		$serviciosPrestados = $empresa['Proyecto'];
+		foreach ($serviciosPrestados as $key => $servicioPrestado) {
+			if($servicioPrestado['servicio_id'] != 1) {
+				unset($serviciosPrestados[$key]);
+			}
+		}
+		echo $this -> element('empresas/mantenimientos');
+	}
+	// PROYECTOS
 	if(
 		isset($servicios[2])
 		&& isset($this -> params['pass'][1])
 		&& $this -> params['pass'][1] == 'proyectos'
-	): //if($type=="proyectos"):?>
-
-<?php 
-	echo $this -> element('panel_proyecto');
-	endif;?>
+	) {
+		$serviciosPrestados = $empresa['Proyecto'];
+		foreach ($serviciosPrestados as $key => $servicioPrestado) {
+			if($servicioPrestado['servicio_id'] != 2) {
+				unset($serviciosPrestados[$key]);
+			}
+		}
+		echo $this -> element('empresas/proyectos', array('serviciosPrestados' => $serviciosPrestados));
+	}
+	// CALIDAD DE AIRE
+	if(
+		isset($servicios[3])
+		&& isset($this -> params['pass'][1])
+		&& $this -> params['pass'][1] == 'calidad'
+	) {
+		$serviciosPrestados = $empresa['Proyecto'];
+		foreach ($serviciosPrestados as $key => $servicioPrestado) {
+			if($servicioPrestado['servicio_id'] != 3) {
+				unset($serviciosPrestados[$key]);
+			}
+		}
+		echo $this -> element('empresas/calidad', array('serviciosPrestados' => $serviciosPrestados));
+	}
+	// INGENIERÍA
+	if(
+		isset($servicios[4])
+		&& isset($this -> params['pass'][1])
+		&& $this -> params['pass'][1] == 'ingenieria'
+	) {
+		$serviciosPrestados = $empresa['Proyecto'];
+		foreach ($serviciosPrestados as $key => $servicioPrestado) {
+			if($servicioPrestado['servicio_id'] != 4) {
+				unset($serviciosPrestados[$key]);
+			}
+		}
+		echo $this -> element('empresas/ingenieria', array('serviciosPrestados' => $serviciosPrestados));
+	}
+?>
 </div>
 <div style="display:none">
-	<div id="usuario" usuarioId="<?php echo $this -> Session->read("Auth.Usuario.id");?>"></div>
+	<div id="usuario" usuarioId="<?php echo $this -> Session->read("Auth.User.id");?>"></div>
 </div>
 <script>
-
-
-var server="/";
-
-$(document).ready(function(){
-	//$(".postventa").hide();
-	
-	$(".post").toggle(
-		function(){
-			$(".postventa").show();
-		},
-		function(){
-			$(".postventa").hide();
-		}	
-	);
-	$("#estadoProyectoC").change(function(){
-			var select=($("#estadoProyectoC option:selected").val());
-			$.post(server+"proyectos/AJAX_cambiarEstado",{"id":$(this).attr("modelId"),"estado_proyecto_id":select},function(data){
+	var server="/";
+	$(document).ready(function(){
+		//$(".postventa").hide();		
+		$(".post").toggle(
+			function(){
+				$(".postventa").show();
+			},
+			function(){
+				$(".postventa").hide();
+			}	
+		);
+		$(".cambioEstadoProyectoC").change(function() {
+			$.post(server+"proyectos/AJAX_cambiarEstado",{"id":$(this).attr("modelId"),"estado_proyecto_id":$(this).val()},function(data){
 				if(data=="NO"){
 					alert("No se pudo Actualizar el estado por favor intentelo de nuevo");
-					}else{
-						alert(data);
-					}
-				});
+				}else{
+					alert(data);
+				}
+			});
 		});	
-});
-$.each($(".equipo"), function(i, val){
-	$.post(server+"equipos/AJAX_verificarVisitas",{"equipoId":$(val).attr("equipoId"),"usuarioId":"<?php echo $this -> Session->read('Auth.Usuario.id');?>"},function(data){
-		if(parseInt(data)>0){
-			$(val).before("<img src='"+server+"img/alerta.gif' >");
-		}else{
-			$(val).before("<img src='"+server+"img/ninguno.gif' >");
-		}
-		//$(val).before(data);
-	});	
-});
-
+	});
+	$.each($(".equipo"), function(i, val){
+		$.post(server+"equipos/AJAX_verificarVisitas",{"equipoId":$(val).attr("equipoId"),"usuarioId":"<?php echo $this -> Session->read('Auth.User.id');?>"},function(data){
+			if(parseInt(data)>0){
+				$(val).before("<img src='"+server+"img/alerta.gif' >");
+			}else{
+				$(val).before("<img src='"+server+"img/ninguno.gif' >");
+			}
+			//$(val).before(data);
+		});	
+	});
 </script>

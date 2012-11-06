@@ -182,7 +182,7 @@
 	</div>
 <?php } ?>
 <div style="display:none">
-	<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.Usuario.id");?>"></div>
+	<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>
 	<div id="equipo" equipoId="<?php echo $equipo["Equipo"]["id"];?>"></div>
 </div>
 <script> //SCRIPT para Registrar la ultima visita al equipo del usuario

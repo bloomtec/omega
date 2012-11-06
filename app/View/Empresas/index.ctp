@@ -282,7 +282,7 @@
 <?php endif; ?>
 </div>
 	<div style="display:none">
-		<div id="usuario" usuarioId="<?php echo $this -> Session -> read("Auth.Usuario.id"); ?>"></div>
+		<div id="usuario" usuarioId="<?php echo $this -> Session -> read("Auth.User.id"); ?>"></div>
 	</div>
 <?php } else { ?>
 <h3>Por favor cambie su contraseña</h3>

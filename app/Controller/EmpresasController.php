@@ -268,6 +268,7 @@ class EmpresasController extends AppController {
 		$this -> Empresa -> contain('Contrato', 'Solicitud');
 		$paginate = array(
 			'order' => array(
+				'Empresa.activa' => 'DESC',
 				'Empresa.tiene_publicacion_empresa' => 'DESC',
 				'Empresa.tiene_publicacion_omega' => 'DESC',
 				'Empresa.tiene_alerta' => 'DESC'
@@ -387,7 +388,7 @@ class EmpresasController extends AppController {
 	 * @param string $id
 	 * @return void
 	 */
-	public function admin_delete($id = null) {
+	/*public function admin_delete($id = null) {
 		if (!$this -> request -> is('post')) {
 			throw new MethodNotAllowedException();
 		}
@@ -400,6 +401,38 @@ class EmpresasController extends AppController {
 			$this -> redirect(array('action' => 'index'));
 		}
 		$this -> Session -> setFlash(__('Empresa was not deleted'));
+		$this -> redirect(array('action' => 'index'));
+	}*/
+	
+	public function admin_enable($id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Empresa -> id = $id;
+		if (!$this -> Empresa -> exists()) {
+			throw new NotFoundException(__('Empresa no válida'));
+		}
+		if ($this -> Empresa -> saveField('activa', 1)) {
+			$this -> Session -> setFlash(__('Se activó la empresa'), 'crud/success');
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Session -> setFlash(__('No se activó la empresa'), 'crud/error');
+		$this -> redirect(array('action' => 'index'));
+	}
+	
+	public function admin_disable($id) {
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		$this -> Empresa -> id = $id;
+		if (!$this -> Empresa -> exists()) {
+			throw new NotFoundException(__('Empresa no válida'));
+		}
+		if ($this -> Empresa -> saveField('activa', 0)) {
+			$this -> Session -> setFlash(__('Se desactivó la empresa'), 'crud/success');
+			$this -> redirect(array('action' => 'index'));
+		}
+		$this -> Session -> setFlash(__('No se desactivó la empresa'), 'crud/error');
 		$this -> redirect(array('action' => 'index'));
 	}
 

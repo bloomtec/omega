@@ -1,5 +1,5 @@
 <div class="clientes view">
-<h2><?php  __('Cliente');?></h2>
+<h2><?php  __('Empresa');?></h2>
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Id'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
@@ -34,7 +34,7 @@
 	</dl>
 </div>
 <div class="actions">
-	<h3><?php __('Actions'); ?></h3>
+	<h3><?php __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(sprintf(__('Edit %s', true), __('Cliente', true)), array('action' => 'edit', $cliente['Cliente']['id'])); ?> </li>
 		<li><?php echo $this->Html->link(sprintf(__('Delete %s', true), __('Cliente', true)), array('action' => 'delete', $cliente['Cliente']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $cliente['Cliente']['id'])); ?> </li>

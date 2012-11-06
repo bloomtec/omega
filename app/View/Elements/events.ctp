@@ -1,4 +1,4 @@
-<div class="historial contenedorEventos" nombre="<?php echo $this -> Session -> read("Auth.Usuario.nombre"); ?>">
+<div class="historial contenedorEventos" nombre="<?php echo $this -> Session -> read("Auth.User.nombre"); ?>">
 <?php foreach($eventos as $evento): ?>
 	<div class="observacion" id="evento">
 		<div class="encabezado"> <div class="fecha"> <?php echo $evento["Evento"]["created"]; ?></div></div>
