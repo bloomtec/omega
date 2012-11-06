@@ -275,8 +275,9 @@ class EmpresasController extends AppController {
 			)
 		);
 		if($this -> request -> is('post')) {
-			$paginate['conditions'] = array(
-				'nombre LIKE' => '%' . $this -> request -> data['Empresa']['nombre'] . '%'
+			$paginate['conditions']['or'] = array(
+				'nombre LIKE' => '%' . $this -> request -> data['Empresa']['nombre'] . '%',
+				'identificacion LIKE' => '%' . $this -> request -> data['Empresa']['nombre'] . '%'
 			);
 		}
 		$this -> paginate = $paginate;
