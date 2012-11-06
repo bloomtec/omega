@@ -12,7 +12,7 @@
 	<table>
 		<?php echo $this -> Form -> create('Empresa'); ?>
 		<tr>
-			<th>Nombre / Razón Social</th>
+			<th>Nombre / Razón Social o Identificación</th>
 			<th></th>
 		</tr>
 		<tr>
