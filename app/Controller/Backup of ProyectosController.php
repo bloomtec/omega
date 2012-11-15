@@ -519,7 +519,7 @@ class ProyectosController extends AppController {
 		//$this->Proyecto->crearAlarmaProyecto($id,"debe ingresar el centro de costo",false);
 		$proyecto = $this -> Proyecto -> read('nombre', $id);
 		$mail_body =
-			"Usted ha apropado la cotizaciòn del proyecto: "
+			"Usted ha aprobado la cotizaciòn del proyecto: "
 			. $proyecto["Proyecto"]["nombre"]
 			. "\n" . $this -> request -> data["Proyecto"]["comentarios"]
 			. "\n" . "LA APROBACION DE PROYECTO QUE USTED ACABA DE REALIZAR, 

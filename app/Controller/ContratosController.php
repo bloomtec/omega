@@ -344,7 +344,7 @@ class ContratosController extends AppController {
 		
 		$contrato = $this -> Contrato -> read('nombre', $id);
 		$mail_body =
-			"Se ha apropado la cotización del contrato de mantenimiento: "
+			"Se ha aprobado la cotización del contrato de mantenimiento: "
 			. $contrato["Contrato"]["nombre"]
 			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
 		
