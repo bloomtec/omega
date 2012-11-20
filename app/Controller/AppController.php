@@ -61,7 +61,13 @@ class AppController extends Controller {
 	}
 	
 	public function isAuthorized() {
-		return true;
+		if(!isset($this -> params['prefix'])) {
+			return true;
+		} elseif($this -> params['prefix'] == 'admin' && $this -> Auth -> user('rol_id') != 3) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected function layoutConfig() {
