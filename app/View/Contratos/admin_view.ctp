@@ -30,7 +30,7 @@
 		<?php endif;?>
 	</dl>
 </div>
-<div class="actions">
+<div class="actions" style="display: inherit;">
 	<h3><?php echo __('Acciones'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('Volver'), array("controller"=>"empresas",'action' => 'view',$contrato['Contrato']['empresa_id'],"mantenimientos")); ?> </li>
@@ -73,6 +73,11 @@
 		</ul>
 	</div>
 </div>
+
+
+
+
+
 <div class="related">
 	<h3><?php echo __('Equipos Relacionados');?></h3>
 	<?php if (!empty($contrato['Equipo'])):?>
@@ -86,57 +91,66 @@
 		</tr>
 	</table>
 	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Alertas'); ?></th>
-		<th><?php echo __('Código Equipo'); ?></th>
-		<th><?php echo __('Descripción'); ?></th>
-		<th><?php echo __('Categoría'); ?></th>
-		<th><?php echo __('Ficha Tecnica'); ?></th>
-		<th class="actions"><?php __('Acciones');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($contrato['Equipo'] as $equipo):
-			$alarmaPublicacion=false;
-			if($equipo["ContratosEquipo"]["tiene_publicacion_empresa"]) $alarmaPublicacion=true;
-			$class = null;
-			if ($i++ % 2 == 0) {
-				$class = ' class="altrow"';
-			}
+		<tr>
+			<th><?php echo __('Alertas'); ?></th>
+			<th><?php echo $this -> paginator -> sort('codigo', 'Código'); ?></th>
+			<th><?php echo $this -> paginator -> sort('descripcion', 'Descripción'); ?></th>
+			<th><?php echo $this -> paginator -> sort('categorias_equipo_id', 'Categoría'); ?></th>
+			<th><?php echo __('Ficha Tecnica'); ?></th>
+			<th class="actions"><?php echo __('Acciones'); ?></th>
+		</tr>
+		<?php
+			$i = 0;
+			foreach ($equipos as $key => $equipo):
+				$alarmaPublicacion=false;
+				if($equipo['Contrato'][0]["tiene_publicacion_empresa"]) $alarmaPublicacion=true;
+				$class = null;
+				if ($i++ % 2 == 0) {
+					$class = ' class="altrow"';
+				}
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">
-				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
+				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
-			<td><?php echo $equipo['codigo'];?></td>
-			<td><?php echo $equipo['descripcion'];?></td>
+			<td><?php echo $equipo['Equipo']['codigo'];?></td>
+			<td><?php echo $equipo['Equipo']['descripcion'];?></td>
 			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
-			<td>
-				<?php if($equipo['ficha_tecnica']&&$equipo['ficha_tecnica']!="") echo $this -> Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['id']),array("target"=>"_blank"));?>
-			</td>
-	
+			<td><?php if($equipo['Equipo']['ficha_tecnica']&&$equipo['Equipo']['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['Equipo']['id']), array('target'=>'_BLANK'));?></td>
 			<td class="actions">
 				<?php 
 					if ($contrato['Tipo']['id']==1 ) {
-						echo $this->Html->link(__('Ver', true), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"mantenimiento"));
+						echo $this->Html->link(__('Ver', true), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"mantenimiento"));
 					} else {
-						echo $this->Html->link(__('Ver', true), array('controller' => 'equipos', 'action' => 'view', $equipo['id'],$contrato['Contrato']['id'],"reparacion"));
+						echo $this->Html->link(__('Ver', true), array('controller' => 'equipos', 'action' => 'view', $equipo['Equipo']['id'],$contrato['Contrato']['id'],"reparacion"));
 					}
 				?>
-				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'equipos', 'action' => 'edit', $equipo['id'],$contrato['Contrato']['id'])); ?>
+				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'equipos', 'action' => 'edit', $equipo['Equipo']['id'],$contrato['Contrato']['id'])); ?>
 				<?php //echo $this->Html->link(__('Borrar', true), array('controller' => 'equipos', 'action' => 'delete', $equipo['id']), null, sprintf(__('¿Seguro desea borrar el equipo con código %s?'), $equipo['codigo'])); ?>
 				<?php
-					if($equipo['activo']) {
-						echo $this -> Form -> postLink(__('Desactivar'), array('controller' => 'equipos', 'action' => 'disable', $equipo['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea desactivar el equipo %s?', $equipo['codigo']));
+					if($equipo['Equipo']['activo']) {
+						echo $this -> Form -> postLink(__('Desactivar'), array('controller' => 'equipos', 'action' => 'disable', $equipo['Equipo']['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea desactivar el equipo %s?', $equipo['Equipo']['codigo']));
 					} else {
-						echo $this -> Form -> postLink(__('Activar'), array('controller' => 'equipos', 'action' => 'enable', $equipo['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea activar el equipo %s?', $equipo['codigo']));
+						echo $this -> Form -> postLink(__('Activar'), array('controller' => 'equipos', 'action' => 'enable', $equipo['Equipo']['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea activar el equipo %s?', $equipo['Equipo']['codigo']));
 					}
 				?>
 			</td>
 		</tr>
-	<?php endforeach; ?>
+		<?php endforeach; ?>
 	</table>
 	<?php endif; ?>
+	<p>
+		<?php echo $this -> Paginator -> counter(array('format' => __('Página {:page} de {:pages}. Mostrando {:current} registros de un total de {:count}. Inicia con el  {:start} y termina con el {:end}'))); ?>
+	</p>
+	<div class="paging">
+		<?php
+		echo $this -> Paginator -> first('<< ', array(), null, array('class' => 'prev disabled'));
+		echo $this -> Paginator -> prev('< ' . __('anterior'), array(), null, array('class' => 'prev disabled'));
+		echo $this -> Paginator -> numbers(array('separator' => ''));
+		echo $this -> Paginator -> next(__('siguiente') . ' >', array(), null, array('class' => 'next disabled'));
+		echo $this -> Paginator -> last(' >>', array(), null, array('class' => 'next disabled'));
+		?>
+	</div>
 	<div class="actions">
 		<ul>
 			<li><?php echo $this->Html->link(__('Nuevo Equipo'), array('controller' => 'equipos', 'action' => 'add',$contrato["Contrato"]["id"]));?> </li>

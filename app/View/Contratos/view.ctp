@@ -87,21 +87,21 @@
 				 ?>				
 			</td>
 		</tr>
-	<?php endforeach; ?>
+		<?php endforeach; ?>
 	</table>
-<?php endif; ?>
-<p>
-	<?php echo $this -> Paginator -> counter(array('format' => __('Página {:page} de {:pages}. Mostrando {:current} registros de un total de {:count}. Inicia con el  {:start} y termina con el {:end}'))); ?>
-</p>
-<div class="paging">
-	<?php
-	echo $this -> Paginator -> first('<< ', array(), null, array('class' => 'prev disabled'));
-	echo $this -> Paginator -> prev('< ' . __('anterior'), array(), null, array('class' => 'prev disabled'));
-	echo $this -> Paginator -> numbers(array('separator' => ''));
-	echo $this -> Paginator -> next(__('siguiente') . ' >', array(), null, array('class' => 'next disabled'));
-	echo $this -> Paginator -> last(' >>', array(), null, array('class' => 'next disabled'));
-	?>
-</div>
+	<?php endif; ?>
+	<p>
+		<?php echo $this -> Paginator -> counter(array('format' => __('Página {:page} de {:pages}. Mostrando {:current} registros de un total de {:count}. Inicia con el  {:start} y termina con el {:end}'))); ?>
+	</p>
+	<div class="paging">
+		<?php
+		echo $this -> Paginator -> first('<< ', array(), null, array('class' => 'prev disabled'));
+		echo $this -> Paginator -> prev('< ' . __('anterior'), array(), null, array('class' => 'prev disabled'));
+		echo $this -> Paginator -> numbers(array('separator' => ''));
+		echo $this -> Paginator -> next(__('siguiente') . ' >', array(), null, array('class' => 'next disabled'));
+		echo $this -> Paginator -> last(' >>', array(), null, array('class' => 'next disabled'));
+		?>
+	</div>
 </div>
 <div style="display:none">
 		<div id="usuario" usuarioId="<?php echo $this->Session->read("Auth.User.id");?>"></div>		
