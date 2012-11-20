@@ -195,7 +195,7 @@ class ContratosController extends AppController {
 						)
 					)
 				);
-				$conditions['equipo_id'] = $equipos;
+				$conditions['Equipo.id'] = $equipos;
 			}
 			if(isset($this -> request -> data['Contrato']['categorias_equipo_id']) && !empty($this -> request -> data['Contrato']['categorias_equipo_id'])) {
 				$equipos = $this -> Contrato -> Equipo -> find(
@@ -213,7 +213,7 @@ class ContratosController extends AppController {
 					$equipos_tmp = $conditions['equipo_id'];
 					$equipos = array_merge($equipos, $equipos_tmp);
 				}
-				$conditions['equipo_id'] = $equipos;
+				$conditions['Equipo.id'] = $equipos;
 			}
 		}
 		$this -> Contrato -> bindModel(
