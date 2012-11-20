@@ -61,16 +61,7 @@ class AppController extends Controller {
 	}
 	
 	public function isAuthorized() {
-		// Contexto empresas (usuarios empresas[3])
-		if (!isset($this -> params['prefix']) && $this -> Auth -> user('rol_id') == 2) {
-			return true;
-		}
-		// Contexto omega (Super Administrador[1] y Usuario OMEGA[2])
-		elseif ($this -> params['prefix'] == 'admin' && $this -> Auth -> user('rol_id') != 3) {
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 
 	protected function layoutConfig() {
