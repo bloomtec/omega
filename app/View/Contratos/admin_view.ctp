@@ -89,6 +89,7 @@
 	<tr>
 		<th><?php echo __('Alertas'); ?></th>
 		<th><?php echo __('Código Equipo'); ?></th>
+		<th><?php echo __('Descripción'); ?></th>
 		<th><?php echo __('Categoría'); ?></th>
 		<th><?php echo __('Ficha Tecnica'); ?></th>
 		<th class="actions"><?php __('Acciones');?></th>
@@ -108,6 +109,7 @@
 				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>false,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php echo $equipo['codigo'];?></td>
+			<td><?php echo $equipo['descripcion'];?></td>
 			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
 			<td>
 				<?php if($equipo['ficha_tecnica']&&$equipo['ficha_tecnica']!="") echo $this -> Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['id']),array("target"=>"_blank"));?>
