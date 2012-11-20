@@ -286,7 +286,7 @@ class ContratosController extends AppController {
 				$this -> Contrato -> ContratosEquipo -> set("fase_id", 3);
 				$this -> Contrato -> ContratosEquipo -> save();
 				$this -> Contrato -> ContratosEquipo -> id = 0;
-				$this -> enviarCorreo($contratoEquipo["ContratosEquipo"]["contrato_id"], $mail_body);
+				//$this -> enviarCorreo($contratoEquipo["ContratosEquipo"]["contrato_id"], $mail_body);
 
 				$this -> Contrato -> crearAlarma($contratoEquipo["ContratosEquipo"]["contrato_id"], "contrato finalizado", true);
 				$this -> Contrato -> eliminarAlarma($contratoEquipo["ContratosEquipo"]["contrato_id"], "contrato en desarrollo");
@@ -348,7 +348,7 @@ class ContratosController extends AppController {
 			. $contrato["Contrato"]["nombre"]
 			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
 		
-		$this -> enviarCorreo($id, $mail_body);
+		//$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
 
@@ -381,7 +381,7 @@ class ContratosController extends AppController {
 			"Se ha anulado la cotizaciòn del contrato de mantenimiento: "
 			. $contrato["Contrato"]["nombre"]
 			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
-		$this -> enviarCorreo($id, $mail_body);
+		//$this -> enviarCorreo($id, $mail_body);
 		$this -> Session -> setFlash(__('Se ha anulado la cotizazción'), 'crud/success');
 	}
 
@@ -412,7 +412,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$mail_body = "Se ha reactivado el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
-		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		//$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
 		$this -> Session -> setFlash(__('Se ha reactivado el contrato'), 'crud/success');
 	}
 
@@ -443,7 +443,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> eliminarAlarma($contrato["Contrato"]["id"], "ebe subir la cotización");
 		$this -> Contrato -> crearAlarma($id, "contrato Anulado", true);
 		$mail_body = "Se ha suspendido el contrato de mantenimiento: " . $contrato["Contrato"]["nombre"];
-		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		//$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
 		$this -> Session -> setFlash(__('Se ha suspendido la cotización'), 'crud/success');
 	}
 
@@ -494,7 +494,7 @@ class ContratosController extends AppController {
 			. $contrato["Contrato"]["nombre"]
 			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
 		
-		$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
+		//$this -> enviarCorreo($contrato["Contrato"]["id"], $mail_body);
 		$this -> Session -> setFlash(__('Esperamos hacer parte de su equipo de trabajo en futuros proyectos.'), 'crud/success');
 
 	}
@@ -511,7 +511,7 @@ class ContratosController extends AppController {
 			$this -> Contrato -> set("estado_id", 4);
 			$this -> Contrato -> save();
 			$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
-			$this -> enviarCorreo($contratoId, $mail_body);
+			//$this -> enviarCorreo($contratoId, $mail_body);
 
 			$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
 			$this -> Contrato -> eliminarAlarma($contratoId, "puede iniciar el desarrollo del contrato");
@@ -533,7 +533,7 @@ class ContratosController extends AppController {
 
 			if ($this -> Contrato -> save()) {
 				$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
-				$this -> enviarCorreo($contratoId, $mail_body);
+				//$this -> enviarCorreo($contratoId, $mail_body);
 				$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
 				$this -> Contrato -> eliminarAlarma($contratoId, "contrato en perfeccionamiento");
 				$this -> Contrato -> eliminarAlarma($contratoId, "debe ingresar el centro de costo");
@@ -559,7 +559,7 @@ class ContratosController extends AppController {
 
 			if ($this -> Contrato -> save()) {
 				$mail_body = "El contrato: " . $contrato["Contrato"]["nombre"] . " ha cambiado de estado a EN DESARROLLO";
-				$this -> enviarCorreo($contratoId, $mail_body);
+				//$this -> enviarCorreo($contratoId, $mail_body);
 				$this -> Contrato -> crearAlarma($contratoId, "contrato en desarrollo", true);
 				$this -> Contrato -> eliminarAlarma($contratoId, "contrato en perfeccionamiento");
 				$this -> Contrato -> eliminarAlarma($contratoId, "debe ingresar el centro de costo");
