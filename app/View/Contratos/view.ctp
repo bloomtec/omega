@@ -52,6 +52,7 @@
 		<tr>
 			<th><?php echo __('Alertas'); ?></th>
 			<th><?php echo $this -> paginator -> sort('codigo', 'Código'); ?></th>
+			<th><?php echo $this -> paginator -> sort('descripcion', 'Descripción'); ?></th>
 			<th><?php echo $this -> paginator -> sort('categorias_equipo_id', 'Categoría'); ?></th>
 			<th><?php echo __('Ficha Tecnica'); ?></th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
@@ -73,6 +74,7 @@
 				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
 			</td>
 			<td><?php echo $equipo['Equipo']['codigo'];?></td>
+			<td><?php echo $equipo['Equipo']['descripcion'];?></td>
 			<td><?php if(isset($equipo['CategoriasEquipo']['nombre'])) echo $equipo['CategoriasEquipo']['nombre'];?></td>
 			<td><?php if($equipo['Equipo']['ficha_tecnica']&&$equipo['Equipo']['ficha_tecnica']!="") echo $this->Html->link("Ver Ficha",array("controller"=>"equipos","action"=>"verFicha",$equipo['Equipo']['id']), array('target'=>'_BLANK'));?></td>
 			<td class="actions">
