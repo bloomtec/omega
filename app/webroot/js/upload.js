@@ -88,7 +88,7 @@ $(document).ready(function() {
 			$("#ProyectoCotizacion").val(name);
 			$("#ProyectoCotizacion1").val(name);
 			$(".uploaded").html("Se ha subido con exito la cotización");
-
+			$(".uploadedCotizacion").html("Se ha subido con exito la cotización");
 		}
 	});
 	
@@ -109,7 +109,7 @@ $(document).ready(function() {
 			$("#ProyectoCronograma").val(name);
 			$("#ProyectoCronograma").val(name);
 			$(".uploaded").html("Se ha subido con exito el cronograma");
-
+			$(".uploadedCronograma").html("Se ha subido con exito el cronograma");
 		}
 	});
 

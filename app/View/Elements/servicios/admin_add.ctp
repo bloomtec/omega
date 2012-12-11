@@ -28,7 +28,7 @@
 		?>
 		<label style="float:left; margin-right:10px; margin-top:5px;">Cotización: </label>
 		<div id="cotizacion" path='/files'></div>
-		<div class="uploaded"></div>
+		<div class="uploadedCotizacion"></div>
 		<label style="float:left; margin-right:10px; margin-top:5px;">Cronograma: </label>
 		<div id="procrono" path='/files' ></div>
 		<div class="uploadedCronograma"></div>
