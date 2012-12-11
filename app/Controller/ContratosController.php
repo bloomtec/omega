@@ -560,6 +560,9 @@ class ContratosController extends AppController {
 			$contratoId = $this -> request -> data["Contrato"]["id"];
 			//$this -> Contrato -> recursive = -1;
 			$contrato = $this -> Contrato -> read(null, $contratoId);
+			if(isset($this -> request -> data['Contrato']['nombre'])) {
+				$this -> Contrato -> set("nombre", $this -> request -> data["Contrato"]["nombre"]);	
+			}
 			$this -> Contrato -> set("centro_de_costo", $this -> request -> data["Contrato"]["centro_de_costo"]);
 			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> request -> data["Contrato"]["fecha_inicio_desarrollo"]);
 			$this -> Contrato -> set("estado_id", 4);
@@ -587,6 +590,9 @@ class ContratosController extends AppController {
 		if (!empty($this -> request -> data)) {
 			$contratoId = $this -> request -> data["Contrato"]["id"];
 			$contrato = $this -> Contrato -> read(null, $contratoId);
+			if(isset($this -> request -> data['Contrato']['nombre'])) {
+				$this -> Contrato -> set("nombre", $this -> request -> data["Contrato"]["nombre"]);	
+			}
 			$this -> Contrato -> set("centro_de_costo", $this -> request -> data["Contrato"]["centro_de_costo"]);
 			$this -> Contrato -> set("fecha_inicio_desarrollo", $this -> request -> data["Contrato"]["fecha_inicio_desarrollo"]);
 
