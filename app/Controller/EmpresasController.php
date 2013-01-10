@@ -268,10 +268,10 @@ class EmpresasController extends AppController {
 		$this -> Empresa -> contain('Contrato', 'Solicitud');
 		$paginate = array(
 			'order' => array(
+				'Empresa.tiene_alerta' => 'DESC',
 				'Empresa.activa' => 'DESC',
 				//'Empresa.tiene_publicacion_empresa' => 'DESC',
 				//'Empresa.tiene_publicacion_omega' => 'DESC',
-				'Empresa.tiene_alerta' => 'DESC'
 			)
 		);
 		if($this -> request -> is('post')) {
