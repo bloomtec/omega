@@ -269,9 +269,9 @@ class EmpresasController extends AppController {
 		$paginate = array(
 			'order' => array(
 				'Empresa.tiene_alerta' => 'DESC',
+				'Empresa.tiene_publicacion_empresa' => 'DESC',
+				'Empresa.tiene_publicacion_omega' => 'DESC',
 				'Empresa.activa' => 'DESC',
-				//'Empresa.tiene_publicacion_empresa' => 'DESC',
-				//'Empresa.tiene_publicacion_omega' => 'DESC',
 			)
 		);
 		if($this -> request -> is('post')) {
