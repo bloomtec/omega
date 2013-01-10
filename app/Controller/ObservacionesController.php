@@ -143,7 +143,7 @@ class ObservacionesController extends AppController {
 				$usuario = $this -> Observacion -> Usuario -> read(null, $comentario["Observacion"]["usuario_id"]);
 				$this -> loadModel('Contrato');
 				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
-				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], $comentario["Observacion"]["llave_foranea"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
 				
 				echo "OK";
 			} else {
@@ -196,7 +196,7 @@ class ObservacionesController extends AppController {
 				$usuario = $this -> Observacion -> Usuario -> read(null, $comentario["Observacion"]["usuario_id"]);
 				$this -> loadModel('Contrato');
 				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
-				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], $comentario["Observacion"]["llave_foranea"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
 				
 				echo "OK";
 			} else {
@@ -210,7 +210,7 @@ class ObservacionesController extends AppController {
 		exit(0);
 	}
 
-	function enviarCorreoObservacionesPublicas($observacionId, $contratoId, $mail_body) {
+	function enviarCorreoObservacionesPublicas($observacionId, $contratoId, $contratoEquipoId, $mail_body) {
 		$this -> loadModel('Contrato');
 		$this -> loadModel('Usuario');
 		$this -> Contrato -> contain('Correo', 'Empresa');
@@ -225,7 +225,7 @@ class ObservacionesController extends AppController {
 			'observacion_id' => $observacionId,
 			'usuario_id' => $observacion['Observacion']['usuario_id'],
 			'modelo' => $modelo,
-			'llave_foranea' => $contratoId,
+			'llave_foranea' => $contratoEquipoId,
 		);
 		$datos = json_encode($datos);
 		$extra_content =
