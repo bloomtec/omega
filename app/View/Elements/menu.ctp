@@ -42,7 +42,7 @@
 								</li>
 								<li>
 									<a href="/admin/configs/edit">
-									Backup Base De Datos
+									Backup BD
 									</a>
 								</li>
 							</ul>
