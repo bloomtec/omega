@@ -40,6 +40,11 @@
 										</li>
 									</ul>
 								</li>
+								<li>
+									<a href="/admin/configs/edit">
+									Backup Base De Datos
+									</a>
+								</li>
 							</ul>
 						</li>
 						<li>
