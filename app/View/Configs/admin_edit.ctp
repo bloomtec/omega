@@ -31,6 +31,7 @@
 	<form>
 		<fieldset>
 			<legend>Backups Realizados</legend>
+			<h4>Las copias de seguridad se muestran en orden de más reciente a más antiguo.</h4>
 			<table>
 				<thead>
 					<th><?php echo 'Archivo'; //$this -> paginator -> sort('Archivo.filename', 'Archivo'); ?></th>

@@ -6,8 +6,8 @@ App::uses('AppModel', 'Model');
  */
 class Config extends AppModel {
 
-	public function paginate($object = null, $scope = array(), $whitelist = array()) {
-		$files = $this -> backup_list();
+	public function paginate($conditions, $fields, $order, $limit, $page = 1, $recursive = null, $extra = array()) {
+		$files = $this -> backup_list($limit, $page);
 		return $files['Archivo'];
 	}
 
@@ -16,7 +16,7 @@ class Config extends AppModel {
 		return count($files['Archivo']);
 	}
 
-	private function backup_list() {
+	private function backup_list($limit = null, $page = null) {
 		$path = WWW_ROOT . 'files' . DS . 'db_backups';
 		$files = array('Archivo' => array());
 		if ($handle = opendir($path)) {
@@ -39,7 +39,27 @@ class Config extends AppModel {
 			}
 		}
 		sort($files['Archivo']);
-		return $files;
+		$files['Archivo'] = array_reverse($files['Archivo']);
+		if(!$limit && !$page) {
+			return $files;
+		} else {
+			$pages = array();
+			$total_files = count($files['Archivo']);
+			$total_pages = ceil($total_files / $limit);
+			$current_file = 0;
+			for ($i=1; $i <= $total_pages ; $i++) { 
+				$pages[$i]['Archivo'] = array();
+				for ($j=1; $j <= $limit; $j++) { 
+					$pages[$i]['Archivo'][$current_file] = $files['Archivo'][$current_file];
+					if($current_file == ($total_files - 1)) {
+						break;
+					} else {
+						$current_file++;
+					}
+				}
+			}
+			return $pages[$page];
+		}
 	}
 
 }
