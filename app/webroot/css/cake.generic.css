@@ -236,6 +236,12 @@ td#TDServiciosEmpresa a {
 	max-width: 106px;
 	text-align: center;
 }
+td#AccionesContratosMantenimiento a {
+	float: left;
+	max-height: 17px;
+	max-width: 140px;
+	text-align: center;
+}
 table td.actions a {
 	margin: 0px 6px;
 	padding: 2px 5px;
