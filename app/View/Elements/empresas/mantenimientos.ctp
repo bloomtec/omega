@@ -86,7 +86,7 @@
 			<td><?php  echo $contrato['nombre']; ?></td>
 			<td><?php echo $contrato['Tipo']["nombre"];?></td>
 			<td><?php echo $contrato['Estado']["nombre"];?></td>
-			<td id="AccionesContratosMantenimiento" class="actions" style="max-width:400px;">
+			<td id="AccionesContratosMantenimiento" class="actions" style="max-width:490px;">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
 				<?php echo $this->Html->link(__('Ver', true), array('controller' => 'contratos', 'action' => 'view', $contrato['id'])); ?>
 				<?php echo $this->Html->link(__('Modificar', true), array('controller' => 'contratos', 'action' => 'edit', $contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
