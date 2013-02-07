@@ -6,6 +6,8 @@ App::uses('AppController', 'Controller');
  * @property Contrato $Contrato
  */
 class ContratosController extends AppController {
+	
+	protected $exclusiveActions = array('admin_delete');
 
 	public function index() {
 		$this -> layout = "empresa";
@@ -293,7 +295,7 @@ class ContratosController extends AppController {
 		$this -> Contrato -> Alarma -> deleteAll(array("Alarma.contrato_id" => $contrato["Contrato"]["id"]));
 		 * 
 		 */
-		if ($this -> Contrato -> delete($id)) {
+		if ( $this -> Contrato -> delete($id) ) {
 			$this -> Session -> setFlash(__('Contrato borrado'), 'crud/success');
 			$contrato = $this -> Contrato -> read(null, $id);
 			//$this -> redirect(array('action' => 'view', "controller" => "empresas", $contrato["Contrato"]["empresa_id"], "mantenimientos"));
@@ -302,7 +304,7 @@ class ContratosController extends AppController {
 		}
 		$this -> redirect($this -> referer());
 		//$this->redirect(array("controller"=>"empresas",'action' => 'view',$contrato["Contrato"]["empresa_id"],"mantenimientos"));
-		//debug($contratosEquipo);
+		//debug($this -> action);
 	}
 
 	public function admin_finalizar($id = null) {

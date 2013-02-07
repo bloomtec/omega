@@ -35,6 +35,8 @@ class AppController extends Controller {
 	
 	public $components = array('Auth', 'Session');
 	
+	protected $exclusiveActions = array();
+	
 	public function beforeFilter() {
 		// Contener las relaciones
 		$Class = $this -> modelClass;
@@ -64,7 +66,11 @@ class AppController extends Controller {
 		if(!isset($this -> params['prefix'])) {
 			return true;
 		} elseif($this -> params['prefix'] == 'admin' && $this -> Auth -> user('rol_id') != 3) {
-			return true;
+			if(in_array($this -> action, $this -> exclusiveActions) && $this -> Auth -> user('rol_id') != 1) {
+				return false;
+			} else {
+				return true;
+			}
 		} else {
 			return false;
 		}

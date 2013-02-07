@@ -40,11 +40,13 @@
 										</li>
 									</ul>
 								</li>
+								<?php if($this -> Session -> read('Auth.User.rol_id') == 1) : ?>
 								<li>
 									<a href="/admin/configs/edit">
 									Backup BD
 									</a>
 								</li>
+								<?php endif; ?>
 							</ul>
 						</li>
 						<li>

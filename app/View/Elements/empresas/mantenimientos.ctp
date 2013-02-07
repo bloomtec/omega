@@ -46,7 +46,7 @@
 				echo $this->Html->link("Anular",array("controller"=>"contratos","action"=>"anularCotizacion",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));
 			}
 		?>
-		<?php  echo $this->Html->link(__('Eliminar contrato', true), array('controller' => 'contratos', 'action' => 'delete', $contrato['id']), null, sprintf(__('Esta seguro que desea eliminar el contrato?', true), $contrato['id'])); ?>
+		<?php if($this -> Session -> read('Auth.User.rol_id') == 1) echo $this->Html->link(__('Eliminar contrato', true), array('controller' => 'contratos', 'action' => 'delete', $contrato['id']), null, sprintf(__('Esta seguro que desea eliminar el contrato?', true), $contrato['id'])); ?>
 		</td>
 	</tr>
 	<?php 

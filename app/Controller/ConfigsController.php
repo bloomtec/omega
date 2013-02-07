@@ -7,6 +7,8 @@ App::uses('AppController', 'Controller');
  */
 class ConfigsController extends AppController {
 	
+	protected $exclusiveActions = array('admin_edit', 'admin_restore');
+	
 	private $horas = array(
 		'00:30' => '00:30',
 		'01:30' => '01:30',
