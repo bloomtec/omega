@@ -85,7 +85,6 @@ class Contrato extends AppModel {
 			//$this->crearAlarma($this->id,"contrato nuevo",true);
 			$this -> crearAlarma($this -> id, "debe subir la cotización", false);
 		}
-
 	}
 
 	function crearAlarma($contratoId, $mensaje, $paraCliente) {

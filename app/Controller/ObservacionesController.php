@@ -9,7 +9,7 @@ class ObservacionesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this -> Auth -> allow('emailResponseHandler', 'pruebas');
+		$this -> Auth -> allow('emailResponseHandler');
 	}
 	
 	public function pruebas() {
@@ -62,6 +62,76 @@ class ObservacionesController extends AppController {
 		$texto = 'Se ha escrito desde el correo ' . $data[0]['msg']['from_email'] . ': ' . $texto;
 		debug($texto);
 	}
+	
+	public function correoACarlos($text) {
+		$this -> sendBySMTP('Carlos Sanchez', 'csanchez@omegaingenieros.com', 'SICLOM :: Nuevo comentario de cliente', $text);
+	}
+	
+	/**
+	 * Encontrar el usuario que envía el correo según su correo o el ID de usuario
+	 * @param string $email
+	 * @param int $user_id
+	 * @param string $modelo
+	 * @param int $llave_foranea
+	 * @return string Comentarios del usuario sobre el modelo y llave correspondiente
+	 */
+	public function getRelatedComments($email = null, $user_id = null, $modelo = null, $llave_foranea = null) {
+		/******/
+		$user_id = 3;
+		$modelo = 'ContratosEquipo';
+		$llave_foranea = 2;
+		/******/
+		$this -> autoRender = false;
+		$this -> Observacion -> contain('Usuario.nombre', 'Usuario.apellido', 'Usuario.correo');
+		$this -> Observacion -> Usuario -> contain('Empresa', 'Rol');
+		$user = null;
+		if(!$user_id && $email) {
+			$user = $this -> Observacion -> Usuario -> findByCorreo($email);	
+		} elseif(!$email && $user_id) {
+			$user = $this -> Observacion -> Usuario -> findById($user_id);
+		} else {
+			return false;
+		}
+		if(($user['Usuario']['rol_id'] == 3) && $modelo && $llave_foranea) {
+			$tmp_comments = $this -> Observacion -> find(
+				'all',
+				array(
+					'conditions' => array(
+						'Observacion.modelo' => $modelo,
+						'Observacion.llave_foranea' => $llave_foranea
+					),
+					'limit' => 3,
+					'order' => array(
+						'Observacion.created' => 'DESC'
+					)
+				)
+			);
+			$this -> loadModel($modelo);
+			$this -> loadModel('Empresa');
+			$Modelo = $this -> {$modelo} -> findById($llave_foranea);
+			$this -> Empresa -> contain();
+			$Empresa = null;
+			$Acerca = null;
+			if(isset($Modelo['Contrato'])) {
+				$Empresa = $this -> Empresa -> findById($Modelo['Contrato']['empresa_id']);
+				$Acerca = ' en cuanto al contrato ' . $Modelo['Contrato']['nombre'];
+			} elseif(isset($Modelo['Proyecto'])) {
+				$Empresa = $this -> Empresa -> findById($Modelo['Proyecto']['empresa_id']);
+				$Acerca = ' en cuanto al servicio ' . $Modelo['Proyecto']['nombre'];
+			}
+			$comments = '
+			La empresa ' . $Empresa['Empresa']['nombre'] . $Acerca . ' se trata ha recibido un comentario hecho por un cliente. ' . '
+			';
+			foreach($tmp_comments as $key => $tmp_comment) {
+				$comments .= '
+				' . $tmp_comment['Usuario']['nombre'] . ' ' . $tmp_comment['Usuario']['apellido'] . ' (' . $tmp_comment['Usuario']['correo'] . ' - ' . $tmp_comment['Observacion']['created'] . ') :: ' . $tmp_comment['Observacion']['texto'] . '
+				';
+			}
+			return $comments;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Método para manejar respuestas de los correos para
@@ -85,7 +155,10 @@ class ObservacionesController extends AppController {
 				)
 			);
 			$this -> Observacion -> create();
-			$this -> Observacion -> save($observacion);
+			if($this -> Observacion -> save($observacion)) {
+				$mensaje = $this -> getRelatedComments($from_email, null, $info['modelo'], $info['llave_foranea']);
+				$this -> correoACarlos($mensaje);
+			}
 		} else {
 			$this -> Observacion -> create();
 			$this -> Observacion -> save(
@@ -197,6 +270,8 @@ class ObservacionesController extends AppController {
 				$this -> loadModel('Contrato');
 				$contrato = $this -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
 				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], $comentario["Observacion"]["llave_foranea"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
+				$mensaje = $this -> getRelatedComments(null, $comentario["Observacion"]["usuario_id"], $comentario["Observacion"]["modelo"], $comentario["Observacion"]["llave_foranea"]);
+				$this -> correoACarlos($mensaje);
 				
 				echo "OK";
 			} else {
@@ -248,7 +323,7 @@ class ObservacionesController extends AppController {
 		}
 		$empresaId = $contrato['Contrato']['empresa_id'];
 		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/1');
-		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.empresa_id' => $empresaId)));
+		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.id <>' => $observacion['Observacion']['usuario_id'], 'Usuario.empresa_id' => $empresaId)));
 		foreach ($usuarios as $key => $usuario) {
 			$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $usuario["Usuario"]["correo"], $subject, $mail_body);
 		}
@@ -284,7 +359,7 @@ class ObservacionesController extends AppController {
 	
 	/* -----------------------------------------------------------------------------------------------------------------------------------*/
 	
-	public function enviarCorreoComentariosPublicos($observacionId,$proyectoId,$mail_body) {
+	public function enviarCorreoComentariosPublicos($observacionId,$proyectoId,$servicioId,$mail_body) {
 		$this -> loadModel('Proyecto');
 		$this -> loadModel('Usuario');
 		$this -> Proyecto -> contain('Correo', 'Empresa');
@@ -324,8 +399,8 @@ class ObservacionesController extends AppController {
 		}
 		
 		$empresaId = $proyecto['Proyecto']['empresa_id'];
-		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/2');
-		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.empresa_id' => $empresaId)));
+		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/' . $servicioId);
+		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.id <>' => $observacion['Observacion']['usuario_id'], 'Usuario.empresa_id' => $empresaId)));
 		foreach ($usuarios as $key => $usuario) {
 			$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $usuario["Usuario"]["correo"], $subject, $mail_body);
 		}
@@ -426,8 +501,10 @@ class ObservacionesController extends AppController {
 				$this->Observacion->Proyecto->save($proyecto);
 				$usuario=$this->Observacion->Usuario->recursive=0;
 				$usuario=$this->Observacion->Usuario->read(null,$comentario["Observacion"]["usuario_id"]);
-				$this->enviarCorreoComentariosPublicos($this -> Observacion -> id,$comentario["Observacion"]["llave_foranea"],"El Usuario: ".$usuario["Usuario"]["nombre"]." del Proyecto ".$proyecto["Proyecto"]["nombre"]." ha escrito el siguiente comentario: \n".$comentario["Observacion"]["texto"]);
-				echo "OK";	
+				$this->enviarCorreoComentariosPublicos($this -> Observacion -> id,$comentario["Observacion"]["llave_foranea"],$proyecto['Proyecto']['servicio_id'], "El Usuario: ".$usuario["Usuario"]["nombre"]." del Proyecto ".$proyecto["Proyecto"]["nombre"]." ha escrito el siguiente comentario: \n".$comentario["Observacion"]["texto"]);
+				$mensaje = $this -> getRelatedComments(null, $comentario["Observacion"]["usuario_id"], $comentario["Observacion"]["modelo"], $comentario["Observacion"]["llave_foranea"]);
+				$this -> correoACarlos($mensaje);
+				echo "OK";
 			}else{
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
 			}

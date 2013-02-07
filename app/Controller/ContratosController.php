@@ -272,23 +272,22 @@ class ContratosController extends AppController {
 	}
 
 	public function admin_delete($id = null) {
+		$this -> autoRender = false;
 		$this -> Contrato -> id = $id;
 		if (!$this -> Contrato -> exists()) {
 			throw new NotFoundException(__('Contrato no válido'));
 			$this -> redirect(array('action' => 'index'));
 		}
-		$contrato = $this -> Contrato -> read(null, $id);
-		$contratosEquipo = $this -> Contrato -> ContratosEquipo -> find("all", array("Conditions" => array("ContratosEquipo.contrato_id" => $id)));
-		foreach ($contratosEquipo as $contratoEquipo) {
-			$this -> Contrato -> ContratosEquipo -> delete($contratoEquipo['ContratosEquipo']['id']);
-			/* Manejar con el dependant en true
-			$this -> Contrato -> ContratosEquipo -> ObservacionPublica -> deleteAll(array("ObservacionPublica.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
-			$this -> Contrato -> ContratosEquipo -> ObservacionPrivada -> deleteAll(array("ObservacionPrivada.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
-			$this -> Contrato -> ContratosEquipo -> Evento -> deleteAll(array("Evento.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
-			$this -> Contrato -> ContratosEquipo -> RevisionContratosEquipo -> deleteAll(array("RevisionContratosEquipo.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
-			 * 
-			 */
-		}
+		$contratosEquipo = $this -> Contrato -> ContratosEquipo -> find("list", array('fields' => array('ContratosEquipo.id'), "Conditions" => array("ContratosEquipo.contrato_id" => $id)));
+		$this -> loadModel('RevisionContratosEquipo');
+		$this -> RevisionContratosEquipo -> deleteAll(array('RevisionContratosEquipo.contratos_equipo_id' => $contratosEquipo));
+		/*foreach ($contratosEquipo as $contratoEquipo) {
+			//$this -> Contrato -> ContratosEquipo -> Observacion -> deleteAll(array("Observacion.modelo" => 'ContratosEquipo', 'Observacion.llave_foranea' => $contratoEquipo["ContratosEquipo"]["id"]));
+			//$this -> Contrato -> ContratosEquipo -> Evento -> deleteAll(array("Evento.contratos_equipo_id" => $contratoEquipo["ContratosEquipo"]["id"]));
+			//$this -> Contrato -> ContratosEquipo -> RevisionContratosEquipo -> find('all');
+			//$this -> Contrato -> ContratosEquipo -> RevisionContratosEquipo -> deleteAll(array('RevisionContratosEquipo.contratos_equipo_id' => $contratoEquipo["ContratosEquipo"]["id"]));
+			//$this -> Contrato -> ContratosEquipo -> delete($contratoEquipo['ContratosEquipo']['id']);
+		}*/
 		/* Manejar con dependant en true
 		$this -> Contrato -> ContratosEquipo -> deleteAll(array("ContratosEquipo.contrato_id" => $contrato["Contrato"]["id"]));
 		$this -> Contrato -> Alarma -> deleteAll(array("Alarma.contrato_id" => $contrato["Contrato"]["id"]));
@@ -296,10 +295,14 @@ class ContratosController extends AppController {
 		 */
 		if ($this -> Contrato -> delete($id)) {
 			$this -> Session -> setFlash(__('Contrato borrado'), 'crud/success');
-			$this -> redirect(array('action' => 'view', "controller" => "empresas", $contrato["Contrato"]["empresa_id"], "mantenimientos"));
+			$contrato = $this -> Contrato -> read(null, $id);
+			//$this -> redirect(array('action' => 'view', "controller" => "empresas", $contrato["Contrato"]["empresa_id"], "mantenimientos"));
+		} else {
+			$this -> Session -> setFlash(__('Contrato no fue borrado'), 'crud/error');	
 		}
-		$this -> Session -> setFlash(__('Contrato no fue borrado'), 'crud/error');
+		$this -> redirect($this -> referer());
 		//$this->redirect(array("controller"=>"empresas",'action' => 'view',$contrato["Contrato"]["empresa_id"],"mantenimientos"));
+		//debug($contratosEquipo);
 	}
 
 	public function admin_finalizar($id = null) {

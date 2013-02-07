@@ -229,12 +229,12 @@ class Usuario extends AppModel {
 	public $hasMany = array(
 		'Observacion' => array(
 			'className' => 'Observacion',
-			'foreignKey' => 'llave_foranea',
+			'foreignKey' => 'usuario_id',
 			'dependent' => false,
-			'conditions' => array('Observacion.modelo' => 'Usuario'),
+			'conditions' => '',
 			'fields' => '',
-			'order' => '',
-			'limit' => '',
+			'order' => array('id' => 'DESC'),
+			'limit' => 5,
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',
@@ -243,7 +243,7 @@ class Usuario extends AppModel {
 		'RevisionContratosEquipo' => array(
 			'className' => 'RevisionContratosEquipo',
 			'foreignKey' => 'usuario_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
