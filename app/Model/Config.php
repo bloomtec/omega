@@ -45,6 +45,7 @@ class Config extends AppModel {
 		} else {
 			$pages = array();
 			$total_files = count($files['Archivo']);
+			if($total_files === 0) return $files;
 			$total_pages = ceil($total_files / $limit);
 			$current_file = 0;
 			for ($i=1; $i <= $total_pages ; $i++) { 
