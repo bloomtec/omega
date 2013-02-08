@@ -312,52 +312,57 @@ class UsuariosController extends AppController {
 	 * @return void
 	 */
 	public function admin_edit($id = null) {
-		$this -> Usuario -> id = $id;
-		$this -> Usuario -> contain('Servicio', 'Empresa');
-		if (!$this -> Usuario -> exists()) {
-			throw new NotFoundException(__('Usuario no válido'));
-		}
-		if ($this -> request -> is('post') || $this -> request -> is('put')) {
-			if($this -> request -> data['Usuario']['rol_id'] == 3 && empty($this -> request -> data['Usuario']['servicios'])) {
-				$this -> Session -> setFlash(__('Seleccione al menos un servicio visible para el usuario'));
-			} else {
-				if ($this -> Usuario -> save($this -> request -> data)) {
-					if(isset($this -> request -> data['Usuario']['servicios'])) {
-						$servicios_previos = $this -> Usuario -> ServiciosUsuario -> find('all', array('conditions' => array('ServiciosUsuario.usuario_id' => $this -> request -> data['Usuario']['id'])));
-						foreach($servicios_previos as $key => $servicio) {
-							$this -> Usuario -> ServiciosUsuario -> delete($servicio['ServiciosUsuario']['id']);
-						}
-						foreach($this -> request -> data['Usuario']['servicios'] as $key => $servicio_id) {
-							$this -> Usuario -> ServiciosUsuario -> create();
-							$tmp_data = array(
-								'ServiciosUsuario' => array(
-									'usuario_id' => $this -> Usuario -> id,
-									'servicio_id' => $servicio_id
-								)
-							);
-							$this -> Usuario -> ServiciosUsuario -> save($tmp_data);
-						}
-					}
-					$this -> Session -> setFlash(__('Se guardaron los cambios del usuario'), 'crud/success');
-					$this -> redirect(array('action' => 'index'));
+		if(($this -> Auth -> user('id') == $id) || ($this -> Auth -> user('rol_id') == 1)) {
+			$this -> Usuario -> id = $id;
+			$this -> Usuario -> contain('Servicio', 'Empresa');
+			if (!$this -> Usuario -> exists()) {
+				throw new NotFoundException(__('Usuario no válido'));
+			}
+			if ($this -> request -> is('post') || $this -> request -> is('put')) {
+				if($this -> request -> data['Usuario']['rol_id'] == 3 && empty($this -> request -> data['Usuario']['servicios'])) {
+					$this -> Session -> setFlash(__('Seleccione al menos un servicio visible para el usuario'));
 				} else {
-					$this -> Session -> setFlash(__('No se guardaron los cambios del usuario. Por favor, intente de nuevo.'), 'crud/error');
+					if ($this -> Usuario -> save($this -> request -> data)) {
+						if(isset($this -> request -> data['Usuario']['servicios'])) {
+							$servicios_previos = $this -> Usuario -> ServiciosUsuario -> find('all', array('conditions' => array('ServiciosUsuario.usuario_id' => $this -> request -> data['Usuario']['id'])));
+							foreach($servicios_previos as $key => $servicio) {
+								$this -> Usuario -> ServiciosUsuario -> delete($servicio['ServiciosUsuario']['id']);
+							}
+							foreach($this -> request -> data['Usuario']['servicios'] as $key => $servicio_id) {
+								$this -> Usuario -> ServiciosUsuario -> create();
+								$tmp_data = array(
+									'ServiciosUsuario' => array(
+										'usuario_id' => $this -> Usuario -> id,
+										'servicio_id' => $servicio_id
+									)
+								);
+								$this -> Usuario -> ServiciosUsuario -> save($tmp_data);
+							}
+						}
+						$this -> Session -> setFlash(__('Se guardaron los cambios del usuario'), 'crud/success');
+						$this -> redirect(array('action' => 'index'));
+					} else {
+						$this -> Session -> setFlash(__('No se guardaron los cambios del usuario. Por favor, intente de nuevo.'), 'crud/error');
+					}
 				}
 			}
-		}
-		$this -> request -> data = $this -> Usuario -> read(null, $id);
-		$empresas = $this -> Usuario -> Empresa -> find('list');
-		$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id >=' => $this -> Auth -> user('rol_id'))));
-		unset($roles[3]);
-		$servicios = $this -> Usuario -> Servicio -> find('list');
-		$servicios_visibles = array();
-		foreach($this -> request -> data['Servicio'] as $key => $servicio) {
-			$servicios_visibles[$servicio['id']] = $servicio['id'];
-		}
-		$this -> set(compact('empresas', 'roles'));
-		if(isset($this -> request -> data['Empresa']['id']) && !empty($this -> request -> data['Empresa']['id'])) {
-			$this -> set('servicios_visibles', $servicios_visibles);
-			$this -> set('servicios', $this -> requestAction('/empresas/getServicios/' . $this -> request -> data['Empresa']['id']));
+			$this -> request -> data = $this -> Usuario -> read(null, $id);
+			$empresas = $this -> Usuario -> Empresa -> find('list');
+			$roles = $this -> Usuario -> Rol -> find('list', array('conditions' => array('Rol.id >=' => $this -> Auth -> user('rol_id'))));
+			unset($roles[3]);
+			$servicios = $this -> Usuario -> Servicio -> find('list');
+			$servicios_visibles = array();
+			foreach($this -> request -> data['Servicio'] as $key => $servicio) {
+				$servicios_visibles[$servicio['id']] = $servicio['id'];
+			}
+			$this -> set(compact('empresas', 'roles'));
+			if(isset($this -> request -> data['Empresa']['id']) && !empty($this -> request -> data['Empresa']['id'])) {
+				$this -> set('servicios_visibles', $servicios_visibles);
+				$this -> set('servicios', $this -> requestAction('/empresas/getServicios/' . $this -> request -> data['Empresa']['id']));
+			}	
+		} else {
+			$this -> Session -> setFlash(__('No tiene permiso para realizar cambios a otro usuario.'), 'crud/error');
+			$this -> redirect(array('action' => 'index'));
 		}
 	}
 	

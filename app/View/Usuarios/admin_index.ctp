@@ -44,12 +44,16 @@
 		<td><?php if($usuario['Usuario']['activo']) { echo '<input type="checkbox" disabled="true" checked="checked" />'; } else { echo '<input type="checkbox" disabled="true" />'; } ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this -> Html -> link(__('Ver', true), array('action' => 'view', $usuario['Usuario']['id'])); ?>
-			<?php echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $usuario['Usuario']['id'])); ?>
 			<?php
-				if($usuario['Usuario']['activo']) {
-					echo $this -> Form -> postLink(__('Desactivar'), array('action' => 'disable', $usuario['Usuario']['id']), null, __('¿Seguro desea desactivar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
-				} else {
-					echo $this -> Form -> postLink(__('Activar'), array('action' => 'enable', $usuario['Usuario']['id']), null, __('¿Seguro desea activar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
+				if(($this -> Session -> read('Auth.User.id') == $usuario['Usuario']['id']) || ($this -> Session -> read('Auth.User.rol_id') == 1)) {
+					echo $this -> Html -> link(__('Editar', true), array('action' => 'edit', $usuario['Usuario']['id']));	
+				}
+				if($this -> Session -> read('Auth.User.rol_id') == 1) {
+					if($usuario['Usuario']['activo']) {
+						echo $this -> Form -> postLink(__('Desactivar'), array('action' => 'disable', $usuario['Usuario']['id']), null, __('¿Seguro desea desactivar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
+					} else {
+						echo $this -> Form -> postLink(__('Activar'), array('action' => 'enable', $usuario['Usuario']['id']), null, __('¿Seguro desea activar el usuario %s?', $usuario['Usuario']['nombre_de_usuario']));
+					}
 				}
 			?>
 		</td>
