@@ -9,10 +9,28 @@ class BaseServiciosController extends AppController {
 	
 	public function beforeFilter() {
 		parent::beforeFilter();
+		$this -> Auth -> allow('admin_pruebas');
 		//$this -> { $this -> modelClass } -> genericTest();
 		//debug($this);
 		//debug($this -> modelClass);
 		//debug(Inflector::tableize($this -> modelClass));
+	}
+	
+	function admin_pruebas() {
+		$this -> autoRender = false;
+		/*if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", 'dominguez48@hotmail.com')) {
+			echo 'correo válido';
+		} else {
+			echo 'correo no válido';
+		}*/
+		$result = preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", 'sico@omegaingenieros.com');
+		if($result === FALSE) {
+			echo 'Error al procesar el correo';
+		} elseif($result === 1) {
+			echo 'Correo válido';			
+		} else {
+			echo 'Correo no válido';
+		}
 	}
 
 	public function index() {
@@ -149,45 +167,80 @@ class BaseServiciosController extends AppController {
 		$this -> set(compact('proyecto', 'comentariosPrivados', 'comentariosPublicos', 'eventos'));
 	}
 	
-	function isValidEmail($email){
-		return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email);
+	public function processEmails($list) {
+		$procesar_correos = true;
+		$correos_validos = true;
+		$texto_no_validos = "";
+		$lista_correos = trim($list);
+		
+		if(!empty($lista_correos)) {
+			$lista_correos = trim($lista_correos);
+			$lista_correos = explode(",", $lista_correos);
+			foreach ($lista_correos as $key => $correo) {
+				$lista_correos[$key] = trim($correo);
+				$lista_correos[$key] = explode('<', $lista_correos[$key]);
+				$lista_correos[$key][0] = trim($lista_correos[$key][0]);
+				if(count($lista_correos[$key]) === 1) {
+					$lista_correos[$key][1] = $lista_correos[$key][0] . '>';
+					$lista_correos[$key][0] = '';
+				}
+				if(isset($lista_correos[$key][1])) {
+					$lista_correos[$key][1] = trim($lista_correos[$key][1], '> ');
+					$result = preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $lista_correos[$key][1]);
+					if($result === 1) {
+						$lista_correos[$key][2] = true;
+					}
+				} else {
+					$lista_correos[$key][2] = false;
+				}
+				if(!$lista_correos[$key][2]) {
+					$correos_validos = false;
+					if(isset($lista_correos[$key][1])) {
+						$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][1] . '"';
+					} else {
+						$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][0] . '"';
+					}
+					break;
+				}
+			}
+		} else {
+			$procesar_correos = false;
+		}
+		
+		return json_encode(
+			array(
+				'success' => $procesar_correos,
+				'message' => $texto_no_validos,
+				'list' => $lista_correos
+			)
+		);
+		
+	}
+	
+	public function isValidEmail($email) {
+		$result = preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $email);
+		if($result === FALSE) {
+			//echo 'Error al procesar el correo';
+			return false;
+		} elseif($result === 1) {
+			//echo 'Correo válido';
+			return true;			
+		} else {
+			//echo 'Correo no válido';
+			return false;
+		}
 	}
 
 	public function admin_add($id = null) {
+		
 		$empresaId = $id;
+		
 		if (!empty($this -> request -> data)) {
-			$procesar_correos = true;
-			$correos_validos = true;
-			$texto_no_validos = "";
-			$lista_correos = trim($this -> request -> data['Proyecto']['correos']);
-			if(!empty($lista_correos)) {
-				$lista_correos = trim($lista_correos);
-				$lista_correos = explode(",", $lista_correos);
-				foreach ($lista_correos as $key => $correo) {
-					$lista_correos[$key] = trim($correo);
-					$lista_correos[$key] = explode('<', $lista_correos[$key]);
-					$lista_correos[$key][0] = trim($lista_correos[$key][0]);
-					if(isset($lista_correos[$key][1])) {
-						$lista_correos[$key][1] = trim($lista_correos[$key][1], '> ');
-						$lista_correos[$key][2] = $this -> isValidEmail($lista_correos[$key][1]);
-					} else {
-						$lista_correos[$key][2] = false;
-					}
-					if(!$lista_correos[$key][2]) {
-						$correos_validos = false;
-						if(isset($lista_correos[$key][1])) {
-							$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][1] . '"';
-						} else {
-							$texto_no_validos = 'Por favor revise la lista de correos. Hay un error alrededor del texto "' . $lista_correos[$key][0] . '"';
-						}
-						break;
-					}
-				}
-			} else {
-				$procesar_correos = false;
-			}
+			$result = json_decode($this -> processEmails($this -> request -> data['Proyecto']['correos']));
 			
-			//debug($lista_correos);
+			$correos_validos = $result -> success;
+			$texto_no_validos = $result -> message;
+			$lista_correos = $result -> list;
 			
 			if($correos_validos) {
 				$this -> Proyecto -> create();
@@ -215,7 +268,7 @@ class BaseServiciosController extends AppController {
 						$this -> Proyecto -> Correo -> save($correo);
 					}
 					// --------------
-					if($procesar_correos) {
+					if($correos_validos) {
 						foreach ($lista_correos as $key => $correo) {
 							$correo = array();
 							$correo["Correo"]["modelo"] = 'Proyecto';
@@ -223,7 +276,13 @@ class BaseServiciosController extends AppController {
 							$correo["Correo"]["nombre"] = $lista_correos[$key][0];
 							$correo["Correo"]["correo"] = $lista_correos[$key][1];
 							$this -> Proyecto -> Correo -> create();
-							$this -> Proyecto -> Correo -> save($correo);
+							if($this -> Proyecto -> Correo -> save($correo)) {
+								//debug('Se creo el correo');
+							} else {
+								//debug('No se creo el correo');
+								//debug($correo);
+								//debug($this -> Proyecto -> Correo -> invalidFields());
+							}
 						}
 					}
 					// --------------
