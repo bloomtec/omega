@@ -44,6 +44,9 @@ class ContratosController extends AppController {
 			array(
 				'conditions' => array(
 					'contrato_id' => $contrato['Contrato']['id']
+				),
+				'fields' => array(
+					'ContratosEquipo.equipo_id'
 				)
 			)
 		);
@@ -60,6 +63,7 @@ class ContratosController extends AppController {
 					'list',
 					array(
 						'conditions' => array(
+							'Equipo.id' => $equiposContrato,
 							'Equipo.codigo LIKE' => '%' . $this -> request -> data['Contrato']['codigo'] . '%'
 						),
 						'fields' => array(
@@ -75,6 +79,7 @@ class ContratosController extends AppController {
 					'list',
 					array(
 						'conditions' => array(
+							'Equipo.id' => $equiposContrato,
 							'Equipo.categorias_equipo_id' => $this -> request -> data['Contrato']['categorias_equipo_id']
 						),
 						'fields' => array(
@@ -174,6 +179,9 @@ class ContratosController extends AppController {
 			array(
 				'conditions' => array(
 					'contrato_id' => $contrato['Contrato']['id']
+				),
+				'fields' => array(
+					'ContratosEquipo.equipo_id'
 				)
 			)
 		);
@@ -190,6 +198,7 @@ class ContratosController extends AppController {
 					'list',
 					array(
 						'conditions' => array(
+							'Equipo.id' => $equiposContrato,
 							'Equipo.codigo LIKE' => '%' . $this -> request -> data['Contrato']['codigo'] . '%'
 						),
 						'fields' => array(
@@ -204,6 +213,7 @@ class ContratosController extends AppController {
 					'list',
 					array(
 						'conditions' => array(
+							'Equipo.id' => $equiposContrato,
 							'Equipo.categorias_equipo_id' => $this -> request -> data['Contrato']['categorias_equipo_id']
 						),
 						'fields' => array(
