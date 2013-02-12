@@ -189,6 +189,8 @@ class BaseServiciosController extends AppController {
 					$result = preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $lista_correos[$key][1]);
 					if($result === 1) {
 						$lista_correos[$key][2] = true;
+					} else {
+						$lista_correos[$key][2] = false;
 					}
 				} else {
 					$lista_correos[$key][2] = false;
