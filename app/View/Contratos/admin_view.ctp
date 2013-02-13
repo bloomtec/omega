@@ -60,7 +60,7 @@
 		<tr<?php echo $class;?>>
 			<td><?php echo $categoria_equipo_nombre; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'categorias_equipos', 'action' => 'edit', $categoria_equipo_id, $contrato['Contrato']['id'])); ?>
+				<?php echo $this->Html->link(__('Editar', true), array('controller' => 'categorias_equipos', 'action' => 'edit', $contrato['Contrato']['empresa_id'], $contrato['Contrato']['id'], $categoria_equipo_id)); ?>
 				<?php echo $this->Html->link(__('Borrar', true), array('controller' => 'categorias_equipos', 'action' => 'delete', $categoria_equipo_id, $contrato['Contrato']['id']), null, sprintf(__('¿Seguro desea eliminar %s?'), $categoria_equipo_nombre)); ?>
 			</td>
 		</tr>

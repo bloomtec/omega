@@ -78,23 +78,27 @@ class CategoriasEquiposController extends AppController {
 	 * @param string $id
 	 * @return void
 	 */
-	public function admin_edit($id = null) {
-		$this -> CategoriasEquipo -> id = $id;
+	public function admin_edit($empresa_id, $contrato_id, $categoria_id) {
+		$this -> CategoriasEquipo -> Empresa -> id = $empresa_id;
+		if(!$this -> CategoriasEquipo -> Empresa -> exists()) {
+			throw new NotFoundException(__('Empresa no válida'));
+		}
+		$this -> CategoriasEquipo -> id = $categoria_id;
 		if (!$this -> CategoriasEquipo -> exists()) {
-			throw new NotFoundException(__('Invalid categorias equipo'));
+			throw new NotFoundException(__('Categoría de equipo no válida'));
 		}
 		if ($this -> request -> is('post') || $this -> request -> is('put')) {
 			if ($this -> CategoriasEquipo -> save($this -> request -> data)) {
-				$this -> Session -> setFlash(__('The categorias equipo has been saved'));
-				$this -> redirect(array('action' => 'index'));
+				$this -> Session -> setFlash(__('Se ha modificado la categoría de equipos'), 'crud/success');
+				$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
 			} else {
 				$this -> Session -> setFlash(__('The categorias equipo could not be saved. Please, try again.'));
 			}
 		} else {
-			$this -> request -> data = $this -> CategoriasEquipo -> read(null, $id);
+			$this -> request -> data = $this -> CategoriasEquipo -> read(null, $categoria_id);
 		}
-		$empresas = $this -> CategoriasEquipo -> Empresa -> find('list');
-		$this -> set(compact('empresas'));
+		$empresas = $this -> CategoriasEquipo -> Empresa -> find('list', array('conditions' => array('Empresa.id' => $empresa_id)));
+		$this -> set(compact('empresas', 'contrato_id'));
 	}
 
 	/**
