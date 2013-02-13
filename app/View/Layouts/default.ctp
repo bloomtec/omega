@@ -57,11 +57,8 @@
 						<span style="font-weight:bold;">SICLOM  &infin;</div>
 					<div class="logo">
 						<?php echo $this -> Html -> image('logo.png'); ?>
-						<br />
-						<br />
-						<?php if($this -> action != "login") echo $this -> element('menu');?>
 					</div>
-				
+					<?php if($this -> action != "login") echo $this -> element('menu');?>				
 					<div style='clear:both;'></div>
 				</div>
 				

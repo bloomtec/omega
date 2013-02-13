@@ -52,11 +52,9 @@
 					<div class="titulo" style="font-size:21px; text-decoration:none; font-style:italic">ESTIMADO CLIENTE,<br /> Gracias por emplear nuestra herramienta<span style="font-weight:bold; font-style:italic"> SICLOM &infin; </div>
 					<div class="logo">
 						<?php echo $this -> Html -> image("logo.png"); ?>
-						<br />
-						<br />
-						<?php if($this -> action != "login") echo $this -> element('menu');?>
 					</div>
-					
+					<?php if($this -> action != "login") echo $this -> element('menu');?>
+					<div style='clear:both;'></div>
 				</div>
 			</div>
 			<div id="content">

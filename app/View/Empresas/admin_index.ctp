@@ -109,12 +109,8 @@
 		?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php __('Acciones'); ?></h3>
+<div class="actions" style="display: block;">
 	<ul>
-		<li><?php echo $this -> Html -> link(__('Nueva Empresa', true), array('action' => 'add')); ?></li>
-		<li><?php echo $this -> Html -> link(__('Listar Usuarios', true), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this -> Html -> link(__('Nuevo Usuario', true), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		
+		<li><?php echo $this -> Html -> link(__('Crear Empresa', true), array('action' => 'add')); ?></li>
 	</ul>
 </div>

@@ -29,7 +29,8 @@ body div#container div#content div.form {
 	float:right;
 	clear:both;
 	text-align: center;
-
+	position:relative;
+	top:-43px;
 }
 
 /*** ESSENTIAL STYLES ***/
@@ -104,7 +105,7 @@ ul.sf-menu li li li.sfHover ul {
 .sf-menu li {
 	/*background:		#BDD2FF;*/
 	background:		url("../img/boton-gris Grande.jpg");
-	min-width: 130px;
+	min-width: 186px;
 }
 .sf-menu li li {
 	/*background:		#AABDE6;*/
@@ -114,7 +115,7 @@ ul.sf-menu li li li.sfHover ul {
 .sf-menu li li li {
 	/*background:		#9AAEDB;*/
 	background:		url("../img/boton-gris Grande.jpg");
-	min-width: 187px;
+	min-width: 186px;
 }
 .sf-menu li:hover, .sf-menu li.sfHover,
 .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {

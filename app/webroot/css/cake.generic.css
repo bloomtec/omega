@@ -102,8 +102,8 @@ li {
 	border-bottom: solid 1px #d90000;
 }
 #header .wrap {
-	width: 1280px;
 	margin: 0 auto;
+	width: 97%;
 }
 #header .llave {
 	float: left;
@@ -117,8 +117,8 @@ li {
 
 }
 #header .logo {
-	float: right;
-	margin-top: 0px;
+	/*float: right;*/
+	margin-right: 10px;
 	text-align: right;
 }
 #content {
@@ -127,9 +127,9 @@ li {
 	background-color: white;
 	clear: both;
 	color: #333;
-	padding: 10px 20px 40px 20px;
+	padding: 10px;
 	overflow: auto;
-	width: 1280px;
+	/*width: 1280px;*/
 	margin: 0 auto;
 	/*min-height: 480px;*/
 }
@@ -137,7 +137,7 @@ li {
 	clear: both;
 	padding: 6px 10px;
 	text-align: right;
-	width: 1280px;
+	/*width: 1280px;*/
 	margin: 0 auto;
 }
 
@@ -301,7 +301,7 @@ form {
 	clear: both;
 	margin-right: 20px;
 	padding: 0;
-	width: 95%;
+	/*width: 95%;*/
 }
 fieldset {
 	border: 1px solid #ccc;
@@ -1099,12 +1099,17 @@ th a {
 
 }
 .contenedorAlerta {
-
+	max-width: 90px;
 }
-.campana {
+/*.campana {
 	float: left;
 	width: 36px;
 	margin-right: 5px;
+}*/
+.campana img {
+	display:block;
+	margin-left:auto;
+	margin-right: auto;
 }
 .alarmas {
 	float: left;
