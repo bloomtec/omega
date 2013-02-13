@@ -9,17 +9,12 @@ class ObservacionesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this -> Auth -> allow('emailResponseHandler');
+		$this -> Auth -> allow('emailResponseHandler', 'pruebas');
 	}
 	
-	public function pruebas() {
-		$this -> autoRender = false;
-		$data = array(
-				0 => array(
-						'event' => 'inbound',
-						'ts' => 1348662138,
-						'msg' => array(
-								'text' => 'asdlfkjasldñfkjaslñknlñkjñasdfasldfkj!!!lkjfsnfñafhng!!!
+	public function pruebas($id) {
+		/*
+		$text_a = 'asdlfkjasldñfkjaslñknlñkjñasdfasldfkj!!!lkjfsnfñafhng!!!
 
 											2012/9/26 Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>:
 											> El Usuario: jucedogi ha escrito el siguiente comentario: tests envío datos
@@ -31,7 +26,45 @@ class ObservacionesController extends AppController {
 											>
 											>
 											> {"observacion_id":"15","usuario_id":"1","modelo":"Contrato","llave_foranea":"2"}
-											>',
+											>';
+		$text_b = 'Ing Carlos Sanchez, buenos días.
+Le cuento que intentó la Ing. ingresar en el programa siguiendo ruta  que usted me envío, pero no pudimos acceder.
+La actividad del mtto del auditorio, (eje, chumaceras) por favor adelantar, y por fa enviar cotización de acuerdo a lo que charlamos esta mañana.
+Que tenga buen día.
+
+Henry Bernal R
+Supervisor área eléctrica
+Servicios operacionales
+
+[https://owa.javerianacali.edu.co/owa/8.1.340.0/themes/base/csi/company2.jpg]
+
+[http://portales.puj.edu.co/owa/firma.png]
+
+AVISO LEGAL:
+La información enviada en este mensaje electrónico es confidencial y solo para uso de la persona/compañía identificada en el mismo. Si el receptor de este mensaje no es la persona de destino mencionada, cualquier divulgación, distribución y/o copia de la información contenida en este mensaje electrónico, se encuentra estrictamente prohibida. Si usted recibe este mensaje por error, por favor notifique al emisor del mismo de inmediato.
+
+Disclaimer added by CodeTwo Exchange Rules 2007
+www.codetwo.com<http://www.codetwo.com>
+
+________________________________
+De: Aplicación Web Omega Ingenieros [notificaciones@omega.bloomweb.co]
+Enviado el: viernes, 08 de febrero de 2013 01:01 p.m.
+Para: Henry Bernal
+Asunto: Nueva actividad en el contrato: MANTENIMIENTO PREVENTIVO 2013
+
+El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran oferta de MTTO correctivo para la reparación de la trasmisión de la UMA del Auditorio Borrero Cabal. El detalle de precios unitarios son: 1. MOD: El monto incluye cuadrilla externa y Supervisor. El costo de la MOD en el campus NO fúe contemplada. 2. Materiales (valores totales antes de IVA): Uso de herramientas $ 81.600 chumacera pedestal 1-3/16 (4 unid) $ 217.600 Angulo 3/16x1-1/2 (2 mts) $ 59.840 Tornilleria $68.000 Eje 1-3/16 x 74” maquinado (1 unid) $ 272.459 correas (2 unid) $ 48.960
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONDER SOBRE ESTA LINEA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+{"observacion_id":"23","usuario_id":"9","modelo":"ContratosEquipo","llave_foranea":"2"}';
+		$this -> autoRender = false;
+		$data = array(
+				0 => array(
+						'event' => 'inbound',
+						'ts' => 1348662138,
+						'msg' => array(
+								'text' => $id ? $text_a : $text_b,
 								'from_email' => 'juliodominguez@gmail.com',
 								'from_name' => 'Julio César Domínguez Giraldo',
 								'to' => array(
@@ -49,18 +82,19 @@ class ObservacionesController extends AppController {
 		);
 		//debug($data);
 		$email_text = $data[0]['msg']['text'];
-		debug($email_text);
 		$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
 		
-		debug(trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11))));
+		//debug($email_text);
+		//debug(trim(substr($email_text, 0, strpos($email_text, 'Aplicación Web Omega Ingenieros') - 11)));
 		
 		$this -> Observacion -> Usuario -> contain('Observacion');
 		$usuario = $this -> Observacion -> Usuario -> findByCorreo($data[0]['msg']['from_email']);
 		debug($data[0]['msg']['from_email']);
 		debug($usuario);
-		$texto = trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11)));
+		$texto = trim(substr($email_text, 0, strpos($email_text, 'Aplicación Web Omega Ingenieros') - 11));
 		$texto = 'Se ha escrito desde el correo ' . $data[0]['msg']['from_email'] . ': ' . $texto;
 		debug($texto);
+		*/
 	}
 	
 	public function correoACarlos($text) {
@@ -77,9 +111,9 @@ class ObservacionesController extends AppController {
 	 */
 	public function getRelatedComments($email = null, $user_id = null, $modelo = null, $llave_foranea = null) {
 		/******/
-		$user_id = 3;
-		$modelo = 'ContratosEquipo';
-		$llave_foranea = 2;
+		//$user_id = 3;
+		//$modelo = 'ContratosEquipo';
+		//$llave_foranea = 2;
 		/******/
 		$this -> autoRender = false;
 		$this -> Observacion -> contain('Usuario.nombre', 'Usuario.apellido', 'Usuario.correo');
@@ -144,7 +178,7 @@ class ObservacionesController extends AppController {
 			$email_text = $data[0]['msg']['text'];
 			$info = json_decode(substr($email_text, strpos($email_text, '{"observacion_id"'), strrpos($email_text, '"}') - strpos($email_text, '{"observacion_id"') + 2), true);
 			$from_email = $data[0]['msg']['from_email'];
-			$texto = trim(substr($email_text, 0, (strpos($email_text, 'Aplicación Web Omega Ingenieros <notificaciones@omega.bloomweb.co>') - 11)));
+			$texto = trim(substr($email_text, 0, strpos($email_text, 'Aplicación Web Omega Ingenieros') - 11));
 			$texto = 'Se ha escrito desde el correo ' . $from_email . ': ' . $texto;
 			$observacion = array(
 				'Observacion' => array(
