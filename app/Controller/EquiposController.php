@@ -309,7 +309,7 @@ class EquiposController extends AppController {
 			$contratoId = $id;
 		if (!empty($this -> request -> data["Equipos"])) {
 			$contratoId = $this -> request -> data["Contrato"]["Contrato"][0];
-			foreach ($this->data["Equipos"] as $contrato) {
+			foreach ($this -> request -> data["Equipos"] as $contrato) {
 				if (!empty($contrato)) {
 					foreach ($contrato as $equipo) {
 						$contratosEquipo["ContratosEquipo"]["contrato_id"] = $contratoId;
