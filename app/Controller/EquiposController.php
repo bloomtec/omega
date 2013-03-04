@@ -8,7 +8,8 @@ App::uses('AppController', 'Controller');
 class EquiposController extends AppController {
 	
 	public function admin_eliminarEquipoDeContrato($equipo_id = null, $contrato_id = null) {
-		$total_contratos = $this -> Equipo -> ContratosEquipo -> find('count', array('conditios' => array('ContratosEquipo.equipo_id' => $equipo_id)));
+		$this -> autoRender = false;
+		$total_contratos = $this -> Equipo -> ContratosEquipo -> find('count', array('conditions' => array('ContratosEquipo.equipo_id' => $equipo_id)));
 		$contratos_equipo = $this -> Equipo -> ContratosEquipo -> find(
 			'first',
 			array(
@@ -18,6 +19,7 @@ class EquiposController extends AppController {
 				)
 			)
 		);
+		
 		$equipo_eliminado_del_contrato = false;
 		$equipo_eliminado = false;
 		if($this -> Equipo -> ContratosEquipo -> delete($contratos_equipo['ContratosEquipo']['id'])) {
