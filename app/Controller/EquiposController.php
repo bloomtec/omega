@@ -8,7 +8,32 @@ App::uses('AppController', 'Controller');
 class EquiposController extends AppController {
 	
 	public function eliminarEquipoDeContrato($equipo_id = null, $contrato_id = null) {
-		
+		$total_contratos = $this -> Equipo -> ContratosEquipo -> find('count', array('conditios' => array('ContratosEquipo.equipo_id' => $equipo_id)));
+		$contratos_equipo = $this -> Equipo -> ContratosEquipo -> find(
+			'first',
+			array(
+				'conditions' => array(
+					'ContratosEquipo.contrato_id' => $contrato_id,
+					 'ContratosEquipo.equipo_id' => $equipo_id
+				)
+			)
+		);
+		$equipo_eliminado_del_contrato = false;
+		$equipo_eliminado = false;
+		if($this -> Equipo -> ContratosEquipo -> delete($contratos_equipo['ContratosEquipo']['id'])) {
+			$equipo_eliminado_del_contrato = true;
+		}
+		if(($total_contratos == 1) && $this -> Equipo -> delete($equipo_id)) {
+			$equipo_eliminado = true;
+		}
+		if(!$equipo_eliminado_del_contrato) {
+			$this -> Session -> setFlash('No se pudo eliminar el equipo del contrato', 'crud/errpr');
+		} elseif($equipo_eliminado) {
+			$this -> Session -> setFlash('Se eliminó completamente el equipo', 'crud/success');
+		} else {
+			$this -> Session -> setFlash('Se eliminó el equipo del contrato y este sigue en el sistema', 'crud/success');
+		}
+		$this -> redirect(array('controller' => 'contratos', 'action' => 'view', $contrato_id));
 	}
 	
 	public function canBeDeleted($equipo_id = null, $contrato_id = null) {
