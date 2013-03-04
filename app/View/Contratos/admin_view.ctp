@@ -133,6 +133,9 @@
 					} else {
 						echo $this -> Form -> postLink(__('Activar'), array('controller' => 'equipos', 'action' => 'enable', $equipo['Equipo']['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea activar el equipo %s?', $equipo['Equipo']['codigo']));
 					}
+					if($this -> requestAction('/equipos/canBeDeleted/' . $equipo['Equipo']['id'] . '/' . $contrato['Contrato']['id'])) {
+						echo $this -> Form -> postLink(__('Eliminar'), array('controller' => 'equipos', 'action' => 'eliminarEquipoDeContrato', $equipo['Equipo']['id'], $contrato['Contrato']['id']), null, __('¿Seguro desea eliminar el equipo %s DE ESTE CONTRATO? (El equipo seguirá en el sistema a menos que no exista en otros contratos)', $equipo['Equipo']['codigo']));
+					}
 				?>
 			</td>
 		</tr>

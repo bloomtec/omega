@@ -6,6 +6,35 @@ App::uses('AppController', 'Controller');
  * @property Equipo $Equipo
  */
 class EquiposController extends AppController {
+	
+	public function eliminarEquipoDeContrato($equipo_id = null, $contrato_id = null) {
+		
+	}
+	
+	public function canBeDeleted($equipo_id = null, $contrato_id = null) {
+		$this -> autoRender = false;
+		if($equipo_id && $this -> Equipo -> exists($equipo_id)) {
+			$this -> Equipo -> contain('Contrato');
+			$equipo = $this -> Equipo -> read(null, $equipo_id);
+			foreach($equipo['Contrato'] as $key => $contrato) {
+				if($contrato_id == $contrato['id']) {
+					if(
+						!$contrato['ContratosEquipo']['proxima_revision']
+						&& !$contrato['ContratosEquipo']['tiene_publicacion_empresa']
+						&& !$contrato['ContratosEquipo']['tiene_publicacion_omega']
+						&& !$contrato['ContratosEquipo']['inicio_desarrollo']
+						&& !$contrato['ContratosEquipo']['observaciones_finales']
+						&& !$contrato['ContratosEquipo']['actividades_concluida']
+						&& !$contrato['ContratosEquipo']['fecha_finalizacion']
+					) {
+						return true;
+					}
+					break;
+				}
+			}
+		}
+		return false;
+	}
 
 	public function index() {
 		$this -> layout = "empresa";
