@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  */
 class EquiposController extends AppController {
 	
-	public function eliminarEquipoDeContrato($equipo_id = null, $contrato_id = null) {
+	public function admin_eliminarEquipoDeContrato($equipo_id = null, $contrato_id = null) {
 		$total_contratos = $this -> Equipo -> ContratosEquipo -> find('count', array('conditios' => array('ContratosEquipo.equipo_id' => $equipo_id)));
 		$contratos_equipo = $this -> Equipo -> ContratosEquipo -> find(
 			'first',
