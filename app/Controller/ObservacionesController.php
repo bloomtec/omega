@@ -98,8 +98,7 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 	}
 	
 	public function correoACarlos($text) {
-		//$this -> sendBySMTP('Carlos Sanchez', 'csanchez@omegaingenieros.com', 'SICLOM :: Nuevo comentario de cliente', $text);
-		$this -> sendBySMTP('Carlos Sanchez', 'juliodominguez@gmail.com', 'SICLOM :: Nuevo comentario de cliente', $text);
+		$this -> sendBySMTP('Carlos Sanchez', 'csanchez@omegaingenieros.com', 'SICLOM :: Nuevo comentario de cliente', $text);
 	}
 	
 	/**
@@ -498,8 +497,8 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 				if($this -> Auth -> user('rol_id') < 3){
 					if(!$proyecto["Proyecto"]["publicacion_para_empresa"]) $proyecto["Proyecto"]["publicacion_para_empresa"]=true;
 				}	
-				$this->Observacion->Proyecto->save($proyecto);				
-				echo "OK";	
+				$this -> Observacion -> Proyecto -> save($proyecto);				
+				echo "OK";
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";
 			}
