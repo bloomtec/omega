@@ -238,11 +238,17 @@ class BaseServiciosController extends AppController {
 		$empresaId = $id;
 		
 		if (!empty($this -> request -> data)) {
-			$result = json_decode($this -> processEmails($this -> request -> data['Proyecto']['correos']));
+			$correos_validos = true;
+			$correos_validos = true;
+			$texto_no_validos = '';
+			$lista_correos = array();
 			
-			$correos_validos = $result -> success;
-			$texto_no_validos = $result -> message;
-			$lista_correos = $result -> list;
+			if(isset($this -> request -> data['Proyecto']['correos']) && !empty($this -> request -> data['Proyecto']['correos'])) {
+				$result = json_decode($this -> processEmails($this -> request -> data['Proyecto']['correos']));
+				$correos_validos = $result -> success;
+				$texto_no_validos = $result -> message;
+				$lista_correos = $result -> list;
+			}
 			
 			if($correos_validos) {
 				$this -> Proyecto -> create();
