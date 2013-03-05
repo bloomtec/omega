@@ -83,10 +83,28 @@
 	<?php if (!empty($contrato['Equipo'])):?>
 	<table>
 		<?php echo $this -> Form -> create('Contrato'); ?>
-		<tr><th>Código</th><th>Categoría Equipo</th><th></th></tr>
+		<tr>
+            <th>Código</th>
+            <th>Categoría Equipo</th>
+            <?php if($filtrado) : ?><th></th><?php endif; ?>
+            <th></th>
+        </tr>
 		<tr>
 			<td><?php echo $this -> Form -> input('codigo', array('label' => false)); ?></td>
 			<td><?php echo $this -> Form -> input('categorias_equipo_id', array('label' => false, 'empty' => 'Seleccione...')); ?></td>
+            <?php if($filtrado) : ?>
+            <td class="actions">
+                <?php
+                    echo $this -> Html -> link(
+                        'Quitar filtro',
+                        array(
+                            'action' => 'quitarFiltro',
+                            $contrato['Contrato']['id']
+                        )
+                    );
+                ?>
+            </td>
+            <?php endif; ?>
 			<td><?php echo $this -> Form -> end('Buscar Equipo'); ?></td>
 		</tr>
 	</table>

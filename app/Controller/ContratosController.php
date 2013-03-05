@@ -92,6 +92,9 @@ class ContratosController extends AppController {
 				}
 				$conditions['Equipo.id'] = $equipos;
 			}
+
+            $this -> Session -> write('Contratos.View.conditions', $conditions);
+
 		}
 		$this -> Contrato -> bindModel(
 			array(
@@ -116,12 +119,25 @@ class ContratosController extends AppController {
 				)
 			)
 		);
+
+        $filtrado = false;
+
+        if(
+            $this -> Session -> read('Contratos.View.conditions')
+            && $this -> Session -> read('Contratos.View.conditions')
+        ) {
+            $conditions = $this -> Session -> read('Contratos.View.conditions');
+            $filtrado = true;
+        }
+
 		$this -> paginate = array(
 			'Equipo' => array(
 				'conditions' => $conditions,
 				'limit' => $limit
 			)		
 		);
+
+        $this -> set('filtrado', $filtrado);
 		$this -> set('equipos', $this -> paginate('Equipo'));
 		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set(compact('contrato', 'categoriasEquipos'));
@@ -226,7 +242,11 @@ class ContratosController extends AppController {
 				}
 				$conditions['Equipo.id'] = $equipos;
 			}
+
+            $this -> Session -> write('Contratos.View.conditions', $conditions);
+
 		}
+
 		$this -> Contrato -> bindModel(
 			array(
 				"hasAndBelongsToMany" => array(
@@ -250,17 +270,42 @@ class ContratosController extends AppController {
 				)
 			)
 		);
+
+        $filtrado = false;
+
+        if(
+            $this -> Session -> read('Contratos.View.conditions')
+            && $this -> Session -> read('Contratos.View.conditions')
+        ) {
+            $conditions = $this -> Session -> read('Contratos.View.conditions');
+            $filtrado = true;
+        }
+
 		$this -> paginate = array(
 			'Equipo' => array(
 				'conditions' => $conditions,
 				'limit' => $limit
-			)		
+			)
 		);
+
+        $this -> set('filtrado', $filtrado);
 		$this -> set('equipos', $this -> paginate('Equipo'));
 		$contrato = $this -> Contrato -> read(null, $id);
 		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set(compact('contrato', 'categoriasEquipos'));
 	}
+
+    public function admin_quitarFiltro($id) {
+        $this -> autoRender = false;
+        $this -> Session -> delete('Contratos.View.conditions');
+        $this -> redirect(array('action' => 'view', $id));
+    }
+
+    public function quitarFiltro($id) {
+        $this -> autoRender = false;
+        $this -> Session -> delete('Contratos.View.conditions');
+        $this -> redirect(array('action' => 'view', $id));
+    }
 
 	public function admin_add($id = null) {
 		$empresaId = $id;
