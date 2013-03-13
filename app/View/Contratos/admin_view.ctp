@@ -35,7 +35,9 @@
 	<ul>
 		<li><?php echo $this->Html->link(__('Volver'), array("controller"=>"empresas",'action' => 'view',$contrato['Contrato']['empresa_id'],"mantenimientos")); ?> </li>
 		<li><?php echo $this->Html->link(__('Editar Contrato'), array('action' => 'edit', $contrato['Contrato']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Borrar Contrato'), array('action' => 'delete', $contrato['Contrato']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $contrato['Contrato']['id'])); ?> </li>
+		<!--<li>-->
+			<?php //echo $this->Html->link(__('Borrar Contrato'), array('action' => 'delete', $contrato['Contrato']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $contrato['Contrato']['id'])); ?>
+		<!--</li>-->
 		<li><?php echo $this->Html->link(__('Lista de Correo'), array("controller"=>"contratos",'action' => 'listaCorreo',$contrato['Contrato']['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"boton thickbox"));?></li>
 	</ul>
 </div>
