@@ -14,6 +14,7 @@
 			<?php
 			$i = 0;
 			foreach($contratos as $contrato):
+				//debug($contrato['Contrato']);
 				if(($contrato["Contrato"]["estado_id"] < 4 || $contrato["Contrato"]["estado_id"] == 6 || $contrato["Contrato"]["estado_id"] == 7) && $contrato["Contrato"]["estado_id"] != 8) {
 					$alarmaPublicacion = false;
 					foreach($contrato["Equipo"] as $equipito) {
