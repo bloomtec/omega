@@ -1,6 +1,6 @@
 # INITIAL CONFIGURATION
 #set :application, "siclom.omegaingenieros.com"
-set :application, "dev.omegaingenieros.com"
+set :application, "omega.bloomweb.co"
 set :export, :remote_cache
 set :keep_releases, 5
 set :cakephp_app_path, "app"
@@ -9,7 +9,7 @@ default_run_options[:pty] = true # Para pedir la contraseña de la llave publica
 
 # DEPLOYMENT DIRECTORY STRUCTURE
 #set :deploy_to, "/home/embalao/siclom.omegaingenieros.com"
-set :deploy_to, "/home/embalao/dev.omegaingenieros.com"
+set :deploy_to, "/home/embalao/omega.bloomweb.co"
 
 # USER & PASSWORD
 set :user, 'embalao'
@@ -19,9 +19,9 @@ set :password, 'rr40r900343'
 #role :app, "siclom.omegaingenieros.com"
 #role :web, "siclom.omegaingenieros.com"
 #role :db, "siclom.omegaingenieros.com", :primary => true
-role :app, "dev.omegaingenieros.com"
-role :web, "dev.omegaingenieros.com"
-role :db, "dev.omegaingenieros.com", :primary => true
+role :app, "omega.bloomweb.co"
+role :web, "omega.bloomweb.co"
+role :db, "omega.bloomweb.co", :primary => true
 
 # VERSION TRACKER INFORMATION
 set :scm, :git
@@ -38,7 +38,7 @@ namespace :deploy do
   
   task :restart, :roles => :app, :except => { :no_release => true } do
     #run "cp /home/embalao/siclom.omegaingenieros.com/current/. /home/embalao/siclom.omegaingenieros.com/ -R"
-    run "cp /home/embalao/dev.omegaingenieros.com/current/. /home/embalao/dev.omegaingenieros.com/ -R"
+    run "cp /home/embalao/omega.bloomweb.co/current/. /home/embalao/omega.bloomweb.co/ -R"
   end
   
 end
