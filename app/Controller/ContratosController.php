@@ -95,6 +95,7 @@ class ContratosController extends AppController {
 
             $this -> Session -> write('Contratos.View.conditions', $conditions);
 
+			$this->redirect(array('action' => 'view', $id));
 		}
 		$this -> Contrato -> bindModel(
 			array(
@@ -244,6 +245,8 @@ class ContratosController extends AppController {
 			}
 
             $this -> Session -> write('Contratos.View.conditions', $conditions);
+
+			$this->redirect(array('action' => 'view', $id));
 
 		}
 
