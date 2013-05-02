@@ -99,8 +99,6 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 	
 	public function correoACarlos($text) {
 		$this -> sendBySMTP('Carlos Sanchez', 'csanchez@omegaingenieros.com', 'SICLOM :: Nuevo comentario de cliente', $text);
-		$this -> sendBySMTP('Kung Fu Panda', 'ricardopandales@gmail.com', 'SICLOM :: Nuevo comentario de cliente', $text);
-		$this -> sendBySMTP('JuCeDoGi', 'juliodominguez@gmail.com', 'SICLOM :: Nuevo comentario de cliente', $text);
 	}
 	
 	/**

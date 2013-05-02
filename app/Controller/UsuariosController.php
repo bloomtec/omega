@@ -322,6 +322,10 @@ class UsuariosController extends AppController {
 				if($this -> request -> data['Usuario']['rol_id'] == 3 && empty($this -> request -> data['Usuario']['servicios'])) {
 					$this -> Session -> setFlash(__('Seleccione al menos un servicio visible para el usuario'));
 				} else {
+					if(isset($this -> request -> data['Usuario']['contraseña']) && empty($this -> request -> data['Usuario']['contraseña'])) {
+						unset($this -> request -> data['Usuario']['contraseña']);
+						unset($this -> request -> data['Usuario']['verificar_contraseña']);
+					}
 					if ($this -> Usuario -> save($this -> request -> data)) {
 						if(isset($this -> request -> data['Usuario']['servicios'])) {
 							$servicios_previos = $this -> Usuario -> ServiciosUsuario -> find('all', array('conditions' => array('ServiciosUsuario.usuario_id' => $this -> request -> data['Usuario']['id'])));
@@ -343,6 +347,8 @@ class UsuariosController extends AppController {
 						$this -> redirect(array('action' => 'index'));
 					} else {
 						$this -> Session -> setFlash(__('No se guardaron los cambios del usuario. Por favor, intente de nuevo.'), 'crud/error');
+						debug($this->request->data);
+						debug($this->Usuario->invalidFields());
 					}
 				}
 			}

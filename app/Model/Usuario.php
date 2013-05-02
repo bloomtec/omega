@@ -67,7 +67,7 @@ class Usuario extends AppModel {
 			'notempty' => array(
 				'rule' => array('notempty'),
 				'message' => 'Debe ingresar una contraseña',
-				//'allowEmpty' => false,
+				//'allowEmpty' => true,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
@@ -85,7 +85,7 @@ class Usuario extends AppModel {
 			'notempty' => array(
 				'rule' => array('notempty'),
 				'message' => 'Debe verificar su contraseña',
-				//'allowEmpty' => false,
+				//'allowEmpty' => true,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
