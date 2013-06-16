@@ -473,6 +473,37 @@ class ContratosController extends AppController {
 			. "\n" . $this -> request -> data["Contrato"]["comentarios"];
 		
 		//$this -> enviarCorreo($id, $mail_body);
+
+		// Enviar el correo al usuario
+
+		// subject
+		$subject = 'Notificación aprobación de cotización SICLOM';
+
+		// message
+		$message =
+			'<html>
+				<head>
+					  <title>Notificación aprobación de cotización SICLOM</title>
+				</head>
+				<body>
+					  <p>Se ha aprobado una cotización.</p>
+					  <p>Nombre del contrato: ' . $contrato["Contrato"]["nombre"] . '</p>
+					  <p>Comentarios: ' . $this -> request -> data["Contrato"]["comentarios"] . '</p>
+				</body>
+			</html>';
+
+		// To send HTML mail, the Content-type header must be set
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+		// Additional headers
+		$headers .= "To: Carlos Sanchez <csanchez@omegaingenieros.com>" . "\r\n";
+		$headers .= 'From: Aplicación SICLOM <no-reply@siclom.omegaingenieros.com>' . "\r\n";
+
+		// Mail it
+		mail($email, $subject, $message, $headers);
+
+		/** ----------------------------------------------------------------------------------------- */
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
 	}
 
