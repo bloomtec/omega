@@ -9,7 +9,10 @@ class ObservacionesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this -> Auth -> allow('emailResponseHandler', 'pruebas');
+		$this -> Auth -> allow(
+			'emailResponseHandler',
+			'pruebas'
+		);
 	}
 	
 	public function pruebas($id) {
@@ -111,9 +114,9 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 	 */
 	public function getRelatedComments($email = null, $user_id = null, $modelo = null, $llave_foranea = null) {
 		/******/
-		//$user_id = 3;
+		//$user_id = 21;
 		//$modelo = 'ContratosEquipo';
-		//$llave_foranea = 2;
+		//$llave_foranea = 27;
 		/******/
 		$this -> autoRender = false;
 		$this -> Observacion -> contain('Usuario.nombre', 'Usuario.apellido', 'Usuario.correo');
@@ -126,7 +129,11 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 		} else {
 			return false;
 		}
-		if(($user['Usuario']['rol_id'] == 3) && $modelo && $llave_foranea) {
+		if(
+			//($user['Usuario']['rol_id'] == 3) &&
+			$modelo &&
+			$llave_foranea
+		) {
 			$tmp_comments = $this -> Observacion -> find(
 				'all',
 				array(
@@ -152,15 +159,36 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 			} elseif(isset($Modelo['Proyecto'])) {
 				$Empresa = $this -> Empresa -> findById($Modelo['Proyecto']['empresa_id']);
 				$Acerca = ' en cuanto al servicio ' . $Modelo['Proyecto']['nombre'];
+			} else {
+				//
 			}
-			$comments = '
+			$comments =
+				'<html>
+					<head>
+						  <title>Notificación observación SICLOM</title>
+					</head>
+					<body>
+						  <p>Se ha recibido una observación en la aplicación</p>
+						  <p>La empresa ' . $Empresa['Empresa']['nombre'] . $Acerca . ' se trata ha recibido un comentario hecho por un cliente. ' . '</p>' .
+						'<p>:: Comentarios ::</p>';
+			foreach($tmp_comments as $key => $tmp_comment) {
+				$comments .=
+					'<p>' .
+					$tmp_comment['Usuario']['nombre'] . ' ' . $tmp_comment['Usuario']['apellido'] . ' (' . $tmp_comment['Usuario']['correo'] . ' - ' . $tmp_comment['Observacion']['created'] . ') :: ' . $tmp_comment['Observacion']['texto'] .
+					'</p>';
+			}
+			$comments .=
+					'</body>
+				</html>';
+			/*$comments = '
 			La empresa ' . $Empresa['Empresa']['nombre'] . $Acerca . ' se trata ha recibido un comentario hecho por un cliente. ' . '
 			';
 			foreach($tmp_comments as $key => $tmp_comment) {
 				$comments .= '
 				' . $tmp_comment['Usuario']['nombre'] . ' ' . $tmp_comment['Usuario']['apellido'] . ' (' . $tmp_comment['Usuario']['correo'] . ' - ' . $tmp_comment['Observacion']['created'] . ') :: ' . $tmp_comment['Observacion']['texto'] . '
 				';
-			}
+			}*/
+			//echo $comments;
 			return $comments;
 		} else {
 			return false;
