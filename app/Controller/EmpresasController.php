@@ -333,6 +333,8 @@ class EmpresasController extends AppController {
 		$estadosProyectosCotizacion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("or" => array("id <" => 3, "id >" => 7))));
 		$estadosProyectosEjecucion = $this -> Empresa -> Proyecto -> EstadoProyecto -> find("list", array("fields" => array("id", "nombre"), "conditions" => array("id >=" => 3, "id <" => "8")));
 		$this -> set(compact("estadosProyectosCotizacion", "estadosProyectosEjecucion"));
+		$estadosContratosEjecucion = $this->Empresa->Contrato->Estado->find('list', array('fields' => array('id', 'nombre'), 'conditions' => array('id >=' => 4)));
+		$this->set(compact('estadosContratosEjecucion'));
 	}
 
 	/**

@@ -43,7 +43,7 @@
 				unset($serviciosPrestados[$key]);
 			}
 		}
-		echo $this -> element('empresas/mantenimientos');
+		echo $this -> element('empresas/mantenimientos', 'estadosContratosEjecucion');
 	}
 	// PROYECTOS
 	if(

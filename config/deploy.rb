@@ -16,12 +16,12 @@ set :user, 'embalao'
 set :password, 'rr40r900343'
 
 # ROLES
-role :app, "siclom.omegaingenieros.com"
-role :web, "siclom.omegaingenieros.com"
-role :db, "siclom.omegaingenieros.com", :primary => true
-#role :app, "omega.bloomweb.co"
-#role :web, "omega.bloomweb.co"
-#role :db, "omega.bloomweb.co", :primary => true
+#role :app, "siclom.omegaingenieros.com"
+#role :web, "siclom.omegaingenieros.com"
+#role :db, "siclom.omegaingenieros.com", :primary => true
+role :app, "omega.bloomweb.co"
+role :web, "omega.bloomweb.co"
+role :db, "omega.bloomweb.co", :primary => true
 
 # VERSION TRACKER INFORMATION
 set :scm, :git
@@ -37,8 +37,8 @@ namespace :deploy do
   task :stop do ; end
   
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "cp /home/embalao/siclom.omegaingenieros.com/current/. /home/embalao/siclom.omegaingenieros.com/ -R"
-    #run "cp /home/embalao/omega.bloomweb.co/current/. /home/embalao/omega.bloomweb.co/ -R"
+    #run "cp /home/embalao/siclom.omegaingenieros.com/current/. /home/embalao/siclom.omegaingenieros.com/ -R"
+    run "cp /home/embalao/omega.bloomweb.co/current/. /home/embalao/omega.bloomweb.co/ -R"
   end
   
 end

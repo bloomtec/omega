@@ -9,6 +9,35 @@ class ContratosController extends AppController {
 	
 	protected $exclusiveActions = array('admin_delete');
 
+	public function cambiarEstado($contrato_id, $estado_id) {
+		$success = true;
+		$message = '';
+		if($this->Auth->user('id')) {
+			if($this->Auth->user('rol_id') == 1) {
+				$this->Contrato->id = $contrato_id;
+				if(!$this->Contrato->saveField('estado_id', $estado_id)) {
+					$success = false;
+					$message = 'Ha ocurrido un error al tratar de cambiar el estado del contrato';
+				}
+			} else {
+				$success = false;
+				$message = 'Debe de ser administrador para cambiar el estado de manera arbitraria';
+			}
+		} else {
+			$success = false;
+			$message = 'Debe de haber iniciado sesión para intentar ejecutar esta acción';
+		}
+
+		echo json_encode(
+			array(
+				'success' => $success,
+				'message' => $message
+			)
+		);
+
+		exit(0);
+	}
+
 	public function index() {
 		$this -> layout = "empresa";
 		//$this -> Contrato -> recursive = 0;

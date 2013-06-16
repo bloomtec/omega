@@ -35,7 +35,7 @@
 		<td class="actions">
 		<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
 		<?php echo $this->Html->link(__('Ver', true), array('controller' => 'contratos', 'action' => 'view', $contrato['id'])); ?>
-		<?php if($contrato["estado_id"]< 3)echo $this->Html->link("Subir cotización PDF",array("controller"=>"contratos","action"=>"subirCotizacion",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
+		<?php if($contrato["estado_id"]< 3)echo $this->Html->link("Subir cotización",array("controller"=>"contratos","action"=>"subirCotizacion",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 		<?php if($contrato["estado_id"]== 3)echo $this->Html->link("Ingresar C. C.",array("controller"=>"contratos","action"=>"ingresarCc",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 		<?php if($contrato["estado_id"]== 3 && $contrato["centro_de_costo"] && $contrato["centro_de_costo"]!="")echo $this->Html->link("Iniciar desarrollo",array("controller"=>"contratos","action"=>"iniciarDesarrollo",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 		<?php if($contrato["estado_id"]== 4)echo $this->Html->link(__('Finalizar Contrato', true), array('controller' => 'contratos', 'action' => 'finalizar', $contrato['id']), null, sprintf(__('Esta seguro que desea finalizar el contrato? Esto hará que todos sus equipos pasen al estado finalizado', true), $contrato['id']));?>
@@ -85,12 +85,48 @@
 			<td><?php  echo $contrato['centro_de_costo']; ?></td>
 			<td><?php  echo $contrato['nombre']; ?></td>
 			<td><?php echo $contrato['Tipo']["nombre"];?></td>
-			<td><?php echo $contrato['Estado']["nombre"];?></td>
+			<td>
+				<?php
+					//echo $contrato['Estado']["nombre"];
+					echo $this->Form->input(
+						'Estado' . $contrato['id'],
+						array(
+							'label' => false,
+							'div' => false,
+							'type' => 'select',
+							'rel' => $contrato['id'],
+							'options' => $estadosContratosEjecucion,
+							'value' => $contrato['estado_id']
+						)
+					);
+				?>
+				<script type="text/javascript">
+					$(function() {
+						var select = $('#Estado<?php echo $contrato['id']; ?>'),
+							estado = 0;
+						select.change(function() {
+							estado = select.val();
+							$.ajax({
+								url     : '/contratos/cambiarEstado/<?php echo $contrato['id']; ?>/' + estado,
+								cache   : false,
+								dataType: 'json',
+								success : function(response) {
+									if(response.success) {
+										alert('Se ha cambiado el estado del contrato');
+									} else {
+										alert(response.message);
+									}
+								}
+							});
+						});
+					});
+				</script>
+			</td>
 			<td id="AccionesContratosMantenimiento" class="actions" style="max-width:490px;">
 				<?php // if(isset($equipo["Ciclo"][count($equipo["Ciclo"])-1])&&$equipo["Ciclo"][count($equipo["Ciclo"])-1]["estado_id"]==5) echo $this->Html->link(__('Nuevo Ciclo', true), array('controller' => 'equipos', 'action' => 'addCiclo', $equipo['id'],$empresa['Empresa']["id"])); ?>
 				<?php echo $this->Html->link(__('Ver', true), array('controller' => 'contratos', 'action' => 'view', $contrato['id'])); ?>
 				<?php echo $this->Html->link(__('Modificar', true), array('controller' => 'contratos', 'action' => 'edit', $contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
-				<?php if($contrato["estado_id"]< 5)echo $this->Html->link("Subir cotización PDF",array("controller"=>"contratos","action"=>"subirCotizacion",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
+				<?php if($contrato["estado_id"]< 5)echo $this->Html->link("Subir cotización",array("controller"=>"contratos","action"=>"subirCotizacion",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($contrato["estado_id"]== 3)echo $this->Html->link("Ingresar C. C. / Modificar",array("controller"=>"contratos","action"=>"ingresarCc",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($contrato["estado_id"]== 3 && $contrato["centro_de_costo"] && $contrato["centro_de_costo"]!="")echo $this->Html->link("Iniciar desarrollo",array("controller"=>"contratos","action"=>"iniciarDesarrollo",$contrato['id'],"?KeepThis=true&TB_iframe=true&height=400&width=600"),array("class"=>"thickbox"));?>
 				<?php if($contrato["estado_id"]== 4)echo $this->Html->link(__('Finalizar Contrato', true), array('controller' => 'contratos', 'action' => 'finalizar', $contrato['id']), null, sprintf(__('Esta seguro que desea finalizar el contrato? Esto hará que todos sus equipos pasen al estado finalizado', true), $contrato['id']));?>
