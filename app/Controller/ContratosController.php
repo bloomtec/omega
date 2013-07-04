@@ -13,6 +13,13 @@ class ContratosController extends AppController {
 		$success = true;
 		$message = '';
 		if($this->Auth->user('id')) {
+			$this->Contrato->id = $contrato_id;
+			if(!$this->Contrato->saveField('estado_id', $estado_id)) {
+				$success = false;
+				$message = 'Ha ocurrido un error al tratar de cambiar el estado del contrato';
+			}
+			/*
+			 * A petición de Carlos se quita la verificación de ser administrador.
 			if($this->Auth->user('rol_id') == 1) {
 				$this->Contrato->id = $contrato_id;
 				if(!$this->Contrato->saveField('estado_id', $estado_id)) {
@@ -22,7 +29,7 @@ class ContratosController extends AppController {
 			} else {
 				$success = false;
 				$message = 'Debe de ser administrador para cambiar el estado de manera arbitraria';
-			}
+			}*/
 		} else {
 			$success = false;
 			$message = 'Debe de haber iniciado sesión para intentar ejecutar esta acción';
