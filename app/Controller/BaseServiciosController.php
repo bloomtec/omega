@@ -209,19 +209,19 @@ class BaseServiciosController extends AppController {
 			$procesar_correos = false;
 		}
 		
-		/*return json_encode(
+		return json_encode(
 			array(
 				'success' => $procesar_correos,
 				'message' => $texto_no_validos,
 				'list' => $lista_correos
 			)
-		);*/
+		);
 
-		return array(
+		/*return array(
 			'success' => $procesar_correos,
 			'message' => $texto_no_validos,
 			'list' => $lista_correos
-		);
+		);*/
 		
 	}
 	
@@ -256,9 +256,9 @@ class BaseServiciosController extends AppController {
 				$result = json_decode(
 					$this -> processEmails($this -> request -> data['Proyecto']['correos'])
 				);
-				$correos_validos = $result['success'];
-				$texto_no_validos = $result['message'];
-				$lista_correos = $result['list'];
+				$correos_validos = $result->success;
+				$texto_no_validos = $result->message;
+				$lista_correos = $result->list;
 			}
 			
 			if($correos_validos) {
