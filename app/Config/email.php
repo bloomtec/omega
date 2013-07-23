@@ -45,6 +45,8 @@ class EmailConfig {
 	public $smtp = array(
 		'transport' => 'Smtp',
 		'from' => array('notificaciones@omega.bloomweb.co' => 'Aplicación Web Omega Ingenieros'),
+		/*'host' => 'localhost',
+		'port' => 25,*/
 		'host' => 'ssl://smtp.gmail.com',
 		'port' => 465,
 		'timeout' => 30,

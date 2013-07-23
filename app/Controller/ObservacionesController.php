@@ -155,9 +155,17 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 			$this -> Empresa -> contain();
 			$Empresa = null;
 			$Acerca = null;
+			$link = false;
 			if(isset($Modelo['Contrato'])) {
 				$Empresa = $this -> Empresa -> findById($Modelo['Contrato']['empresa_id']);
 				$Acerca = ' en cuanto al contrato ' . $Modelo['Contrato']['nombre'];
+
+				// Crear el enlace para ver directamente el equipo en el que se hace un comentario
+				$this->loadModel('ContratosEquipo');
+				$contratosEquipo = $this->ContratosEquipo->read(null, $llave_foranea);
+				$contrato_id = $contratosEquipo['ContratosEquipo']['contrato_id'];
+				$equipo_id = $contratosEquipo['ContratosEquipo']['equipo_id'];
+				$link = "http://siclom.omegaingenieros.com/admin/equipos/view/$equipo_id/$contrato_id/mantenimiento";
 			} elseif(isset($Modelo['Proyecto'])) {
 				$Empresa = $this -> Empresa -> findById($Modelo['Proyecto']['empresa_id']);
 				$Acerca = ' en cuanto al servicio ' . $Modelo['Proyecto']['nombre'];
@@ -179,18 +187,13 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 					$tmp_comment['Usuario']['nombre'] . ' ' . $tmp_comment['Usuario']['apellido'] . ' (' . $tmp_comment['Usuario']['correo'] . ' - ' . $tmp_comment['Observacion']['created'] . ') :: ' . $tmp_comment['Observacion']['texto'] .
 					'</p>';
 			}
+			if($link) {
+				$comments .=
+					'<p>Puedes ver la información relacionada <a href="' . $link . '">aquí</a></p>';
+			}
 			$comments .=
-					'</body>
-				</html>';
-			/*$comments = '
-			La empresa ' . $Empresa['Empresa']['nombre'] . $Acerca . ' se trata ha recibido un comentario hecho por un cliente. ' . '
-			';
-			foreach($tmp_comments as $key => $tmp_comment) {
-				$comments .= '
-				' . $tmp_comment['Usuario']['nombre'] . ' ' . $tmp_comment['Usuario']['apellido'] . ' (' . $tmp_comment['Usuario']['correo'] . ' - ' . $tmp_comment['Observacion']['created'] . ') :: ' . $tmp_comment['Observacion']['texto'] . '
-				';
-			}*/
-			//echo $comments;
+				'</body>
+			</html>';
 			return $comments;
 		} else {
 			return false;
@@ -357,6 +360,7 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 		$observacion = $this -> Observacion -> read(null, $observacionId);
 		$modelo = 'ContratosEquipo';
 		$correos = $this -> Contrato -> Correo -> find("all", array("conditions" => array("Correo.modelo" => $modelo, "Correo.llave_foranea" => $contratoId)));
+		$destinatariosEnviados = array();
 		// Asunto del mensaje
 		$subject = "Nueva actividad en el contrato: " . $contrato["Contrato"]["nombre"];
 		// Cabeceras
@@ -377,19 +381,27 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 		<br />';
 		$mail_body .= $extra_content; 
 		// Enviar al contacto principal
+		$destinatariosEnviados[] = $contrato["Empresa"]["correo"];
 		$this -> sendbySMTP($contrato["Empresa"]["nombre"], $contrato["Empresa"]["correo"], $subject, $mail_body);
 		if (!empty($correos)) {
 			foreach ($correos as $correo) {
 				$recipient = $correo["Correo"]["correo"];
 				// Enviar a otros contactos registrados
-				$this -> sendbySMTP($correo["Correo"]["nombre"], $correo["Correo"]["correo"], $subject, $mail_body);
+				if(!in_array($recipient, $destinatariosEnviados)) {
+					$destinatariosEnviados[] = $recipient;
+					$this -> sendbySMTP($correo["Correo"]["nombre"], $recipient, $subject, $mail_body);
+				}
 			}
 		}
 		$empresaId = $contrato['Contrato']['empresa_id'];
 		$usuarios = $this -> requestAction('/usuarios/getUsuariosServicio/1');
 		$usuarios = $this -> Usuario -> find('all', array('conditions' => array('Usuario.id' => $usuarios, 'Usuario.id <>' => $observacion['Observacion']['usuario_id'], 'Usuario.empresa_id' => $empresaId)));
 		foreach ($usuarios as $key => $usuario) {
-			$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $usuario["Usuario"]["correo"], $subject, $mail_body);
+			$recipient = $usuario["Usuario"]["correo"];
+			if(!in_array($recipient, $destinatariosEnviados)) {
+				$destinatariosEnviados[] = $recipient;
+				$this -> sendbySMTP($usuario["Usuario"]["nombre_de_usuario"], $recipient, $subject, $mail_body);
+			}
 		}
 		return true;
 	}
