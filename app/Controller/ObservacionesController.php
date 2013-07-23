@@ -256,7 +256,19 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 			if ($this -> Observacion -> save($comentario)) {
 				$contratoEquipo = $this -> Observacion -> ContratosEquipo -> read(null, $comentario["Observacion"]["llave_foranea"]);
 				$this -> Observacion -> ContratosEquipo -> Contrato -> contain();
+				$this -> Observacion -> ContratosEquipo -> Equipo -> contain();
 				$contrato = $this -> Observacion -> ContratosEquipo -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
+				$equipo = $this -> Observacion -> ContratosEquipo -> Equipo -> read(null, $contratoEquipo["ContratosEquipo"]["equipo_id"]);
+				$this->loadModel('Alarma');
+				$this->Alarma->create();
+				$alarma = array(
+					'Alarma' => array(
+						'modelo' => 'Equipo',
+						'llave_foranea' => $equipo['Equipo']['id'],
+						'para_empresa' => 1
+					)
+				);
+				$this->Alarma->save($alarma);
 				$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
 				
 				if (in_array(1, $servicios_usuario)) {
@@ -309,7 +321,19 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 			if ($this -> Observacion -> save($comentario)) {
 				$contratoEquipo = $this -> Observacion -> ContratosEquipo -> read(null, $comentario["Observacion"]["llave_foranea"]);
 				$this -> Observacion -> ContratosEquipo -> Contrato -> contain();
+				$this -> Observacion -> ContratosEquipo -> Equipo -> contain();
 				$contrato = $this -> Observacion -> ContratosEquipo -> Contrato -> read(null, $contratoEquipo["ContratosEquipo"]["contrato_id"]);
+				$equipo = $this -> Observacion -> ContratosEquipo -> Equipo -> read(null, $contratoEquipo["ContratosEquipo"]["equipo_id"]);
+				$this->loadModel('Alarma');
+				$this->Alarma->create();
+				$alarma = array(
+					'Alarma' => array(
+						'modelo' => 'Equipo',
+						'llave_foranea' => $equipo['Equipo']['id'],
+						'para_empresa' => 0
+					)
+				);
+				$this->Alarma->save($alarma);
 				$servicios_usuario = $this -> requestAction('/usuarios/getServiciosUsuario/' . $this -> Auth -> user('id'));
 				
 				if (in_array(1, $servicios_usuario)) {
@@ -339,7 +363,7 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 				$this -> enviarCorreoObservacionesPublicas($this -> Observacion -> id, $contrato["Contrato"]["id"], $comentario["Observacion"]["llave_foranea"], "El Usuario: " . $usuario["Usuario"]["nombre_de_usuario"] . " ha escrito el siguiente comentario: \n" . $comentario["Observacion"]["texto"]);
 				$mensaje = $this -> getRelatedComments(null, $comentario["Observacion"]["usuario_id"], $comentario["Observacion"]["modelo"], $comentario["Observacion"]["llave_foranea"]);
 				$this -> correoACarlos($mensaje);
-				
+
 				echo "OK";
 			} else {
 				echo "No se pudo agregar su comentario, Por favor Intente de nuevo";

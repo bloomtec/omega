@@ -89,7 +89,17 @@
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">
-				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
+				<?php
+					echo $this->element(
+						"alertasContratos",
+						array(
+							"alertas" => array(),
+							"cliente" => true,
+							"equipo" => $equipo,
+							"publicaciones" => $alarmaPublicacion
+						)
+					);
+				?>
 			</td>
 			<td><?php echo $equipo['Equipo']['codigo'];?></td>
 			<td><?php echo $equipo['Equipo']['descripcion'];?></td>

@@ -71,6 +71,19 @@ class Equipo extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+		'Alarma' => array(
+			'className' => 'Alarma',
+			'foreignKey' => 'llave_foranea',
+			'dependent' => true,
+			'conditions' => array('Alarma.modelo' => 'Equipo'),
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
 	);
 

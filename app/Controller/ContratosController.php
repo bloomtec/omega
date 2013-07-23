@@ -174,8 +174,11 @@ class ContratosController extends AppController {
 			)		
 		);
 
+		$equipos = $this -> paginate('Equipo');
+		$equipos = $this->sortEquipos($equipos, 1);
+
         $this -> set('filtrado', $filtrado);
-		$this -> set('equipos', $this -> paginate('Equipo'));
+		$this -> set('equipos', $equipos);
 		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set(compact('contrato', 'categoriasEquipos'));
 	}
@@ -326,12 +329,47 @@ class ContratosController extends AppController {
 				'limit' => $limit
 			)
 		);
+		$equipos = $this -> paginate('Equipo');
+		$equipos = $this->sortEquipos($equipos);
 
         $this -> set('filtrado', $filtrado);
-		$this -> set('equipos', $this -> paginate('Equipo'));
+		$this -> set('equipos', $equipos);
 		$contrato = $this -> Contrato -> read(null, $id);
 		$categoriasEquipos = $this -> Contrato -> Equipo -> CategoriasEquipo -> find('list', array('conditions' => array('CategoriasEquipo.empresa_id' => $contrato['Empresa']['id'])));
 		$this -> set(compact('contrato', 'categoriasEquipos'));
+	}
+
+	/**
+	 * Ordenar los equipos para mostrar en el listado de primero
+	 * aquellos con alarmas
+	 *
+	 * @param     $equipos
+	 * @param int $for_empresa
+	 *
+	 * @return mixed
+	 */
+	private function sortEquipos($equipos, $for_empresa = 0) {
+		for($i = 0; $i < count($equipos); $i+=1) {
+			for($j = 0; $j < count($equipos); $j+=1) {
+				if($j > $i) {
+					if(empty($equipos[$i]['Alarma']) && !empty($equipos[$j]['Alarma'])) {
+						$proceder = false;
+						foreach($equipos[$j]['Alarma'] as $key => $alarma) {
+							if($alarma['para_empresa'] == $for_empresa) {
+								$proceder = true;
+							}
+						}
+						if($proceder) {
+							$tmp = $equipos[$j];
+							$equipos[$j] = $equipos[$i];
+							$equipos[$i] = $tmp;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return $equipos;
 	}
 
     public function admin_quitarFiltro($id) {
@@ -508,7 +546,7 @@ class ContratosController extends AppController {
 		$headers .= 'From: Aplicación SICLOM <no-reply@siclom.omegaingenieros.com>' . "\r\n";
 
 		// Mail it
-		mail($email, $subject, $message, $headers);
+		mail('csanchez@omegaingenieros.com', $subject, $message, $headers);
 
 		/** ----------------------------------------------------------------------------------------- */
 		$this -> Session -> setFlash(__('Gracias por permitirnos hacer parte de su equipo de trabajo.'), 'crud/success');
@@ -877,6 +915,33 @@ class ContratosController extends AppController {
 			}
 		}
 		return true;
+	}
+
+	public function admin_alarmaEquipo($equipo_id) {
+		return $this->_alarmaEquipo($equipo_id);
+	}
+
+	public function alarmaEquipo($equipo_id) {
+		return $this->_alarmaEquipo($equipo_id);
+	}
+
+	private function _alarmaEquipo($equipo_id) {
+		$this->loadModel('Alarma');
+		$alarma = $this->Alarma->find(
+			'first',
+			array(
+				'conditions' => array(
+					'Alarma.modelo' => 'Equipo',
+					'Alarma.llave_foranea' => $equipo_id
+				)
+			)
+		);
+		/*if($alarma) {
+			return true;
+		} else {
+			return false;
+		}*/
+		return $alarma;
 	}
 
 }

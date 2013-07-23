@@ -70,6 +70,20 @@ class EquiposController extends AppController {
 	}
 
 	public function view($id = null, $contratoId, $tipoContrato) {
+		$this->loadModel('Alarma');
+		$alarmas = $this->Alarma->find(
+			'all',
+			array(
+				'conditions' => array(
+					'Alarma.modelo' => 'Equipo',
+					'Alarma.llave_foranea' => $id,
+					'Alarma.para_empresa' => 1
+				)
+			)
+		);
+		foreach($alarmas as $key => $alarma) {
+			$this->Alarma->delete($alarma['Alarma']['id']);
+		}
 		$this -> layout = "empresa";
 		$this -> Equipo -> contain('Archivo');
 		if (!$id) {
@@ -231,6 +245,20 @@ class EquiposController extends AppController {
 	}
 
 	public function admin_view($id = null, $contratoId, $tipoContrato) {
+		$this->loadModel('Alarma');
+		$alarmas = $this->Alarma->find(
+			'all',
+			array(
+				'conditions' => array(
+					'Alarma.modelo' => 'Equipo',
+					'Alarma.llave_foranea' => $id,
+					'Alarma.para_empresa' => 0
+				)
+			)
+		);
+		foreach($alarmas as $key => $alarma) {
+			$this->Alarma->delete($alarma['Alarma']['id']);
+		}
 		$this -> Equipo -> contain('Archivo');
 		if (!$id) {
 			$this -> Session -> setFlash(__('Equipo no válido'), 'crud/error');

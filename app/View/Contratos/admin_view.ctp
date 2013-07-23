@@ -123,7 +123,9 @@
 			$i = 0;
 			foreach ($equipos as $key => $equipo):
 				$alarmaPublicacion=false;
-				if($equipo['Contrato'][0]["tiene_publicacion_empresa"]) $alarmaPublicacion=true;
+				if($equipo['Contrato'][0]["tiene_publicacion_empresa"]) {
+					$alarmaPublicacion=true;
+				}
 				$class = null;
 				if ($i++ % 2 == 0) {
 					$class = ' class="altrow"';
@@ -131,7 +133,17 @@
 		?>
 		<tr<?php echo $class;?>>
 			<td style="width:180px;">
-				<?php echo $this->element("alertasContratos",array("alertas"=>array(),"cliente"=>true,"publicaciones"=>$alarmaPublicacion))?>
+				<?php
+					echo $this->element(
+						"alertasContratos",
+						array(
+							"alertas" => array(),
+							"cliente" => false,
+							"equipo" => $equipo,
+							"publicaciones" => $alarmaPublicacion
+						)
+					);
+				?>
 			</td>
 			<td><?php echo $equipo['Equipo']['codigo'];?></td>
 			<td><?php echo $equipo['Equipo']['descripcion'];?></td>
