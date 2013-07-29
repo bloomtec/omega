@@ -21,7 +21,7 @@ foreach($observacionesPublicas as $observacion):?>
 		}
 	?>
 </div>
-<div class="addComentario">
+<div class="addComentario" style="position: relative;">
 <?php
 	echo $this -> Form -> create("Observacion", array("action" => "AJAX_addObservacion".$modelo));
 	echo $this -> Form -> input("usuario_id", array('type' => 'hidden', "value" => $usuario_id));
@@ -43,6 +43,7 @@ foreach($observacionesPublicas as $observacion):?>
 			)
 		);
 	}
+    echo '<div class="comments_overlay" style="width:100%;height: 32px; background: #000000; opacity: 0.3; position:absolute; color:white; text-align: center; display:none;"> Enviando... </div>';
 	echo $this -> Form -> end("AGREGAR");
 ?>
 </div>
