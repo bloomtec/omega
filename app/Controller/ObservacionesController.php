@@ -169,6 +169,10 @@ El Usuario: csanchez ha escrito el siguiente comentario: Adjunto encontraran ofe
 			} elseif(isset($Modelo['Proyecto'])) {
 				$Empresa = $this -> Empresa -> findById($Modelo['Proyecto']['empresa_id']);
 				$Acerca = ' en cuanto al servicio ' . $Modelo['Proyecto']['nombre'];
+
+				// Crear el enlace para ver directamente el proyecto en el que se hace un comentario
+				$proyecto_id = $Modelo['Proyecto']['id'];
+				$link = "http://siclom.omegaingenieros.com/admin/proyectos/view/$proyecto_id";
 			} else {
 				//
 			}

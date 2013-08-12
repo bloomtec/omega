@@ -304,7 +304,8 @@ class EmpresasController extends AppController {
 			);
 		}
 		$this -> paginate = $paginate;
-		$this -> set('empresas', $this -> paginate());
+		$empresas = $this -> paginate();
+		$this -> set('empresas', $empresas);
 	}
 
 	/**
