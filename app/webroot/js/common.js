@@ -36,6 +36,7 @@ $(document).ready(function() {
 
 	$(document).ready(function() {
 		$("#ObservacionAJAXAddObservacionPublicaForm").submit(function() {
+            $overlay = $(this).find(".comments_overlay").show();
 			$.post($(this).attr("action"), 
 				$(this).serialize(),
 				function(data) {
@@ -43,14 +44,17 @@ $(document).ready(function() {
 					$(".publicos .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".publicos #observacion").val() + '</div></div>');
 					$(".publicos #observacion").val("");
 					$('.publicos .historial').scrollTop(10000);
+                    $overlay.hide();
 				} else
-					//alert(data);
-					$("body").append(data);
+					alert(data);
+                    $overlay.hide();
+
 			});
 
 			return false;
 		});
 		$("#ObservacionAJAXAddObservacionPrivadaForm").submit(function() {
+            $overlay = $(this).find(".comments_overlay").show();
 			$.post($(this).attr("action"), 
 				$(this).serialize(), 
 				function(data) {
@@ -58,9 +62,11 @@ $(document).ready(function() {
 					$(".privados .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".privados #observacion").val() + '</div></div>');
 					$(".privados #observacion").val("");
 					$('.privados .historial').scrollTop(10000);
+                    $overlay.hide();
 
 				} else
 					alert(data);
+                    $overlay.hide();
 			});
 
 			return false;
@@ -69,6 +75,7 @@ $(document).ready(function() {
 		//****** DE PROYECTOS**//
 		
 		$("#ObservacionAJAXAddComentarioPublicoForm").submit(function() {
+            $overlay = $(this).find(".comments_overlay").show();
 			$.post($(this).attr("action"), 
 				$(this).serialize(), 
 				function(data) {
@@ -76,24 +83,28 @@ $(document).ready(function() {
 					$(".publicos .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".publicos #observacion").val() + '</div></div>');
 					$(".publicos #observacion").val("");
 					$('.publicos .historial').scrollTop(10000);
+                    $overlay.hide();
 
 				} else
-					//alert(data);
-					$("body").append(data);
+					alert(data);
+                    $overlay.hide();
 			});
 
 			return false;
 		});
 		$("#ObservacionAJAXAddComentarioPrivadoForm").submit(function() {
+            $overlay = $(this).find(".comments_overlay").show();
 			$.post($(this).attr("action"), $(this).serialize(),
 				function(data) {
 				if (data == "OK") {
 					$(".privados .historial").append('<div class="observacion nueva"><div class="encabezado"><div class="nombre">' + $(".historial").attr("nombre") + '</div><div class="fecha">HOY</div></div> <div class="cuerpo">' + $(".privados #observacion").val() + '</div></div>');
 					$(".privados #observacion").val("");
 					$('.privados .historial').scrollTop(10000);
+                    $overlay.hide();
 
 				} else
 					alert(data);
+                    $overlay.hide();
 			});
 
 			return false;

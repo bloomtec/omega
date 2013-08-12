@@ -23,7 +23,7 @@ if($modelo=="Publico") {
 	}
 ?>
 </div>
-<div class="addComentario">
+<div class="addComentario" style="position: relative">
 <?php
 	//echo $this -> Form -> create("comentario" . $modelo, array("action" => "AJAX_add"));
 	echo $this -> Form -> create("Observacion", array("action" => "AJAX_addComentario".$modelo));
@@ -45,7 +45,9 @@ if($modelo=="Publico") {
 			)
 		);
 	}
-	echo $this -> Form -> end("AGREGAR");
+echo '<div class="comments_overlay" style="width:100%;height: 32px; background: #000000; opacity: 0.3; position:absolute; color:white; text-align: center; display:none;"> Enviando... </div>';
+
+echo $this -> Form -> end("AGREGAR");
 	//debug($observacionesPublicas);
 ?>
 </div>
